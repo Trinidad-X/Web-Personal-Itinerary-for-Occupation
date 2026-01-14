@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Professional Profiles – Programming Careers</title>
+
+<link rel="stylesheet" href="styles/general.css">
+
+<!-- ONLY new styles -->
+<style>
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.profile-box {
+    box-shadow: var(--bevel-inset);
+    padding: 14px;
+    margin-bottom: 20px;
+}
+
+.profile-meta {
+    font-size: 13px;
+    margin-bottom: 10px;
+    color: var(--text-dim);
+}
+
+.skill-meter {
+    height: 16px;
+    background: var(--border-med);
+    box-shadow: var(--bevel-inset);
+    margin-bottom: 10px;
+}
+
+.skill-fill {
+    height: 100%;
+    background: var(--title-grad-1);
+}
+
+[data-theme="dark"] .skill-fill {
+    background: var(--text-main);
+}
+</style>
+</head>
+
+<body>
+<div class="window">
+
+    <!-- TITLE BAR -->
+    <div class="title-bar">
+        <div class="title-text">👤 Professional Profiles</div>
+        <div class="title-controls">
+            <button class="win-btn" onclick="toggleTheme()">☼</button>
+        </div>
+    </div>
+
+    <!-- MENU -->
+    <div class="menu-bar">
+        <div class="menu-item">File</div>
+        <div class="menu-item">View</div>
+        <div class="menu-item">Help</div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+        <button class="tool-btn active" onclick="showTab('software', this)">Software Eng</button>
+        <button class="tool-btn" onclick="showTab('web', this)">Frontend / Backend</button>
+        <button class="tool-btn" onclick="showTab('data', this)">Data Roles</button>
+        <button class="tool-btn" onclick="showTab('ml', this)">ML Engineer</button>
+        <button class="tool-btn" onclick="showTab('qa', this)">QA / Test</button>
+        <button class="tool-btn" onclick="showTab('sysadmin', this)">SysAdmin</button>
+        <button class="tool-btn" onclick="showTab('product', this)">Product</button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="window-content">
+
+        <!-- SOFTWARE ENGINEER -->
+        <section id="software" class="tab-content active">
+            <h1>Software Engineer</h1>
+            <div class="profile-box">
+                <div class="profile-meta">Core engineering role across industries</div>
+                <p>
+                    Software engineers design, build, and maintain applications and systems,
+                    often working across multiple layers of a product.
+                </p>
+                <h3>Focus Areas</h3>
+                <ul>
+                    <li>Problem solving & algorithms</li>
+                    <li>System design</li>
+                    <li>Code quality & maintainability</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- FRONTEND / BACKEND -->
+        <section id="web" class="tab-content">
+            <h1>Frontend / Backend / Full-Stack</h1>
+            <div class="profile-box">
+                <div class="profile-meta">Web-focused specialization</div>
+                <p>
+                    These roles focus on user interfaces (frontend), server logic (backend),
+                    or both (full-stack).
+                </p>
+                <h3>Specialization Balance</h3>
+                <div class="skill-meter"><div class="skill-fill" style="width:75%"></div></div>
+            </div>
+        </section>
+
+        <!-- DATA -->
+        <section id="data" class="tab-content">
+            <h1>Data Analyst / Data Engineer</h1>
+            <div class="profile-box">
+                <div class="profile-meta">Business intelligence & data infrastructure</div>
+                <p>
+                    Data analysts interpret data for decision-making, while data engineers
+                    build pipelines and storage systems.
+                </p>
+                <h3>Data Infrastructure Emphasis</h3>
+                <div class="skill-meter"><div class="skill-fill" style="width:80%"></div></div>
+            </div>
+        </section>
+
+        <!-- ML -->
+        <section id="ml" class="tab-content">
+            <h1>Machine Learning Engineer</h1>
+            <div class="profile-box">
+                <div class="profile-meta">Production AI & model deployment</div>
+                <p>
+                    ML engineers operationalize machine learning models, bridging research
+                    and scalable software systems.
+                </p>
+                <h3>Math & ML Intensity</h3>
+                <div class="skill-meter"><div class="skill-fill" style="width:85%"></div></div>
+            </div>
+        </section>
+
+        <!-- QA -->
+        <section id="qa" class="tab-content">
+            <h1>QA / Test Automation</h1>
+            <div class="profile-box">
+                <div class="profile-meta">Quality & reliability focused</div>
+                <p>
+                    QA engineers ensure software correctness through testing strategies,
+                    automation frameworks, and validation pipelines.
+                </p>
+                <h3>Automation Focus</h3>
+                <div class="skill-meter"><div class="skill-fill" style="width:70%"></div></div>
+            </div>
+        </section>
+
+        <!-- SYSADMIN -->
+        <section id="sysadmin" class="tab-content">
+            <h1>Systems Administrator</h1>
+            <div class="profile-box">
+                <div class="profile-meta">Infrastructure & operations</div>
+                <p>
+                    SysAdmins manage servers, networks, access control,
+                    and system reliability.
+                </p>
+                <h3>Operational Responsibility</h3>
+                <div class="skill-meter"><div class="skill-fill" style="width:80%"></div></div>
+            </div>
+        </section>
+
+        <!-- PRODUCT -->
+        <section id="product" class="tab-content">
+            <h1>Technical Product Roles</h1>
+            <div class="profile-box">
+                <div class="profile-meta">Engineering + business bridge</div>
+                <p>
+                    Technical product managers and owners align engineering work
+                    with business goals and user needs.
+                </p>
+                <h3>Communication & Strategy</h3>
+                <div class="skill-meter"><div class="skill-fill" style="width:75%"></div></div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+        <div class="status-panel">Profiles Loaded</div>
+        <div class="status-panel">Career Explorer</div>
+    </div>
+
+</div>
+
+<script>
+function showTab(id, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+
+    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+
+function toggleTheme() {
+    document.body.dataset.theme =
+        document.body.dataset.theme === "dark" ? "" : "dark";
+}
+</script>
+</body>
+</html>
