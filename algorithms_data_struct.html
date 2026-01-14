@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algo & DS Knowledge Base - Win98 Edition</title>
+    <style>
+        /* --- USER PROVIDED WIN98 STYLE SHEET --- */
+        :root {
+            /* Classic Light Theme */
+            --bg-desktop: #008080;
+            --bg-window: #C0C0C0;
+            --bg-content: #FFFFFF;
+            --text-main: #000000;
+            --text-dim: #808080;
+            
+            --border-light: #FFFFFF;
+            --border-med: #DFDFDF;
+            --border-dark: #808080;
+            --border-black: #000000;
+            
+            --title-grad-1: #000080;
+            --title-grad-2: #1084D0;
+            --title-text: #FFFFFF;
+            
+            --link-color: #0000FF;
+            
+            /* 3D Bevel Logic */
+            --bevel-outset: inset -1px -1px var(--border-black), inset 1px 1px var(--border-light), inset -2px -2px var(--border-dark), inset 2px 2px var(--border-med);
+            --bevel-inset: inset -1px -1px var(--border-light), inset 1px 1px var(--border-black), inset -2px -2px var(--border-med), inset 2px 2px var(--border-dark);
+        }
+
+        [data-theme="dark"] {
+            /* Hacker / High Contrast Theme */
+            --bg-desktop: #000000;
+            --bg-window: #202020;
+            --bg-content: #000000;
+            --text-main: #00FF00;
+            --text-dim: #008800;
+            
+            --border-light: #00FF00;
+            --border-med: #008800;
+            --border-dark: #004400;
+            --border-black: #00FF00;
+            
+            --title-grad-1: #004400;
+            --title-grad-2: #000000;
+            --title-text: #00FF00;
+            
+            --link-color: #00FF00;
+            
+            --bevel-outset: 1px solid var(--border-med);
+            --bevel-inset: 1px solid var(--border-med);
+        }
+
+        /* --- GLOBAL RESET --- */
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-desktop);
+            font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            color: var(--text-main);
+        }
+
+        a { color: var(--link-color); }
+        a:hover { background: var(--link-color); color: var(--bg-content); text-decoration: none; }
+
+        /* --- WINDOW CONTAINER --- */
+        .window {
+            width: 900px;
+            max-width: 98vw;
+            height: 90vh;
+            background-color: var(--bg-window);
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.5), var(--bevel-outset);
+            display: flex;
+            flex-direction: column;
+            padding: 3px;
+        }
+
+        /* --- TITLE BAR --- */
+        .title-bar {
+            background: linear-gradient(90deg, var(--title-grad-1), var(--title-grad-2));
+            padding: 3px 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            margin-bottom: 2px;
+        }
+
+        .title-text {
+            color: var(--title-text);
+            font-weight: bold;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .title-controls { display: flex; gap: 2px; }
+
+        .win-btn {
+            width: 16px; height: 14px;
+            background: var(--bg-window);
+            box-shadow: var(--bevel-outset);
+            border: none;
+            font-size: 9px; line-height: 10px;
+            cursor: pointer; color: var(--text-main);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .win-btn:active { box-shadow: var(--bevel-inset); padding-top: 2px; }
+
+        /* --- TOOLBAR & MENU --- */
+        .menu-bar { display: flex; padding: 2px 0; border-bottom: 1px solid var(--border-dark); box-shadow: 0 1px 0 var(--border-light); flex-shrink: 0; }
+        .menu-item { padding: 2px 8px; font-size: 13px; cursor: default; }
+        .menu-item::first-letter { text-decoration: underline; }
+        .menu-item:hover { background: var(--title-grad-1); color: white; }
+
+        .toolbar {
+            display: flex; align-items: center; gap: 5px; padding: 6px;
+            border-bottom: 1px solid var(--border-dark);
+            box-shadow: 0 1px 0 var(--border-light);
+            flex-shrink: 0;
+        }
+
+        .tool-btn {
+            background: var(--bg-window);
+            box-shadow: var(--bevel-outset);
+            border: 0; padding: 4px 10px; font-size: 12px;
+            display: flex; align-items: center; gap: 6px;
+            cursor: pointer; color: var(--text-main); text-decoration: none;
+        }
+        .tool-btn:hover { background: #e0e0e0; }
+        [data-theme="dark"] .tool-btn:hover { background: #333; }
+        .tool-btn:active { box-shadow: var(--bevel-inset); transform: translateY(1px); }
+
+        /* --- ADDRESS BAR --- */
+        .address-bar {
+            display: flex; align-items: center; gap: 8px; padding: 6px;
+            font-size: 12px;
+            border-bottom: 1px solid var(--border-dark);
+            box-shadow: 0 1px 0 var(--border-light);
+            flex-shrink: 0;
+        }
+        .address-input {
+            flex-grow: 1; background: var(--bg-content);
+            box-shadow: var(--bevel-inset); padding: 3px 6px;
+            font-family: monospace; border: none; outline: none;
+            color: var(--text-main);
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        /* Changed slightly to support Split View */
+        .content-frame {
+            flex-grow: 1;
+            display: flex;
+            margin: 5px;
+            gap: 5px;
+            overflow: hidden; /* Manage scroll internally */
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: var(--bg-content);
+            box-shadow: var(--bevel-inset);
+            overflow-y: auto;
+            padding: 10px;
+            flex-shrink: 0;
+        }
+
+        .main-view {
+            flex-grow: 1;
+            background-color: var(--bg-content);
+            box-shadow: var(--bevel-inset);
+            overflow-y: auto;
+            padding: 30px;
+            line-height: 1.6;
+        }
+
+        /* TYPOGRAPHY FOR CONTENT */
+        h1 { 
+            font-family: 'Times New Roman', serif; 
+            font-size: 32px; margin-top: 0; border-bottom: 2px solid var(--text-main); 
+            padding-bottom: 10px;
+        }
+        h2 { font-size: 20px; color: var(--title-grad-1); margin-top: 25px; border-bottom: 1px solid var(--border-med); }
+        [data-theme="dark"] h2 { color: var(--text-main); }
+        h3 { font-size: 16px; font-weight: bold; margin-bottom: 5px; margin-top: 20px; }
+        p { font-size: 14px; margin-bottom: 15px; }
+        ul { margin-bottom: 20px; padding-left: 20px; font-size: 14px; }
+        li { margin-bottom: 5px; }
+        code { background: #eee; padding: 2px 4px; font-family: monospace; border: 1px solid #ccc; font-size: 13px; }
+        [data-theme="dark"] code { background: #333; border-color: #555; }
+        
+        pre {
+            background: #eee;
+            padding: 10px;
+            border: 1px solid #ccc;
+            overflow-x: auto;
+        }
+        [data-theme="dark"] pre { background: #333; border-color: #555; }
+
+        /* --- STATUS BAR --- */
+        .status-bar {
+            display: flex; gap: 2px; padding: 3px; margin-top: 2px;
+            flex-shrink: 0; font-size: 12px;
+        }
+        .status-panel {
+            box-shadow: var(--bevel-inset); padding: 3px 6px;
+        }
+        .status-main { flex-grow: 1; }
+        .status-small { width: 100px; }
+
+        /* --- SCROLLBARS --- */
+        ::-webkit-scrollbar { width: 16px; background: var(--bg-window); }
+        ::-webkit-scrollbar-thumb { background: var(--bg-window); box-shadow: var(--bevel-outset); }
+        ::-webkit-scrollbar-track { background: repeating-linear-gradient(45deg, #ccc 0, #ccc 1px, #fff 0, #fff 2px); }
+        [data-theme="dark"] ::-webkit-scrollbar-track { background: #000; }
+
+        /* --- SIDEBAR NAV STYLES --- */
+        .nav-folder {
+            cursor: pointer;
+            margin-bottom: 4px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .nav-folder:before { content: '📁 '; }
+        .nav-item {
+            margin-left: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            padding: 2px 4px;
+            display: block;
+        }
+        .nav-item:before { content: '📄 '; }
+        .nav-item:hover {
+            background-color: var(--title-grad-1);
+            color: white;
+        }
+        .hidden-section { display: none; }
+        .visible-section { display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="window">
+        <div class="title-bar">
+            <div class="title-text">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" style="width:16px; height:16px; background:white; border:1px solid white;" alt="icon">
+                Algorithmic Knowledge Base v1.0
+            </div>
+            <div class="title-controls">
+                <button class="win-btn" aria-label="Minimize">_</button>
+                <button class="win-btn" aria-label="Maximize">□</button>
+                <button class="win-btn" aria-label="Close">×</button>
+            </div>
+        </div>
+
+        <div class="menu-bar">
+            <div class="menu-item">File</div>
+            <div class="menu-item">Edit</div>
+            <div class="menu-item">View</div>
+            <div class="menu-item">Favorites</div>
+            <div class="menu-item">Help</div>
+        </div>
+
+        <div class="toolbar">
+            <button class="tool-btn" onclick="navTo('home')">🏠 Home</button>
+            <button class="tool-btn" onclick="toggleTheme()">🌗 Dark Mode</button>
+            <div style="width: 1px; height: 20px; background: var(--border-dark); margin: 0 5px;"></div>
+            <button class="tool-btn" onclick="window.print()">🖨️ Print</button>
+        </div>
+
+        <div class="address-bar">
+            <span>Address:</span>
+            <input type="text" class="address-input" id="addr-bar" value="C:\DOCS\ALGORITHMS\INDEX.HTM" readonly>
+        </div>
+
+        <div class="content-frame">
+            <div class="sidebar">
+                <div class="nav-folder" onclick="navTo('complexity')">Complexity</div>
+                <div class="nav-item" onclick="navTo('big-o')">Big O Notation</div>
+                
+                <div style="height:10px"></div>
+                
+                <div class="nav-folder">Data Structures</div>
+                <div class="nav-item" onclick="navTo('arrays')">Arrays</div>
+                <div class="nav-item" onclick="navTo('linked-lists')">Linked Lists</div>
+                <div class="nav-item" onclick="navTo('stacks-queues')">Stacks & Queues</div>
+                <div class="nav-item" onclick="navTo('trees')">Trees & Graphs</div>
+                <div class="nav-item" onclick="navTo('hashmaps')">Hash Tables</div>
+
+                <div style="height:10px"></div>
+
+                <div class="nav-folder">Algorithms</div>
+                <div class="nav-item" onclick="navTo('sorting')">Sorting</div>
+                <div class="nav-item" onclick="navTo('searching')">Searching</div>
+                <div class="nav-item" onclick="navTo('recursion')">Recursion</div>
+            </div>
+
+            <div class="main-view" id="main-content">
+                </div>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-panel status-main" id="status-msg">Done</div>
+            <div class="status-panel status-small">My Computer</div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONTENT DATABASE ---
+        const contentDB = {
+            'home': `
+                <h1>Welcome to AlgoHelp 98</h1>
+                <p>Select a topic from the left sidebar to begin exploring the fundamentals of Computer Science.</p>
+                <p>This interactive guide covers:</p>
+                <ul>
+                    <li><strong>Time & Space Complexity</strong> (Big O)</li>
+                    <li><strong>Essential Data Structures</strong> (Lists, Trees, Maps)</li>
+                    <li><strong>Core Algorithms</strong> (Sorting, Searching, Traversal)</li>
+                </ul>
+                <hr>
+                <h3>Quick Tips:</h3>
+                <p>Use the <strong>Dark Mode</strong> button in the toolbar to switch themes.</p>
+            `,
+            'big-o': `
+                <h1>Big O Notation</h1>
+                <p>Big O notation is a mathematical notation that describes the limiting behavior of a function when the argument tends towards a particular value or infinity.</p>
+                
+                <h2>Common Complexities</h2>
+                <table style="width:100%; border-collapse: collapse; margin-top: 10px; font-size:14px;">
+                    <tr style="background:var(--bg-window); font-weight:bold; border-bottom:1px solid var(--border-dark)">
+                        <td style="padding:5px;">Notation</td>
+                        <td style="padding:5px;">Name</td>
+                        <td style="padding:5px;">Example</td>
+                    </tr>
+                    <tr><td style="padding:5px;">O(1)</td><td>Constant</td><td>Accessing Array Index</td></tr>
+                    <tr><td style="padding:5px;">O(log n)</td><td>Logarithmic</td><td>Binary Search</td></tr>
+                    <tr><td style="padding:5px;">O(n)</td><td>Linear</td><td>Looping through list</td></tr>
+                    <tr><td style="padding:5px;">O(n log n)</td><td>Linearithmic</td><td>Merge Sort</td></tr>
+                    <tr><td style="padding:5px;">O(n²)</td><td>Quadratic</td><td>Nested Loops</td></tr>
+                </table>
+            `,
+            'complexity': `
+                <h1>Complexity Analysis</h1>
+                <p>Before writing code, we must understand the cost of our algorithms.</p>
+                <ul>
+                    <li><strong>Time Complexity:</strong> How the runtime grows as input size grows.</li>
+                    <li><strong>Space Complexity:</strong> How much memory is required as input size grows.</li>
+                </ul>
+                <p>Click "Big O Notation" on the left for details.</p>
+            `,
+            'arrays': `
+                <h1>Arrays</h1>
+                <p>A collection of items stored at contiguous memory locations.</p>
+                <h3>Pros:</h3>
+                <ul>
+                    <li>Fast access by index: <code>O(1)</code></li>
+                    <li>Memory efficient (no pointers)</li>
+                </ul>
+                <h3>Cons:</h3>
+                <ul>
+                    <li>Fixed size (in static arrays)</li>
+                    <li>Slow insertion/deletion in middle: <code>O(n)</code></li>
+                </ul>
+            `,
+            'linked-lists': `
+                <h1>Linked Lists</h1>
+                <p>A linear data structure where elements are not stored at contiguous memory locations. The elements are linked using pointers.</p>
+                
+                <h3>Types:</h3>
+                <ul>
+                    <li><strong>Singly Linked:</strong> Navigation is forward only.</li>
+                    <li><strong>Doubly Linked:</strong> Navigation is forward and backward.</li>
+                </ul>
+
+                <pre>
+struct Node {
+  int data;
+  Node* next;
+};</pre>
+            `,
+            'stacks-queues': `
+                <h1>Stacks & Queues</h1>
+                
+                <h2>Stack (LIFO)</h2>
+                <p><strong>Last In, First Out.</strong> Think of a stack of plates.</p>
+                <ul>
+                    <li><code>push()</code>: Add to top</li>
+                    <li><code>pop()</code>: Remove from top</li>
+                </ul>
+
+                <h2>Queue (FIFO)</h2>
+                <p><strong>First In, First Out.</strong> Think of a line at a store.</p>
+                <ul>
+                    <li><code>enqueue()</code>: Add to back</li>
+                    <li><code>dequeue()</code>: Remove from front</li>
+                </ul>
+            `,
+            'trees': `
+                <h1>Trees & Graphs</h1>
+                <p>Non-linear data structures representing hierarchical data.</p>
+                
+                <h2>Binary Search Tree (BST)</h2>
+                <p>A tree where the left child is smaller than the parent, and the right child is larger.</p>
+                <ul>
+                    <li>Search: <code>O(log n)</code> (balanced)</li>
+                    <li>Insert: <code>O(log n)</code> (balanced)</li>
+                </ul>
+
+                <h2>Graphs</h2>
+                <p>Nodes (vertices) connected by edges. Can be directed or undirected.</p>
+            `,
+            'hashmaps': `
+                <h1>Hash Tables</h1>
+                <p>A structure that maps keys to values for highly efficient lookup.</p>
+                <p>Ideally, a hash function distributes keys evenly across buckets.</p>
+                
+                <h3>Complexity</h3>
+                <ul>
+                    <li>Average Case: <code>O(1)</code> for search/insert/delete.</li>
+                    <li>Worst Case: <code>O(n)</code> (due to collisions).</li>
+                </ul>
+            `,
+            'sorting': `
+                <h1>Sorting Algorithms</h1>
+                
+                <h2>Bubble Sort</h2>
+                <p>Repeatedly swaps adjacent elements if they are in the wrong order. <code>O(n²)</code>.</p>
+                
+                <h2>Merge Sort</h2>
+                <p>Divide and conquer algorithm. Divides array into halves, calls itself, then merges the two sorted halves. <code>O(n log n)</code>.</p>
+                
+                <h2>Quick Sort</h2>
+                <p>Picks a 'pivot' and partitions the array around the pivot. Fast in practice. Average <code>O(n log n)</code>.</p>
+            `,
+            'searching': `
+                <h1>Searching Algorithms</h1>
+                
+                <h2>Linear Search</h2>
+                <p>Check every element. <code>O(n)</code>.</p>
+                
+                <h2>Binary Search</h2>
+                <p>Repeatedly divides the search interval in half. <strong>Requires a sorted array.</strong></p>
+                <code>mid = (low + high) / 2</code>
+                <p>Complexity: <code>O(log n)</code>.</p>
+            `,
+            'recursion': `
+                <h1>Recursion</h1>
+                <p>The process in which a function calls itself directly or indirectly.</p>
+                
+                <h3>Key Components:</h3>
+                <ol>
+                    <li><strong>Base Case:</strong> The condition to stop recursion.</li>
+                    <li><strong>Recursive Step:</strong> The logic where the function calls itself with a modified parameter.</li>
+                </ol>
+            `
+        };
+
+        // --- APPLICATION LOGIC ---
+
+        function navTo(pageId) {
+            const mainView = document.getElementById('main-content');
+            const addrBar = document.getElementById('addr-bar');
+            const statusMsg = document.getElementById('status-msg');
+
+            // 1. Update Content
+            if (contentDB[pageId]) {
+                mainView.innerHTML = contentDB[pageId];
+            } else {
+                mainView.innerHTML = "<h1>404 Not Found</h1><p>The requested file does not exist.</p>";
+            }
+
+            // 2. Update Address Bar simulation
+            const path = `C:\\DOCS\\ALGORITHMS\\${pageId.toUpperCase().replace('-', '_')}.HTM`;
+            addrBar.value = path;
+
+            // 3. Status Bar Simulation
+            statusMsg.textContent = "Loading...";
+            setTimeout(() => {
+                statusMsg.textContent = "Done";
+            }, 300);
+
+            // 4. Scroll to top
+            mainView.scrollTop = 0;
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            
+            if (currentTheme === 'dark') {
+                body.removeAttribute('data-theme');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+            }
+        }
+
+        // Initialize
+        navTo('home');
+
+    </script>
+</body>
+</html>
