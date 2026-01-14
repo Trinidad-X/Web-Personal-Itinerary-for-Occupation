@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study In USA - The CC Pathway</title>
+<style>
+    /* --- WIN98 SYSTEM THEME --- */
+    :root {
+        --bg-desktop: #008080;
+        --bg-window: #C0C0C0;
+        --bg-content: #FFFFFF;
+        --text-main: #000000;
+        --text-dim: #555555;
+        --border-light: #FFFFFF;
+        --border-med: #DFDFDF;
+        --border-dark: #808080;
+        --border-black: #000000;
+        --title-grad-1: #000080;
+        --title-grad-2: #1084D0;
+        --title-text: #FFFFFF;
+        --accent-blue: #0000FF;
+        --accent-green: #008000;
+        
+        --bevel-outset: inset -1px -1px var(--border-black), inset 1px 1px var(--border-light), inset -2px -2px var(--border-dark), inset 2px 2px var(--border-med);
+        --bevel-inset: inset -1px -1px var(--border-light), inset 1px 1px var(--border-black), inset -2px -2px var(--border-med), inset 2px 2px var(--border-dark);
+    }
+
+    [data-theme="dark"] {
+        --bg-desktop: #000000;
+        --bg-window: #202020;
+        --bg-content: #111111;
+        --text-main: #00FF00;
+        --text-dim: #008800;
+        --border-light: #00FF00;
+        --border-med: #008800;
+        --border-dark: #004400;
+        --border-black: #00FF00;
+        --title-grad-1: #004400;
+        --title-grad-2: #000000;
+        --title-text: #00FF00;
+        --accent-blue: #00FFFF;
+        --accent-green: #00FF00;
+        
+        --bevel-outset: 1px solid var(--border-med);
+        --bevel-inset: 1px solid var(--border-med);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+        background-color: var(--bg-desktop);
+        font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+        margin: 0; height: 100vh;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--text-main);
+        overflow: hidden;
+    }
+
+    /* --- WINDOW STRUCTURE --- */
+    .window {
+        width: 1000px; max-width: 98vw; height: 95vh;
+        background-color: var(--bg-window);
+        box-shadow: 4px 4px 10px rgba(0,0,0,0.5), var(--bevel-outset);
+        display: flex; flex-direction: column; padding: 3px;
+    }
+
+    .title-bar {
+        background: linear-gradient(90deg, var(--title-grad-1), var(--title-grad-2));
+        padding: 4px 6px; display: flex; justify-content: space-between; align-items: center;
+        color: var(--title-text); font-weight: bold; font-size: 13px; flex-shrink: 0;
+    }
+
+    .main-view {
+        display: flex; flex-grow: 1; gap: 5px; margin: 5px; overflow: hidden;
+    }
+
+    /* --- LEFT: METRO MAP --- */
+    .map-panel {
+        flex: 2;
+        background: var(--bg-content);
+        box-shadow: var(--bevel-inset);
+        position: relative;
+        overflow: hidden;
+        /* Grid Pattern */
+        background-image: linear-gradient(var(--border-med) 1px, transparent 1px),
+                          linear-gradient(90deg, var(--border-med) 1px, transparent 1px);
+        background-size: 40px 40px;
+        display: flex; flex-direction: column; justify-content: center; align-items: center;
+    }
+    
+    [data-theme="dark"] .map-panel {
+        background-image: linear-gradient(#222 1px, transparent 1px),
+                          linear-gradient(90deg, #222 1px, transparent 1px);
+    }
+
+    .svg-layer {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none;
+    }
+
+    .station-node {
+        width: 140px;
+        position: absolute;
+        background: var(--bg-window);
+        border: 2px solid var(--border-dark);
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        z-index: 2;
+        text-align: center;
+        padding: 8px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: transform 0.2s;
+        font-weight: bold;
+    }
+    .station-node:hover { transform: scale(1.05); border-color: var(--accent-blue); }
+    .station-node.active { background: var(--title-grad-1); color: white; border-color: white; }
+
+    /* Icons inside nodes */
+    .node-icon { font-size: 20px; display: block; margin-bottom: 5px; }
+
+    /* --- RIGHT: INFO TERMINAL --- */
+    .info-panel {
+        flex: 1.2;
+        min-width: 320px;
+        background: var(--bg-window);
+        display: flex; flex-direction: column;
+    }
+
+    .info-screen {
+        flex-grow: 1;
+        background: var(--bg-content);
+        box-shadow: var(--bevel-inset);
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    /* --- CONTENT STYLING --- */
+    h1 { font-family: 'Times New Roman', serif; border-bottom: 2px solid var(--text-main); margin-top: 0; font-size: 22px; }
+    h3 { color: var(--title-grad-1); margin-bottom: 5px; font-size: 14px; }
+    [data-theme="dark"] h3 { color: var(--text-main); }
+    
+    .cost-chart {
+        margin: 15px 0; border: 1px solid var(--border-med); padding: 10px; background: rgba(0,0,0,0.05);
+    }
+    .bar-group { margin-bottom: 8px; font-size: 11px; }
+    .bar { height: 18px; background: var(--accent-blue); display: flex; align-items: center; color: white; padding-left: 5px; margin-top: 2px; }
+    .bar-expensive { background: #800000; }
+    .bar-cheap { background: #008000; }
+
+    ul { padding-left: 20px; margin-bottom: 15px; font-size: 13px; }
+    li { margin-bottom: 5px; }
+
+    .req-box {
+        border: 1px dashed var(--border-dark); padding: 8px; background: #fffde7; margin-bottom: 10px; color: black;
+    }
+    
+    .nav-buttons {
+        padding: 8px; display: flex; gap: 5px; border-top: 1px solid var(--border-light);
+    }
+    .win-btn {
+        background: var(--bg-window); border: none; box-shadow: var(--bevel-outset); 
+        padding: 4px 8px; font-size: 12px; cursor: pointer; color: var(--text-main);
+    }
+    .win-btn:active { box-shadow: var(--bevel-inset); padding-top: 5px; padding-bottom: 3px; }
+
+    /* --- CONNECTOR LINES --- */
+    line { stroke: var(--text-dim); stroke-width: 4; stroke-dasharray: 8; }
+    .path-active { stroke: var(--accent-blue); stroke-dasharray: 0; }
+</style>
+</head>
+<body>
+
+<div class="window">
+    <div class="title-bar">
+        <span>🎓 USA Education Pathway: The 2+2 Model</span>
+        <button class="win-btn" style="width:20px; height:20px;" onclick="toggleTheme()">🌗</button>
+    </div>
+
+    <div class="main-view">
+        <div class="map-panel" id="map-container">
+            <svg class="svg-layer" id="svg-lines"></svg>
+
+            <div class="station-node" id="n-basics" style="top: 10%; left: 10%;" onclick="loadContent('basics')">
+                <span class="node-icon">🏫</span>
+                Step 1:<br>Community College
+            </div>
+
+            <div class="station-node" id="n-admit" style="top: 35%; left: 25%;" onclick="loadContent('admit')">
+                <span class="node-icon">📋</span>
+                Step 2:<br>Admissions & Visa
+            </div>
+
+            <div class="station-node" id="n-cost" style="top: 60%; left: 40%;" onclick="loadContent('cost')">
+                <span class="node-icon">💰</span>
+                The Savings<br>(Comparison)
+            </div>
+
+            <div class="station-node" id="n-transfer" style="top: 35%; left: 55%;" onclick="loadContent('transfer')">
+                <span class="node-icon">🔀</span>
+                Step 3:<br>The Transfer (2+2)
+            </div>
+
+            <div class="station-node" id="n-uni" style="top: 10%; left: 70%;" onclick="loadContent('uni')">
+                <span class="node-icon">🎓</span>
+                Step 4:<br>University Degree
+            </div>
+
+        </div>
+
+        <div class="info-panel">
+            <div class="info-screen" id="content-display">
+                </div>
+            <div class="nav-buttons">
+                <button class="win-btn" onclick="nextStep()">Next Step ➡️</button>
+                <div style="flex-grow:1"></div>
+                <button class="win-btn">Print Summary</button>
+            </div>
+        </div>
+    </div>
+    
+    <div style="padding: 3px; font-size: 11px; border-top: 1px solid var(--border-dark);">
+        Status: Connected to Education Database...
+    </div>
+</div>
+
+<script>
+    const database = {
+        'basics': {
+            title: "What is Community College?",
+            content: `
+                <p>In the US, you don't have to start at a big university. Community Colleges (CC) are public institutions offering the first 2 years of a bachelor's degree.</p>
+                <h3>Why choose this path?</h3>
+                <ul>
+                    <li><strong>Smaller Classes:</strong> 20-30 students vs. 300+ in university lecture halls.</li>
+                    <li><strong>Professor Focus:</strong> Teachers are hired to teach, not do research.</li>
+                    <li><strong>Fresh Start:</strong> High school grades matter less. It's a second chance to build a high GPA.</li>
+                </ul>
+                <div class="req-box">
+                    <strong>Goal:</strong> Earn an Associate Degree (60 credits) then transfer.
+                </div>
+            `
+        },
+        'admit': {
+            title: "Admissions & English Requirements",
+            content: `
+                <p>Admission to CC is much easier than 4-year universities. Most operate on "Open Enrollment".</p>
+                
+                <h3>Standard Requirements</h3>
+                <ul>
+                    <li>High School Diploma (or equivalent).</li>
+                    <li>Proof of Funds (Bank statement showing ~$20k-$25k for 1 year).</li>
+                    <li>Passport copy.</li>
+                    <li><strong>NO SAT/ACT required</strong> (usually).</li>
+                </ul>
+
+                <h3>English Proficiency (Lower than Uni)</h3>
+                <table style="width:100%; border-collapse:collapse; border:1px solid #888; font-size:12px;">
+                    <tr style="background:#ddd; color:black;"><th>Test</th><th>CC Req</th><th>Uni Req</th></tr>
+                    <tr><td>TOEFL iBT</td><td>~61</td><td>~80-100</td></tr>
+                    <tr><td>IELTS</td><td>~5.5</td><td>~6.5-7.0</td></tr>
+                    <tr><td>Duolingo</td><td>~90</td><td>~105+</td></tr>
+                </table>
+            `
+        },
+        'cost': {
+            title: "Cost Comparison: The '2+2' Save",
+            content: `
+                <p>The biggest advantage is financial. You take the exact same "General Education" classes (Math, History, English) for a fraction of the price.</p>
+                
+                <div class="cost-chart">
+                    <div class="bar-group">
+                        <span>University (Per Year)</span>
+                        <div class="bar bar-expensive" style="width: 90%;">$40,000 - $60,000</div>
+                    </div>
+                    <div class="bar-group">
+                        <span>Community College (Per Year)</span>
+                        <div class="bar bar-cheap" style="width: 30%;">$6,000 - $10,000</div>
+                    </div>
+                </div>
+
+                <h3>Total Savings (2 Years)</h3>
+                <p>By spending years 1 & 2 at a CC, you can save <strong>$60,000 to $100,000</strong> on your total education bill.</p>
+            `
+        },
+        'transfer': {
+            title: "How Transferring Works",
+            content: `
+                <p>This is the "Bridge". After 2 years (60 credits), you transfer to a university as a <strong>Junior (Year 3)</strong>.</p>
+                
+                <h3>Articulation Agreements</h3>
+                <p>Contracts between CCs and Universities that ensure your credits transfer 1:1.</p>
+                
+                <h3>TAG (Transfer Admission Guarantee)</h3>
+                <p>Some states (like California) offer <strong>guaranteed admission</strong> to top universities (like UC Irvine, UC Santa Barbara) if you maintain a specific GPA at the CC.</p>
+
+                <div class="req-box">
+                    <strong>Tip:</strong> Always check if your CC has a "pathway" to your dream university.
+                </div>
+            `
+        },
+        'uni': {
+            title: "Graduation & The Degree",
+            content: `
+                <p>You spend Year 3 and Year 4 at the University completing your major-specific classes.</p>
+                
+                <h3>The Final Diploma</h3>
+                <p>When you graduate, your diploma says <strong>"[University Name]"</strong>. It does <strong>NOT</strong> say "Community College".</p>
+                
+                <p>Employers do not distinguish between students who started at the university and those who transferred in. You get the same prestige for half the cost.</p>
+            `
+        }
+    };
+
+    let currentStepIndex = 0;
+    const steps = ['basics', 'admit', 'cost', 'transfer', 'uni'];
+
+    function loadContent(key) {
+        // Highlight active node
+        document.querySelectorAll('.station-node').forEach(n => n.classList.remove('active'));
+        document.getElementById('n-' + key).classList.add('active');
+
+        // Load Content
+        const data = database[key];
+        const screen = document.getElementById('content-display');
+        screen.innerHTML = `
+            <h1>${data.title}</h1>
+            ${data.content}
+        `;
+        
+        // Update index for "Next" button logic
+        currentStepIndex = steps.indexOf(key);
+        
+        drawLines(); // Redraw lines to highlight active path
+    }
+
+    function nextStep() {
+        currentStepIndex++;
+        if (currentStepIndex >= steps.length) currentStepIndex = 0;
+        loadContent(steps[currentStepIndex]);
+    }
+
+    // --- DRAWING THE MAP LINES ---
+    function drawLines() {
+        const svg = document.getElementById('svg-lines');
+        svg.innerHTML = ''; // Clear
+        
+        const nodes = steps.map(id => document.getElementById('n-' + id));
+        const mapRect = document.getElementById('map-container').getBoundingClientRect();
+
+        for (let i = 0; i < nodes.length - 1; i++) {
+            const start = nodes[i].getBoundingClientRect();
+            const end = nodes[i+1].getBoundingClientRect();
+
+            const x1 = (start.left + start.width/2) - mapRect.left;
+            const y1 = (start.top + start.height/2) - mapRect.top;
+            const x2 = (end.left + end.width/2) - mapRect.left;
+            const y2 = (end.top + end.height/2) - mapRect.top;
+
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', x1);
+            line.setAttribute('y1', y1);
+            line.setAttribute('x2', x2);
+            line.setAttribute('y2', y2);
+            
+            // Highlight path if passed
+            if (i < currentStepIndex) {
+                line.setAttribute('class', 'path-active');
+            }
+
+            svg.appendChild(line);
+        }
+    }
+
+    function toggleTheme() {
+        const body = document.body;
+        if (body.dataset.theme === "dark") {
+            delete body.dataset.theme;
+        } else {
+            body.dataset.theme = "dark";
+        }
+    }
+
+    // Init
+    window.addEventListener('load', () => {
+        loadContent('basics');
+        setTimeout(drawLines, 100); // Ensure layout is settled
+    });
+    
+    // Redraw on resize
+    window.addEventListener('resize', drawLines);
+
+</script>
+</body>
+</html>
