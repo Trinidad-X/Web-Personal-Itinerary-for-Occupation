@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career_Explorer.exe</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+
+<div class="window">
+    
+    <div class="title-bar">
+        <div class="title-text">
+            <span>💻</span> US_Tech_Career_Navigator
+        </div>
+        <div class="title-controls">
+            <button class="win-btn">_</button>
+            <button class="win-btn">□</button>
+            <button class="win-btn">X</button>
+        </div>
+    </div>
+
+    <div class="menu-bar">
+        <div class="menu-item">File</div>
+        <div class="menu-item">Edit</div>
+        <div class="menu-item">View</div>
+        <div class="menu-item">Go</div>
+        <div class="menu-item">Favorites</div>
+        <div class="menu-item">Help</div>
+    </div>
+    
+    <div class="separator"></div>
+
+    <div class="toolbar">
+        <button class="tool-btn">⬅ Back</button>
+        <button class="tool-btn">➡ Forward</button>
+        <button class="tool-btn">⬆ Up</button>
+        <div style="width: 1px; height: 20px; background: var(--border-dark); margin: 0 5px; box-shadow: 1px 0 0 white;"></div>
+        <button class="tool-btn">✂ Cut</button>
+        <button class="tool-btn">📄 Copy</button>
+        <button class="tool-btn">📋 Paste</button>
+        <div style="flex-grow:1"></div>
+        <button class="tool-btn" id="themeToggle" style="font-weight:bold;">🌗 Theme</button>
+    </div>
+
+    <div class="address-bar">
+        <span class="address-label">Address</span>
+        <div class="address-input">
+            <span class="icon-mini">📂</span> C:\Career_Development\US_Market\Index
+        </div>
+    </div>
+
+    <div class="window-content" id="iconGrid">
+        
+        <a href="programming_labor_market.html" class="icon-item">
+            <div class="emoji-icon">📈</div>
+            <span class="icon-label">Programming Labor Market</span>
+        </a>
+
+        <a href="professional_sectors.html" class="icon-item">
+            <div class="emoji-icon">🏭</div>
+            <span class="icon-label">Professional Sectors</span>
+        </a>
+
+        <a href="professional_profile.html" class="icon-item">
+            <div class="emoji-icon">👤</div>
+            <span class="icon-label">Professional Profiles</span>
+        </a>
+
+        <a href="personal_learning_env.html" class="icon-item">
+            <div class="emoji-icon">🖥️</div>
+            <span class="icon-label">Personal Learning Env</span>
+        </a>
+
+        <a href="programming_languages.html" class="icon-item">
+            <div class="emoji-icon">⌨️</div>
+            <span class="icon-label">Programming Languages</span>
+        </a>
+
+        <a href="frameworks_libraries.html" class="icon-item">
+            <div class="emoji-icon">🏗️</div>
+            <span class="icon-label">Frameworks & Libraries</span>
+        </a>
+
+        <a href="databases_storage.html" class="icon-item">
+            <div class="emoji-icon">🗄️</div>
+            <span class="icon-label">Databases & Data Storage</span>
+        </a>
+
+        <a href="software_dev_tools.html" class="icon-item">
+            <div class="emoji-icon">🛠️</div>
+            <span class="icon-label">Software Development Tools</span>
+        </a>
+
+        <a href="version_control.html" class="icon-item">
+            <div class="emoji-icon">🌳</div>
+            <span class="icon-label">Version Control & Collab</span>
+        </a>
+
+        <a href="operating_systems.html" class="icon-item">
+            <div class="emoji-icon">💻</div>
+            <span class="icon-label">Operating Systems</span>
+        </a>
+
+        <a href="math_programming.html" class="icon-item">
+            <div class="emoji-icon">🔢</div>
+            <span class="icon-label">Math for Programming</span>
+        </a>
+
+        <a href="computer_science_fund.html" class="icon-item">
+            <div class="emoji-icon">💾</div>
+            <span class="icon-label">Computer Science Fund.</span>
+        </a>
+
+        <a href="algorithms_data_struct.html" class="icon-item">
+            <div class="emoji-icon">🧩</div>
+            <span class="icon-label">Algorithms & Data Struct.</span>
+        </a>
+
+        <a href="networking_basics.html" class="icon-item">
+            <div class="emoji-icon">🌐</div>
+            <span class="icon-label">Networking Basics</span>
+        </a>
+
+        <a href="cybersecurity_fundamentals.html" class="icon-item">
+            <div class="emoji-icon">🔒</div>
+            <span class="icon-label">Cybersecurity Fundamentals</span>
+        </a>
+
+        <a href="cloud_devops.html" class="icon-item">
+            <div class="emoji-icon">☁️</div>
+            <span class="icon-label">Cloud Computing & DevOps</span>
+        </a>
+
+        <a href="testing_qa.html" class="icon-item">
+            <div class="emoji-icon">🐞</div>
+            <span class="icon-label">Testing & QA</span>
+        </a>
+
+        <a href="best_practices.html" class="icon-item">
+            <div class="emoji-icon">✅</div>
+            <span class="icon-label">Best Practices & Clean Code</span>
+        </a>
+
+        <a href="system_design.html" class="icon-item">
+            <div class="emoji-icon">📐</div>
+            <span class="icon-label">System Design Basics</span>
+        </a>
+
+        <a href="online_learning.html" class="icon-item">
+            <div class="emoji-icon">📚</div>
+            <span class="icon-label">Online Learning Resources</span>
+        </a>
+
+        <a href="certifications.html" class="icon-item">
+            <div class="emoji-icon">📜</div>
+            <span class="icon-label">Certifications</span>
+        </a>
+
+        <a href="community_college.html" class="icon-item">
+            <div class="emoji-icon">🏫</div>
+            <span class="icon-label">Community College Pathways</span>
+        </a>
+
+        <a href="financial_aid.html" class="icon-item">
+            <div class="emoji-icon">💸</div>
+            <span class="icon-label">Scholarships & Financial Aid</span>
+        </a>
+
+        <a href="english_skills.html" class="icon-item">
+            <div class="emoji-icon">🗣️</div>
+            <span class="icon-label">English & Academic Skills</span>
+        </a>
+
+        <a href="university_transfer.html" class="icon-item">
+            <div class="emoji-icon">🎓</div>
+            <span class="icon-label">Transfer to University</span>
+        </a>
+
+        <a href="internships.html" class="icon-item">
+            <div class="emoji-icon">💼</div>
+            <span class="icon-label">Internships & Experience</span>
+        </a>
+
+        <a href="portfolio_github.html" class="icon-item">
+            <div class="emoji-icon">📁</div>
+            <span class="icon-label">Portfolio & GitHub</span>
+        </a>
+
+        <a href="resume_interview.html" class="icon-item">
+            <div class="emoji-icon">📄</div>
+            <span class="icon-label">Resume & Interview Prep</span>
+        </a>
+
+        <a href="soft_skills.html" class="icon-item">
+            <div class="emoji-icon">🤝</div>
+            <span class="icon-label">Soft Skills & Communication</span>
+        </a>
+
+        <a href="remote_work.html" class="icon-item">
+            <div class="emoji-icon">🏠</div>
+            <span class="icon-label">Remote Work & Freelancing</span>
+        </a>
+
+        <a href="immigration_visas.html" class="icon-item">
+            <div class="emoji-icon">🛂</div>
+            <span class="icon-label">Immigration & Visas</span>
+        </a>
+
+        <a href="ethics_accessibility.html" class="icon-item">
+            <div class="emoji-icon">⚖️</div>
+            <span class="icon-label">Ethics & Accessibility</span>
+        </a>
+
+        <a href="learning_roadmap.html" class="icon-item">
+            <div class="emoji-icon">🗺️</div>
+            <span class="icon-label">Recommended Roadmap</span>
+        </a>
+
+    </div>
+
+    <div class="status-bar">
+        <div class="status-panel" style="flex-grow: 1;">33 Objects</div>
+        <div class="status-panel" style="width: 150px;">0 bytes</div>
+        <div class="status-panel" style="width: 150px;">Local Intranet</div>
+    </div>
+</div>
+
+<script>
+    // --- THEME LOGIC ---
+    const themeBtn = document.getElementById('themeToggle');
+    const html = document.documentElement;
+
+    themeBtn.addEventListener('click', () => {
+        const current = html.getAttribute('data-theme');
+        if (current === 'dark') {
+            html.removeAttribute('data-theme');
+        } else {
+            html.setAttribute('data-theme', 'dark');
+        }
+    });
+</script>
+
+</body>
+</html>
