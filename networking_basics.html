@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Networking Curriculum – Win98 Edition</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* === WIN98 STYLE === */
+:root{
+--bg-desktop:#008080;--bg-window:#C0C0C0;--bg-content:#fff;
+--text-main:#000;--border-light:#fff;--border-dark:#808080;
+--border-med:#DFDFDF;--border-black:#000;
+--title-grad-1:#000080;--title-grad-2:#1084D0;
+--bevel-outset:inset -1px -1px var(--border-black),
+inset 1px 1px var(--border-light),
+inset -2px -2px var(--border-dark),
+inset 2px 2px var(--border-med);
+--bevel-inset:inset -1px -1px var(--border-light),
+inset 1px 1px var(--border-black),
+inset -2px -2px var(--border-med),
+inset 2px 2px var(--border-dark);
+}
+
+*{box-sizing:border-box}
+body{
+margin:0;height:100vh;background:var(--bg-desktop);
+display:flex;align-items:center;justify-content:center;
+font-family:Segoe UI,Tahoma,sans-serif;
+}
+
+.window{
+width:930px;height:92vh;
+background:var(--bg-window);
+box-shadow:var(--bevel-outset);
+display:flex;flex-direction:column;padding:3px;
+}
+
+.title-bar{
+background:linear-gradient(90deg,var(--title-grad-1),var(--title-grad-2));
+color:#fff;font-weight:bold;font-size:13px;
+padding:4px 6px;display:flex;justify-content:space-between;
+}
+
+.menu-bar,.toolbar,.address-bar{
+padding:5px;border-bottom:1px solid var(--border-dark);
+}
+
+.toolbar button{
+background:var(--bg-window);
+box-shadow:var(--bevel-outset);
+border:0;padding:4px 10px;cursor:pointer;
+}
+
+.content-frame{flex:1;display:flex;gap:5px;padding:5px}
+
+.sidebar{
+width:230px;background:#fff;
+box-shadow:var(--bevel-inset);
+padding:8px;overflow:auto;
+}
+
+.main-view{
+flex:1;background:#fff;
+box-shadow:var(--bevel-inset);
+padding:20px;overflow:auto;
+}
+
+h1{font-family:"Times New Roman";border-bottom:2px solid #000}
+h2{color:#000080;border-bottom:1px solid #ccc}
+.nav-folder{font-weight:bold;margin-top:10px;cursor:pointer}
+.nav-item{margin-left:16px;cursor:pointer;padding:2px}
+.nav-item:hover{background:#000080;color:#fff}
+
+.visual-box{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
+.node{
+width:80px;height:40px;
+background:#C0C0C0;
+box-shadow:var(--bevel-outset);
+display:flex;align-items:center;justify-content:center;
+font-size:12px;font-weight:bold;
+}
+
+.layer{width:100%;padding:6px;margin:4px 0;
+background:#C0C0C0;box-shadow:var(--bevel-outset)}
+
+.packet{
+padding:6px 10px;
+background:#ffffcc;
+border:1px solid #000;
+font-size:12px;
+}
+
+button.demo{margin-top:6px}
+code,pre{background:#eee;padding:4px}
+</style>
+</head>
+
+<body>
+<div class="window">
+
+<div class="title-bar">
+Networking Curriculum – Windows 98 Edition
+<div>🗕 🗖 ✖</div>
+</div>
+
+<div class="menu-bar">File | Network | View | Help</div>
+
+<div class="toolbar">
+<button onclick="navTo('home')">🏠 Home</button>
+<button onclick="navTo('resources')">📚 Resources</button>
+</div>
+
+<div class="address-bar">
+Address:
+<input style="width:80%" value="C:\NETWORKING\CURRICULUM\HOME.HTM" readonly>
+</div>
+
+<div class="content-frame">
+<div class="sidebar">
+
+<div class="nav-folder">📘 Beginner</div>
+<div class="nav-item" onclick="navTo('intro')">What is Networking?</div>
+<div class="nav-item" onclick="navTo('lanwan')">LAN vs WAN</div>
+<div class="nav-item" onclick="navTo('osi')">OSI Model</div>
+
+<div class="nav-folder">📗 Intermediate</div>
+<div class="nav-item" onclick="navTo('ip')">IP Addressing</div>
+<div class="nav-item" onclick="navTo('tcpudp')">TCP vs UDP</div>
+<div class="nav-item" onclick="navTo('clientserver')">Client / Server</div>
+
+<div class="nav-folder">📕 Advanced</div>
+<div class="nav-item" onclick="navTo('routing')">Routing</div>
+<div class="nav-item" onclick="navTo('dns')">DNS & HTTP</div>
+<div class="nav-item" onclick="navTo('firewall')">Firewalls & NAT</div>
+
+</div>
+
+<div class="main-view" id="main"></div>
+</div>
+</div>
+
+<script>
+let packetVisible=false;
+
+const pages={
+home:`
+<h1>Networking Learning Path</h1>
+<p>This curriculum teaches <b>computer networking from fundamentals to real-world systems</b>.</p>
+<ul>
+<li>Understand how computers communicate</li>
+<li>Learn protocols visually</li>
+<li>Simulate real packet flow</li>
+</ul>
+<p><b>Path:</b> Beginner → Intermediate → Advanced</p>
+`,
+
+intro:`
+<h1>What is Networking?</h1>
+<p>Networking is the practice of connecting computers to share data.</p>
+<div class="visual-box">
+<div class="node">PC</div>
+<div class="node">Switch</div>
+<div class="node">Server</div>
+</div>
+<p>Networks enable email, websites, streaming, and games.</p>
+`,
+
+lanwan:`
+<h1>LAN vs WAN</h1>
+<h2>LAN (Local Area Network)</h2>
+<p>Small area (home, office).</p>
+<h2>WAN (Wide Area Network)</h2>
+<p>Large scale (Internet).</p>
+`,
+
+osi:`
+<h1>OSI Model</h1>
+<p>7 layers describing how data moves.</p>
+<div class="layer">7 – Application</div>
+<div class="layer">6 – Presentation</div>
+<div class="layer">5 – Session</div>
+<div class="layer">4 – Transport</div>
+<div class="layer">3 – Network</div>
+<div class="layer">2 – Data Link</div>
+<div class="layer">1 – Physical</div>
+<p>Each layer has a specific role.</p>
+`,
+
+ip:`
+<h1>IP Addressing</h1>
+<p>Identifies devices on a network.</p>
+<pre>
+IPv4: 192.168.1.1
+IPv6: 2001:db8::1
+</pre>
+<p>Routers use IP addresses to deliver packets.</p>
+`,
+
+tcpudp:`
+<h1>TCP vs UDP</h1>
+<h2>TCP</h2>
+<ul>
+<li>Reliable</li>
+<li>Ordered</li>
+<li>Used by HTTP, HTTPS</li>
+</ul>
+<h2>UDP</h2>
+<ul>
+<li>Fast</li>
+<li>No guarantees</li>
+<li>Used by games, video</li>
+</ul>
+`,
+
+clientserver:`
+<h1>Client / Server</h1>
+<p>Client requests, server responds.</p>
+<div class="visual-box">
+<div class="node">Client</div>
+<div class="packet">Request</div>
+<div class="node">Server</div>
+</div>
+<button class="demo" onclick="togglePacket()">Send Packet</button>
+<div id="packetArea"></div>
+`,
+
+routing:`
+<h1>Routing</h1>
+<p>Routers decide the best path.</p>
+<pre>
+Client → Router → Router → Server
+</pre>
+<p>Uses routing tables and metrics.</p>
+`,
+
+dns:`
+<h1>DNS & HTTP</h1>
+<p>DNS converts names to IPs.</p>
+<pre>
+google.com → 142.250.x.x
+</pre>
+<p>HTTP transfers web pages.</p>
+`,
+
+firewall:`
+<h1>Firewalls & NAT</h1>
+<ul>
+<li>Firewall: Filters traffic</li>
+<li>NAT: Translates private IPs</li>
+</ul>
+<p>Critical for security.</p>
+`,
+
+resources:`
+<h1>Networking Resources</h1>
+<ul>
+<li><a href="https://www.cloudflare.com/learning/" target="_blank">Cloudflare Learning</a></li>
+<li><a href="https://gaia.cs.umass.edu/kurose_ross/" target="_blank">Computer Networking: Kurose & Ross</a></li>
+<li><a href="https://packetlife.net" target="_blank">PacketLife Cheat Sheets</a></li>
+<li><a href="https://www.netacad.com" target="_blank">Cisco NetAcad</a></li>
+</ul>
+`
+};
+
+function navTo(id){
+document.getElementById("main").innerHTML=pages[id];
+}
+
+function togglePacket(){
+const area=document.getElementById("packetArea");
+packetVisible=!packetVisible;
+area.innerHTML=packetVisible?'<div class="packet">HTTP GET /index.html</div>':'';
+}
+
+navTo("home");
+</script>
+</body>
+</html>
