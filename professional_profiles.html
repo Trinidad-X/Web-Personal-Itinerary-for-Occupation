@@ -2,202 +2,431 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Professional Profiles – Programming Careers</title>
-
-<link rel="stylesheet" href="styles/general.css">
-
-<!-- ONLY new styles -->
+<title>Professional Profiles – Enterprise Edition</title>
 <style>
-.tab-content { display: none; }
-.tab-content.active { display: block; }
+    /* --- CORE THEME VARIABLES --- */
+    :root {
+        --bg-desktop: #008080;
+        --bg-window: #c0c0c0;
+        --bg-light: #ffffff;
+        --bg-dark: #000000;
+        --text-main: #000000;
+        --text-inv: #ffffff;
+        --blue-title: #000080;
+        --border-light: #dfdfdf;
+        --border-dark: #808080;
+        
+        /* Win98 Bevels */
+        --bevel-out: inset 1px 1px #fff, inset -1px -1px #000, inset 2px 2px #dfdfdf, inset -2px -2px #808080;
+        --bevel-in: inset 1px 1px #000, inset -1px -1px #fff, inset 2px 2px #808080, inset -2px -2px #dfdfdf;
+    }
 
-.profile-box {
-    box-shadow: var(--bevel-inset);
-    padding: 14px;
-    margin-bottom: 20px;
-}
+    [data-theme="dark"] {
+        --bg-desktop: #1a1a1a;
+        --bg-window: #333;
+        --bg-light: #222;
+        --bg-dark: #000;
+        --text-main: #00ff00; /* Hacker Green */
+        --text-inv: #000;
+        --blue-title: #004400;
+        --border-light: #555;
+        --border-dark: #111;
+    }
 
-.profile-meta {
-    font-size: 13px;
-    margin-bottom: 10px;
-    color: var(--text-dim);
-}
+    body {
+        background: var(--bg-desktop);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        display: flex; justify-content: center; align-items: center;
+        height: 100vh; margin: 0; overflow: hidden;
+    }
 
-.skill-meter {
-    height: 16px;
-    background: var(--border-med);
-    box-shadow: var(--bevel-inset);
-    margin-bottom: 10px;
-}
+    /* --- WINDOW STRUCTURE --- */
+    .window {
+        width: 900px; height: 85vh;
+        background: var(--bg-window);
+        box-shadow: 2px 2px 0 #000;
+        display: flex; flex-direction: column;
+        padding: 3px;
+        border: 2px solid var(--bg-window);
+        border-right-color: #404040; border-bottom-color: #404040;
+        border-left-color: #fff; border-top-color: #fff;
+    }
 
-.skill-fill {
-    height: 100%;
-    background: var(--title-grad-1);
-}
+    .title-bar {
+        background: var(--blue-title);
+        color: white; padding: 4px 8px; font-weight: bold;
+        display: flex; justify-content: space-between; align-items: center;
+    }
 
-[data-theme="dark"] .skill-fill {
-    background: var(--text-main);
-}
+    .toolbar {
+        display: flex; gap: 4px; padding: 6px;
+        border-bottom: 1px solid var(--border-dark);
+    }
+
+    .tool-btn {
+        background: var(--bg-window); border: none;
+        box-shadow: var(--bevel-out);
+        padding: 4px 10px; cursor: pointer; font-size: 12px;
+        color: var(--text-main);
+    }
+    .tool-btn:active, .tool-btn.active { box-shadow: var(--bevel-in); font-weight: bold; }
+
+    /* --- MAIN LAYOUT --- */
+    .content-area {
+        flex-grow: 1; display: flex; gap: 10px; padding: 10px;
+        overflow: hidden;
+    }
+
+    /* LEFT: Sidebar / Stats */
+    .sidebar {
+        width: 250px; display: flex; flex-direction: column; gap: 10px;
+    }
+
+    .radar-container {
+        background: var(--bg-light);
+        box-shadow: var(--bevel-in);
+        padding: 10px;
+        display: flex; justify-content: center; align-items: center;
+    }
+
+    .info-panel {
+        background: var(--bg-window);
+        box-shadow: var(--bevel-out);
+        padding: 10px; flex-grow: 1;
+        font-size: 12px; color: var(--text-main);
+    }
+
+    /* RIGHT: Description */
+    .main-view {
+        flex-grow: 1; background: var(--bg-light);
+        box-shadow: var(--bevel-in);
+        padding: 20px; overflow-y: auto;
+        color: var(--text-main);
+        position: relative;
+    }
+
+    h1 { margin-top: 0; border-bottom: 2px solid var(--border-dark); padding-bottom: 5px; }
+    h3 { color: var(--border-dark); margin-bottom: 5px; }
+
+    /* --- TASK LIST INTERACTION --- */
+    .task-list {
+        background: var(--bg-window); border: 1px dotted var(--border-dark);
+        padding: 10px; margin-top: 15px;
+    }
+    .task-item {
+        display: flex; align-items: center; gap: 8px;
+        padding: 4px; border-bottom: 1px solid transparent; cursor: pointer;
+    }
+    .task-item:hover { background: rgba(0,0,0,0.05); }
+    .task-item.completed { text-decoration: line-through; opacity: 0.6; }
+    
+    /* --- TERMINAL LOG --- */
+    .sys-log {
+        height: 80px; background: black; color: #0f0;
+        font-family: 'Courier New', monospace; font-size: 11px;
+        padding: 5px; overflow-y: auto;
+        box-shadow: var(--bevel-in); margin-top: 5px;
+    }
+
+    /* --- UTILS --- */
+    .tag {
+        display: inline-block; background: var(--blue-title); color: white;
+        padding: 2px 6px; font-size: 10px; border-radius: 2px; margin-right: 4px;
+    }
+    img { max-width: 100%; border: 1px solid #000; margin: 10px 0; display:none; /* Simulating loading */ }
+    
+    /* Reveal image helper */
+    .img-placeholder {
+        background: #eee; border: 1px dashed #999; padding: 10px;
+        text-align: center; color: #555; font-style: italic; margin: 10px 0;
+    }
+
 </style>
 </head>
-
 <body>
+
 <div class="window">
-
-    <!-- TITLE BAR -->
     <div class="title-bar">
-        <div class="title-text">👤 Professional Profiles</div>
-        <div class="title-controls">
-            <button class="win-btn" onclick="toggleTheme()">☼</button>
+        <span>ROLE_EXPLORER.EXE</span>
+        <button style="background:transparent; border:1px solid white; color:white; cursor:pointer;" onclick="toggleTheme()">🌗</button>
+    </div>
+
+    <div class="toolbar" id="nav-buttons">
         </div>
+
+    <div class="content-area">
+        <div class="sidebar">
+            <div class="radar-container">
+                <canvas id="radarCanvas" width="220" height="220"></canvas>
+            </div>
+            <div class="info-panel">
+                <strong>Start Salary (Est):</strong> <span id="salary-display">$0k</span><br>
+                <strong>Stress Level:</strong> <span id="stress-display">Low</span><br>
+                <hr>
+                <strong>Core Tech:</strong>
+                <div id="tech-stack" style="margin-top:5px"></div>
+            </div>
+        </div>
+
+        <div class="main-view" id="main-content">
+            </div>
     </div>
 
-    <!-- MENU -->
-    <div class="menu-bar">
-        <div class="menu-item">File</div>
-        <div class="menu-item">View</div>
-        <div class="menu-item">Help</div>
+    <div class="sys-log" id="terminal">
+        > SYSTEM READY...<br>
+        > WAITING FOR INPUT...
     </div>
-
-    <!-- TOOLBAR -->
-    <div class="toolbar">
-        <button class="tool-btn active" onclick="showTab('software', this)">Software Eng</button>
-        <button class="tool-btn" onclick="showTab('web', this)">Frontend / Backend</button>
-        <button class="tool-btn" onclick="showTab('data', this)">Data Roles</button>
-        <button class="tool-btn" onclick="showTab('ml', this)">ML Engineer</button>
-        <button class="tool-btn" onclick="showTab('qa', this)">QA / Test</button>
-        <button class="tool-btn" onclick="showTab('sysadmin', this)">SysAdmin</button>
-        <button class="tool-btn" onclick="showTab('product', this)">Product</button>
-    </div>
-
-    <!-- CONTENT -->
-    <div class="window-content">
-
-        <!-- SOFTWARE ENGINEER -->
-        <section id="software" class="tab-content active">
-            <h1>Software Engineer</h1>
-            <div class="profile-box">
-                <div class="profile-meta">Core engineering role across industries</div>
-                <p>
-                    Software engineers design, build, and maintain applications and systems,
-                    often working across multiple layers of a product.
-                </p>
-                <h3>Focus Areas</h3>
-                <ul>
-                    <li>Problem solving & algorithms</li>
-                    <li>System design</li>
-                    <li>Code quality & maintainability</li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- FRONTEND / BACKEND -->
-        <section id="web" class="tab-content">
-            <h1>Frontend / Backend / Full-Stack</h1>
-            <div class="profile-box">
-                <div class="profile-meta">Web-focused specialization</div>
-                <p>
-                    These roles focus on user interfaces (frontend), server logic (backend),
-                    or both (full-stack).
-                </p>
-                <h3>Specialization Balance</h3>
-                <div class="skill-meter"><div class="skill-fill" style="width:75%"></div></div>
-            </div>
-        </section>
-
-        <!-- DATA -->
-        <section id="data" class="tab-content">
-            <h1>Data Analyst / Data Engineer</h1>
-            <div class="profile-box">
-                <div class="profile-meta">Business intelligence & data infrastructure</div>
-                <p>
-                    Data analysts interpret data for decision-making, while data engineers
-                    build pipelines and storage systems.
-                </p>
-                <h3>Data Infrastructure Emphasis</h3>
-                <div class="skill-meter"><div class="skill-fill" style="width:80%"></div></div>
-            </div>
-        </section>
-
-        <!-- ML -->
-        <section id="ml" class="tab-content">
-            <h1>Machine Learning Engineer</h1>
-            <div class="profile-box">
-                <div class="profile-meta">Production AI & model deployment</div>
-                <p>
-                    ML engineers operationalize machine learning models, bridging research
-                    and scalable software systems.
-                </p>
-                <h3>Math & ML Intensity</h3>
-                <div class="skill-meter"><div class="skill-fill" style="width:85%"></div></div>
-            </div>
-        </section>
-
-        <!-- QA -->
-        <section id="qa" class="tab-content">
-            <h1>QA / Test Automation</h1>
-            <div class="profile-box">
-                <div class="profile-meta">Quality & reliability focused</div>
-                <p>
-                    QA engineers ensure software correctness through testing strategies,
-                    automation frameworks, and validation pipelines.
-                </p>
-                <h3>Automation Focus</h3>
-                <div class="skill-meter"><div class="skill-fill" style="width:70%"></div></div>
-            </div>
-        </section>
-
-        <!-- SYSADMIN -->
-        <section id="sysadmin" class="tab-content">
-            <h1>Systems Administrator</h1>
-            <div class="profile-box">
-                <div class="profile-meta">Infrastructure & operations</div>
-                <p>
-                    SysAdmins manage servers, networks, access control,
-                    and system reliability.
-                </p>
-                <h3>Operational Responsibility</h3>
-                <div class="skill-meter"><div class="skill-fill" style="width:80%"></div></div>
-            </div>
-        </section>
-
-        <!-- PRODUCT -->
-        <section id="product" class="tab-content">
-            <h1>Technical Product Roles</h1>
-            <div class="profile-box">
-                <div class="profile-meta">Engineering + business bridge</div>
-                <p>
-                    Technical product managers and owners align engineering work
-                    with business goals and user needs.
-                </p>
-                <h3>Communication & Strategy</h3>
-                <div class="skill-meter"><div class="skill-fill" style="width:75%"></div></div>
-            </div>
-        </section>
-
-    </div>
-
-    <!-- STATUS BAR -->
-    <div class="status-bar">
-        <div class="status-panel">Profiles Loaded</div>
-        <div class="status-panel">Career Explorer</div>
-    </div>
-
 </div>
 
 <script>
-function showTab(id, btn) {
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+    // --- DATA STORE ---
+    const roles = {
+        software: {
+            title: "Software Engineer",
+            desc: "The architects of the digital world. They focus on algorithms, design patterns, and system scalability.",
+            diagramNote: "",
+            content: "You build the engines that run applications. Unlike web developers who focus on the interface, you focus on the logic, memory management, and data structures underneath.",
+            salary: "$90k - $160k",
+            stress: "Medium-High",
+            stack: ["C++", "Java", "Python", "Go"],
+            stats: [90, 30, 70, 80, 50], // Code, Design, Ops, Math, SoftSkills
+            tasks: [
+                "Optimize O(n^2) algorithm to O(n)",
+                "Review Pull Request #402",
+                "Write Unit Tests for API"
+            ]
+        },
+        frontend: {
+            title: "Frontend Developer",
+            desc: "The bridge between code and user experience.",
+            diagramNote: "",
+            content: "You convert design files (Figma) into interactive code. You care deeply about pixel perfection, accessibility, and state management.",
+            salary: "$80k - $140k",
+            stress: "Medium",
+            stack: ["React", "CSS", "TypeScript", "Next.js"],
+            stats: [70, 90, 30, 40, 60],
+            tasks: [
+                "Fix layout shift on mobile",
+                "Connect form to API endpoint",
+                "Optimize image loading strategy"
+            ]
+        },
+        backend: {
+            title: "Backend Developer",
+            desc: "The logic handling data, authentication, and server rules.",
+            diagramNote: "",
+            content: "You build the 'Brain' of the app. You design APIs, manage databases, and ensure security.",
+            salary: "$95k - $155k",
+            stress: "Medium",
+            stack: ["Node.js", "SQL", "Redis", "Docker"],
+            stats: [90, 10, 80, 60, 40],
+            tasks: [
+                "Design Database Schema",
+                "Implement JWT Authentication",
+                "Cache heavy queries in Redis"
+            ]
+        },
+        ml: {
+            title: "ML Engineer",
+            desc: "Teaching machines to learn from data patterns.",
+            diagramNote: "
 
-    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-}
+[Image of neural network architecture diagram]
+",
+            content: "A hybrid of data science and software engineering. You build pipelines to train models and deploy them to production.",
+            salary: "$130k - $200k",
+            stress: "High",
+            stack: ["PyTorch", "TensorFlow", "Pandas", "AWS SageMaker"],
+            stats: [80, 10, 60, 100, 30],
+            tasks: [
+                "Clean 1TB of training data",
+                "Fine-tune Hyperparameters",
+                "Deploy Model to Inference Endpoint"
+            ]
+        },
+        sysadmin: {
+            title: "DevOps / SysAdmin",
+            desc: "Keeping the lights on and the servers running.",
+            diagramNote: "
 
-function toggleTheme() {
-    document.body.dataset.theme =
-        document.body.dataset.theme === "dark" ? "" : "dark";
-}
+[Image of ci cd pipeline diagram]
+",
+            content: "You automate the infrastructure. If the site goes down at 3 AM, your phone rings.",
+            salary: "$100k - $170k",
+            stress: "High",
+            stack: ["Linux", "Bash", "Kubernetes", "Terraform"],
+            stats: [60, 5, 100, 50, 40],
+            tasks: [
+                "Patch Server Security Vulnerability",
+                "Scale Kubernetes Cluster",
+                "Debug latency in US-East-1"
+            ]
+        }
+    };
+
+    // --- STATE ---
+    let currentRole = 'software';
+    let isDark = false;
+
+    // --- DOM ELEMENTS ---
+    const navContainer = document.getElementById('nav-buttons');
+    const mainContent = document.getElementById('main-content');
+    const canvas = document.getElementById('radarCanvas');
+    const ctx = canvas.getContext('2d');
+    const terminal = document.getElementById('terminal');
+
+    // --- INITIALIZATION ---
+    function init() {
+        // Create Buttons
+        Object.keys(roles).forEach(key => {
+            const btn = document.createElement('button');
+            btn.className = 'tool-btn';
+            btn.innerText = roles[key].title;
+            btn.onclick = () => loadRole(key, btn);
+            navContainer.appendChild(btn);
+            if(key === 'software') btn.classList.add('active');
+        });
+
+        loadRole('software', navContainer.children[0]);
+    }
+
+    // --- CORE LOGIC ---
+    function loadRole(key, btnRef) {
+        currentRole = key;
+        const data = roles[key];
+
+        // 1. Update Buttons
+        document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+        if(btnRef) btnRef.classList.add('active');
+
+        // 2. Log Action
+        log(`LOADING MODULE: ${key.toUpperCase()}...`);
+
+        // 3. Update Text Content with Diagram Placeholder
+        mainContent.innerHTML = `
+            <h1>${data.title}</h1>
+            <p><em>${data.desc}</em></p>
+            
+            <div class="img-placeholder">
+                ${data.diagramNote}<br>
+                <small>(Visualizing Architecture...)</small>
+            </div>
+            
+            <p>${data.content}</p>
+
+            <h3>Simulation: Daily Tasks</h3>
+            <div class="task-list" id="taskList">
+                ${data.tasks.map(t => `<div class="task-item" onclick="toggleTask(this)">⬜ ${t}</div>`).join('')}
+            </div>
+        `;
+
+        // 4. Update Sidebar Info
+        document.getElementById('salary-display').innerText = data.salary;
+        document.getElementById('stress-display').innerText = data.stress;
+        
+        const stackContainer = document.getElementById('tech-stack');
+        stackContainer.innerHTML = '';
+        data.stack.forEach(tech => {
+            const span = document.createElement('span');
+            span.className = 'tag';
+            span.innerText = tech;
+            stackContainer.appendChild(span);
+        });
+
+        // 5. Draw Chart
+        drawRadar(data.stats);
+    }
+
+    function toggleTask(el) {
+        if(el.classList.contains('completed')) {
+            el.classList.remove('completed');
+            el.innerHTML = el.innerHTML.replace('✅', '⬜');
+            log("TASK REOPENED.");
+        } else {
+            el.classList.add('completed');
+            el.innerHTML = el.innerHTML.replace('⬜', '✅');
+            log("TASK COMPLETED. COMMITTING CHANGES...");
+        }
+    }
+
+    function log(msg) {
+        const line = document.createElement('div');
+        line.innerText = `> ${msg}`;
+        terminal.appendChild(line);
+        terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function toggleTheme() {
+        isDark = !isDark;
+        document.body.dataset.theme = isDark ? "dark" : "";
+        drawRadar(roles[currentRole].stats); // Redraw canvas for colors
+        log(`THEME SWITCHED TO ${isDark ? 'DARK' : 'LIGHT'} MODE`);
+    }
+
+    // --- CANVAS DRAWING (RADAR CHART) ---
+    function drawRadar(stats) {
+        // Clear
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = 80;
+        const labels = ["Coding", "Design", "Ops/Infra", "Math", "Soft Skills"];
+        
+        // Colors
+        const gridColor = isDark ? "#444" : "#ccc";
+        const textColor = isDark ? "#0f0" : "#000";
+        const polyColor = isDark ? "rgba(0, 255, 0, 0.4)" : "rgba(0, 0, 128, 0.4)";
+        const strokeColor = isDark ? "#0f0" : "#000080";
+
+        // Draw Grid (5 pentagons)
+        ctx.strokeStyle = gridColor;
+        ctx.lineWidth = 1;
+        for (let r = 20; r <= radius; r += 20) {
+            ctx.beginPath();
+            for (let i = 0; i < 5; i++) {
+                const angle = (Math.PI * 2 / 5) * i - Math.PI / 2;
+                const x = centerX + Math.cos(angle) * r;
+                const y = centerY + Math.sin(angle) * r;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.stroke();
+        }
+
+        // Draw Stats Polygon
+        ctx.fillStyle = polyColor;
+        ctx.strokeStyle = strokeColor;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        stats.forEach((stat, i) => {
+            const value = (stat / 100) * radius;
+            const angle = (Math.PI * 2 / 5) * i - Math.PI / 2;
+            const x = centerX + Math.cos(angle) * value;
+            const y = centerY + Math.sin(angle) * value;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        });
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Draw Labels
+        ctx.fillStyle = textColor;
+        ctx.font = "10px monospace";
+        ctx.textAlign = "center";
+        labels.forEach((label, i) => {
+            const angle = (Math.PI * 2 / 5) * i - Math.PI / 2;
+            const x = centerX + Math.cos(angle) * (radius + 20);
+            const y = centerY + Math.sin(angle) * (radius + 20);
+            ctx.fillText(label, x, y);
+        });
+    }
+
+    // Start
+    init();
+
 </script>
 </body>
 </html>
