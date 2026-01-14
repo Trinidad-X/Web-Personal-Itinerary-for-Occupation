@@ -2,199 +2,387 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Career Preparation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Preparation Hub</title>
 
-<link rel="stylesheet" href="styles/general.css">
-
-<!-- ONLY new styles -->
 <style>
-.tab-content { display: none; }
+/* --- WIN98 CORE STYLES (Restored for standalone functionality) --- */
+:root {
+    --bg-desktop: #008080;
+    --bg-window: #C0C0C0;
+    --bg-content: #FFFFFF;
+    --text-main: #000000;
+    --text-dim: #808080;
+    --border-light: #FFFFFF;
+    --border-med: #DFDFDF;
+    --border-dark: #808080;
+    --border-black: #000000;
+    --title-grad-1: #000080;
+    --title-grad-2: #1084D0;
+    --title-text: #FFFFFF;
+    --link-color: #0000FF;
+    --bevel-outset: inset -1px -1px var(--border-black), inset 1px 1px var(--border-light), inset -2px -2px var(--border-dark), inset 2px 2px var(--border-med);
+    --bevel-inset: inset -1px -1px var(--border-light), inset 1px 1px var(--border-black), inset -2px -2px var(--border-med), inset 2px 2px var(--border-dark);
+}
+
+[data-theme="dark"] {
+    --bg-desktop: #000000;
+    --bg-window: #202020;
+    --bg-content: #000000;
+    --text-main: #00FF00;
+    --text-dim: #008800;
+    --border-light: #00FF00;
+    --border-med: #008800;
+    --border-dark: #004400;
+    --border-black: #00FF00;
+    --title-grad-1: #004400;
+    --title-grad-2: #000000;
+    --title-text: #00FF00;
+    --link-color: #00FF00;
+    --bevel-outset: 1px solid var(--border-med);
+    --bevel-inset: 1px solid var(--border-med);
+}
+
+* { box-sizing: border-box; }
+body {
+    background-color: var(--bg-desktop);
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+    margin: 0; height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-main);
+}
+a { color: var(--link-color); }
+
+/* WINDOW LAYOUT */
+.window {
+    width: 900px; max-width: 98vw; height: 90vh;
+    background-color: var(--bg-window);
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.5), var(--bevel-outset);
+    display: flex; flex-direction: column; padding: 3px;
+}
+
+.title-bar {
+    background: linear-gradient(90deg, var(--title-grad-1), var(--title-grad-2));
+    padding: 3px 4px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;
+}
+.title-text { color: var(--title-text); font-weight: bold; font-size: 13px; }
+.win-btn {
+    width: 16px; height: 14px; background: var(--bg-window);
+    box-shadow: var(--bevel-outset); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 10px;
+}
+.win-btn:active { box-shadow: var(--bevel-inset); padding-top: 1px; }
+
+.menu-bar { display: flex; border-bottom: 1px solid var(--border-dark); margin-bottom: 2px; }
+.menu-item { padding: 2px 8px; font-size: 13px; cursor: pointer; }
+.menu-item:hover { background: var(--title-grad-1); color: white; }
+
+.toolbar {
+    display: flex; gap: 4px; padding: 4px; flex-wrap: wrap;
+    border-bottom: 1px solid var(--border-dark);
+}
+.tool-btn {
+    background: var(--bg-window); box-shadow: var(--bevel-outset);
+    border: 0; padding: 4px 10px; font-size: 12px; cursor: pointer; color: var(--text-main);
+}
+.tool-btn:hover { background: #dfdfdf; }
+[data-theme="dark"] .tool-btn:hover { background: #333; }
+.tool-btn.active { box-shadow: var(--bevel-inset); font-weight: bold; background: #eee; }
+[data-theme="dark"] .tool-btn.active { background: #333; }
+
+/* CONTENT AREA */
+.window-content {
+    flex-grow: 1; background: var(--bg-content);
+    box-shadow: var(--bevel-inset); margin: 4px; padding: 20px; overflow-y: auto;
+}
+
+/* --- TAB CONTENT STYLES --- */
+.tab-content { display: none; animation: fadeIn 0.2s; }
 .tab-content.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+h1 { font-family: 'Times New Roman', serif; border-bottom: 2px solid var(--text-main); padding-bottom: 5px; margin-top: 0; }
+h2 { font-size: 18px; margin-top: 25px; color: var(--title-grad-1); }
+[data-theme="dark"] h2 { color: var(--text-main); }
 
 .prep-box {
-    box-shadow: var(--bevel-inset);
-    padding: 14px;
-    margin-bottom: 20px;
+    box-shadow: var(--bevel-inset); padding: 14px; margin-bottom: 20px;
+    background: #f9f9f9; border: 1px solid var(--border-med);
 }
+[data-theme="dark"] .prep-box { background: #111; border-color: #333; }
 
-.metric {
-    font-size: 13px;
-    margin-bottom: 6px;
-}
+.metric { font-size: 13px; margin-bottom: 6px; font-weight: bold; display: flex; justify-content: space-between; }
+.progress { height: 16px; background: var(--border-med); box-shadow: var(--bevel-inset); margin-bottom: 12px; }
+.progress-fill { height: 100%; background: var(--title-grad-1); transition: width 0.5s; }
+[data-theme="dark"] .progress-fill { background: var(--text-main); }
 
-.progress {
-    height: 16px;
-    background: var(--border-med);
-    box-shadow: var(--bevel-inset);
-    margin-bottom: 12px;
+/* Lists and Resources */
+.resource-list { list-style: none; padding: 0; }
+.resource-list li {
+    padding: 5px 0; border-bottom: 1px dashed var(--border-med); display: flex; align-items: center; gap: 8px;
 }
+.resource-list li::before { content: '🔗'; font-size: 12px; }
 
-.progress-fill {
-    height: 100%;
-    background: var(--title-grad-1);
+.code-snippet {
+    background: #000; color: #0f0; padding: 10px; font-family: monospace;
+    font-size: 12px; overflow-x: auto; border: 1px solid #888; margin: 10px 0;
 }
+[data-theme="dark"] .code-snippet { border: 1px solid #0f0; }
 
-[data-theme="dark"] .progress-fill {
-    background: var(--text-main);
-}
+.status-bar { display: flex; gap: 2px; padding: 3px; font-size: 12px; margin-top: auto; }
+.status-panel { box-shadow: var(--bevel-inset); padding: 3px 6px; }
+
+/* Table Styles */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+.retro-table th { background: var(--border-med); text-align: left; padding: 5px; border: 1px solid var(--border-dark); }
+.retro-table td { padding: 5px; border: 1px solid var(--border-med); }
+[data-theme="dark"] .retro-table th { background: #333; color: white; }
 </style>
 </head>
 
 <body>
 <div class="window">
 
-    <!-- TITLE BAR -->
     <div class="title-bar">
-        <div class="title-text">🚀 Career Preparation</div>
+        <div class="title-text">🚀 Career Preparation Assistant v2.0</div>
         <div class="title-controls">
-            <button class="win-btn" onclick="toggleTheme()">☼</button>
+            <button class="win-btn" aria-label="Minimize">_</button>
+            <button class="win-btn" aria-label="Maximize">□</button>
+            <button class="win-btn" onclick="document.querySelector('.window').remove()">×</button>
         </div>
     </div>
 
-    <!-- MENU -->
     <div class="menu-bar">
-        <div class="menu-item">File</div>
-        <div class="menu-item">View</div>
+        <div class="menu-item" onclick="alert('Printing Resume...')">File</div>
+        <div class="menu-item" onclick="toggleTheme()">View (Toggle Theme)</div>
         <div class="menu-item">Help</div>
     </div>
 
-    <!-- TOOLBAR -->
     <div class="toolbar">
-        <button class="tool-btn active" onclick="showTab('portfolio', this)">Portfolio</button>
-        <button class="tool-btn" onclick="showTab('github', this)">GitHub Projects</button>
-        <button class="tool-btn" onclick="showTab('internships', this)">Internships</button>
-        <button class="tool-btn" onclick="showTab('resume', this)">Resume & Cover Letters</button>
-        <button class="tool-btn" onclick="showTab('interviews', this)">Technical Interviews</button>
-        <button class="tool-btn" onclick="showTab('softskills', this)">Soft Skills</button>
+        <button class="tool-btn active" onclick="showTab('portfolio', this)">📁 Portfolio</button>
+        <button class="tool-btn" onclick="showTab('github', this)">🐙 GitHub</button>
+        <button class="tool-btn" onclick="showTab('internships', this)">💼 Internships</button>
+        <button class="tool-btn" onclick="showTab('resume', this)">📄 Resume</button>
+        <button class="tool-btn" onclick="showTab('interviews', this)">🎤 Interviews</button>
+        <button class="tool-btn" onclick="showTab('softskills', this)">🤝 Soft Skills</button>
     </div>
 
-    <!-- CONTENT -->
     <div class="window-content">
 
-        <!-- PORTFOLIO -->
         <section id="portfolio" class="tab-content active">
             <h1>Building a Portfolio</h1>
             <div class="prep-box">
-                <p>
-                    A strong portfolio demonstrates your skills with concrete projects.
-                </p>
-                <ul>
-                    <li>Highlight key projects</li>
-                    <li>Showcase problem-solving and design</li>
-                    <li>Include live demos and screenshots</li>
-                </ul>
-                <div class="metric">Portfolio Strength</div>
+                <p>Your portfolio is your proof of work. It matters more than your GPA.</p>
+                <div class="metric"><span>Portfolio Strength</span> <span>85%</span></div>
                 <div class="progress"><div class="progress-fill" style="width:85%"></div></div>
+                
+                <h3>Essential Sections:</h3>
+                <ul class="resource-list">
+                    <li><strong>About Me:</strong> Short, personable, tech-focused bio.</li>
+                    <li><strong>Projects:</strong> Cards with screenshots, tech stack icons, live links, and GitHub links.</li>
+                    <li><strong>Contact:</strong> Email (obfuscated) or LinkedIn link.</li>
+                </ul>
             </div>
+
+            <h2>Suggested Projects by Level</h2>
+            <table class="retro-table">
+                <tr><th>Level</th><th>Project Idea</th><th>Key Concepts</th></tr>
+                <tr><td>Beginner</td><td>Personal Weather App</td><td>API Fetching, DOM Manipulation</td></tr>
+                <tr><td>Intermediate</td><td>Task Manager (CRUD)</td><td>Databases, Auth, State Management</td></tr>
+                <tr><td>Advanced</td><td>E-Commerce Store</td><td>Stripe Integration, Cart Logic, Deployment</td></tr>
+            </table>
+
+            <h2>Hosting Resources</h2>
+            <ul>
+                <li><a href="#">Vercel</a> (Best for Next.js/React)</li>
+                <li><a href="#">Netlify</a> (Great for static sites)</li>
+                <li><a href="#">GitHub Pages</a> (Simple, free static hosting)</li>
+            </ul>
         </section>
 
-        <!-- GITHUB -->
         <section id="github" class="tab-content">
-            <h1>GitHub Projects</h1>
+            <h1>GitHub & Open Source</h1>
             <div class="prep-box">
-                <p>
-                    GitHub repositories reflect your coding style, collaboration, and project experience.
-                </p>
-                <ul>
-                    <li>Maintain clean, readable code</li>
-                    <li>Use proper README and documentation</li>
-                    <li>Demonstrate multiple languages and frameworks</li>
-                </ul>
-                <div class="metric">Code Visibility</div>
+                <p>Recruiters look at your "Green Squares" (contributions) and code quality.</p>
+                <div class="metric"><span>Code Visibility</span> <span>80%</span></div>
                 <div class="progress"><div class="progress-fill" style="width:80%"></div></div>
             </div>
+
+            <h2>The Perfect README.md</h2>
+            <p>Every project needs documentation. Copy this template:</p>
+            <div class="code-snippet">
+# Project Title
+
+## 🚀 Introduction
+Brief description of what this app does.
+
+## 🛠️ Tech Stack
+- Frontend: React, Tailwind
+- Backend: Node.js, Express
+
+## 📦 Installation
+1. `git clone https://github.com/user/repo`
+2. `npm install`
+3. `npm start`
+            </div>
+
+            <h2>Clean Code Checklist</h2>
+            <ul style="list-style-type: square;">
+                <li>Do not commit `.env` files (Use `.gitignore`).</li>
+                <li>Write meaningful commit messages (e.g., "Fix login bug" vs "Update").</li>
+                <li>Archive old/abandoned repositories to keep your profile clean.</li>
+            </ul>
         </section>
 
-        <!-- INTERNSHIPS -->
         <section id="internships" class="tab-content">
-            <h1>Internships</h1>
+            <h1>Landing Internships</h1>
             <div class="prep-box">
-                <p>
-                    Internships provide real-world experience and networking opportunities.
-                </p>
-                <ul>
-                    <li>Look for internships aligned with your interests</li>
-                    <li>Participate in co-op programs if available</li>
-                    <li>Gain mentorship and feedback</li>
-                </ul>
-                <div class="metric">Practical Experience</div>
+                <p>Experience trumps theory. Getting the first one is the hardest.</p>
+                <div class="metric"><span>Application Pipeline</span> <span>75%</span></div>
                 <div class="progress"><div class="progress-fill" style="width:75%"></div></div>
             </div>
-        </section>
 
-        <!-- RESUME -->
-        <section id="resume" class="tab-content">
-            <h1>Resume & Cover Letters</h1>
-            <div class="prep-box">
-                <p>
-                    Tailored resumes and cover letters highlight your achievements and fit for a role.
-                </p>
-                <ul>
-                    <li>Focus on measurable impact</li>
-                    <li>Customize per job application</li>
-                    <li>Keep it concise and readable</li>
-                </ul>
-                <div class="metric">Application Readiness</div>
-                <div class="progress"><div class="progress-fill" style="width:80%"></div></div>
+            <h2>Cold Message Template (LinkedIn)</h2>
+            <p>Don't just apply. Network.</p>
+            <div class="code-snippet" style="background:var(--bg-content); color:var(--text-main); border:1px solid var(--border-dark);">
+Hi [Name],
+
+I'm a CS student at [University] passionate about [Topic]. I've been following [Company]'s work on [Specific Project] and built a similar project recently: [Link].
+
+I'd love to ask two quick questions about your engineering culture if you have 5 mins.
+
+Best,
+[Your Name]
             </div>
+
+            <h2>Where to Apply</h2>
+            <ul class="resource-list">
+                <li><strong>LinkedIn Jobs:</strong> Filter by "Internship" & "Past 24 hours".</li>
+                <li><strong>Levels.fyi:</strong> For salary transparency.</li>
+                <li><strong>Y Combinator "Work at a Startup":</strong> Great for startup roles.</li>
+            </ul>
         </section>
 
-        <!-- INTERVIEWS -->
+        <section id="resume" class="tab-content">
+            <h1>Resume Architecture</h1>
+            <div class="prep-box">
+                <p>Use the <strong>XYZ Formula</strong>: "Accomplished [X] as measured by [Y], by doing [Z]".</p>
+                <div class="metric"><span>ATS Readiness</span> <span>90%</span></div>
+                <div class="progress"><div class="progress-fill" style="width:90%"></div></div>
+            </div>
+
+            <h2>The STAR Method</h2>
+            <p>Use this for bullet points and behavioral interviews:</p>
+            <table class="retro-table">
+                <tr>
+                    <td width="20%"><strong>S</strong>ituation</td>
+                    <td>Describe the context/problem.</td>
+                </tr>
+                <tr>
+                    <td><strong>T</strong>ask</td>
+                    <td>What was your responsibility?</td>
+                </tr>
+                <tr>
+                    <td><strong>A</strong>ction</td>
+                    <td>What specific steps did you take? (Use "I", not "We")</td>
+                </tr>
+                <tr>
+                    <td><strong>R</strong>esult</td>
+                    <td>Quantifiable outcome (e.g., "Reduced latency by 20%").</td>
+                </tr>
+            </table>
+
+            <h2>Formatting Rules</h2>
+            <ul>
+                <li>Keep it <strong>One Page</strong> (unless 10+ years experience).</li>
+                <li>Export as <strong>PDF</strong>, never Word.</li>
+                <li>Use a single column layout for better ATS parsing.</li>
+            </ul>
+        </section>
+
         <section id="interviews" class="tab-content">
             <h1>Technical Interviews</h1>
             <div class="prep-box">
-                <p>
-                    Prepare for coding tests, system design, and problem-solving questions.
-                </p>
-                <ul>
-                    <li>Practice coding challenges</li>
-                    <li>Study data structures & algorithms</li>
-                    <li>Mock interviews with peers or mentors</li>
-                </ul>
-                <div class="metric">Interview Readiness</div>
-                <div class="progress"><div class="progress-fill" style="width:85%"></div></div>
+                <p>The grind is real. Split your time between LeetCode and System Design.</p>
+                <div class="metric"><span>DSA Proficiency</span> <span>60%</span></div>
+                <div class="progress"><div class="progress-fill" style="width:60%; background: #FFA500;"></div></div>
             </div>
+
+            <h2>Study Roadmap</h2>
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <div style="flex:1; border:1px solid var(--border-dark); padding:10px;">
+                    <strong>Week 1-2:</strong><br>Arrays, Strings, HashMaps
+                </div>
+                <div style="flex:1; border:1px solid var(--border-dark); padding:10px;">
+                    <strong>Week 3-4:</strong><br>Trees, Graphs, BFS/DFS
+                </div>
+                <div style="flex:1; border:1px solid var(--border-dark); padding:10px;">
+                    <strong>Week 5:</strong><br>DP & System Design
+                </div>
+            </div>
+
+            <h2>Top Resources</h2>
+            <ul class="resource-list">
+                <li><a href="#">NeetCode.io</a> (Roadmap & Video Solutions)</li>
+                <li><a href="#">Blind 75</a> (The essential question list)</li>
+                <li><a href="#">Pramp</a> (Mock interviews with peers)</li>
+            </ul>
         </section>
 
-        <!-- SOFT SKILLS -->
         <section id="softskills" class="tab-content">
-            <h1>Soft Skills & Communication</h1>
+            <h1>Soft Skills & EQ</h1>
             <div class="prep-box">
-                <p>
-                    Strong communication and teamwork skills are critical for career success.
-                </p>
-                <ul>
-                    <li>Presentation and verbal communication</li>
-                    <li>Collaboration and teamwork</li>
-                    <li>Time management and adaptability</li>
-                </ul>
-                <div class="metric">Professional Competency</div>
-                <div class="progress"><div class="progress-fill" style="width:80%"></div></div>
+                <p>Hireable engineers are pleasant to work with. Don't be a "brilliant jerk".</p>
+                <div class="metric"><span>Communication</span> <span>95%</span></div>
+                <div class="progress"><div class="progress-fill" style="width:95%"></div></div>
             </div>
+
+            <h2>During the Interview</h2>
+            <ul>
+                <li><strong>Think Out Loud:</strong> Never code in silence. Explain your thought process.</li>
+                <li><strong>Clarify Requirements:</strong> Ask questions before you start coding.</li>
+                <li><strong>Admit Unknowns:</strong> It's okay to say "I don't know, but here is how I would find out."</li>
+            </ul>
+
+            <h2>Negotiation Tips</h2>
+            <p>Always negotiate. Even a 5% increase compounds over years.</p>
+            <ul>
+                <li>Don't give a number first.</li>
+                <li>Counter-offer based on market data (Levels.fyi).</li>
+                <li>Consider equity and sign-on bonuses if base salary is fixed.</li>
+            </ul>
         </section>
 
     </div>
 
-    <!-- STATUS BAR -->
     <div class="status-bar">
-        <div class="status-panel">Career Prep Loaded</div>
-        <div class="status-panel">Career Explorer</div>
+        <div class="status-panel" style="flex-grow:1">Ready</div>
+        <div class="status-panel">User: Guest</div>
+        <div class="status-panel">INS</div>
     </div>
 
 </div>
 
 <script>
 function showTab(id, btn) {
+    // Hide all tabs
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    // Show selected tab
     document.getElementById(id).classList.add('active');
 
+    // Reset buttons
     document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+    // Activate button
     btn.classList.add('active');
 }
 
 function toggleTheme() {
-    document.body.dataset.theme =
-        document.body.dataset.theme === "dark" ? "" : "dark";
+    const body = document.body;
+    if (body.getAttribute('data-theme') === 'dark') {
+        body.removeAttribute('data-theme');
+    } else {
+        body.setAttribute('data-theme', 'dark');
+    }
 }
 </script>
 </body>
