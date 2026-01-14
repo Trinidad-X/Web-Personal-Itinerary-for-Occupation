@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Recommended Learning Roadmap</title>
+
+<link rel="stylesheet" href="styles/general.css">
+
+<!-- ONLY new styles -->
+<style>
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.roadmap-box {
+    box-shadow: var(--bevel-inset);
+    padding: 14px;
+    margin-bottom: 20px;
+}
+
+.level-bar {
+    height: 16px;
+    background: var(--border-med);
+    box-shadow: var(--bevel-inset);
+    margin-bottom: 12px;
+}
+
+.level-fill {
+    height: 100%;
+    background: var(--title-grad-1);
+}
+
+[data-theme="dark"] .level-fill {
+    background: var(--text-main);
+}
+
+.warning {
+    color: red;
+    font-weight: bold;
+    margin-top: 8px;
+}
+</style>
+</head>
+
+<body>
+<div class="window">
+
+    <!-- TITLE BAR -->
+    <div class="title-bar">
+        <div class="title-text">🗺 Recommended Learning Roadmap</div>
+        <div class="title-controls">
+            <button class="win-btn" onclick="toggleTheme()">☼</button>
+        </div>
+    </div>
+
+    <!-- MENU -->
+    <div class="menu-bar">
+        <div class="menu-item">File</div>
+        <div class="menu-item">View</div>
+        <div class="menu-item">Help</div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+        <button class="tool-btn active" onclick="showTab('paths', this)">Paths</button>
+        <button class="tool-btn" onclick="showTab('roles', this)">Role-based</button>
+        <button class="tool-btn" onclick="showTab('timeline', this)">Timeline</button>
+        <button class="tool-btn" onclick="showTab('mistakes', this)">Common Mistakes</button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="window-content">
+
+        <!-- BEGINNER → INTERMEDIATE → ADVANCED -->
+        <section id="paths" class="tab-content active">
+            <h1>Beginner → Intermediate → Advanced Paths</h1>
+            <div class="roadmap-box">
+                <p>
+                    Structured learning paths help build skills progressively.
+                </p>
+                <ul>
+                    <li><strong>Beginner:</strong> HTML, CSS, Python basics, Git</li>
+                    <li><strong>Intermediate:</strong> Data structures, frameworks, small projects</li>
+                    <li><strong>Advanced:</strong> System design, ML models, large-scale applications</li>
+                </ul>
+                <div class="level-bar"><div class="level-fill" style="width:33%"></div></div>
+            </div>
+        </section>
+
+        <!-- ROLE-BASED ROADMAPS -->
+        <section id="roles" class="tab-content">
+            <h1>Role-Based Roadmaps</h1>
+            <div class="roadmap-box">
+                <p>
+                    Tailor your learning path according to desired roles.
+                </p>
+                <ul>
+                    <li>Frontend: JS frameworks, UI/UX design, performance optimization</li>
+                    <li>Backend: APIs, databases, cloud deployment</li>
+                    <li>Data Science: Python, SQL, ML libraries, data visualization</li>
+                    <li>DevOps / Cloud: CI/CD, Docker, Kubernetes, cloud platforms</li>
+                </ul>
+                <div class="level-bar"><div class="level-fill" style="width:50%"></div></div>
+            </div>
+        </section>
+
+        <!-- TIMELINE EXAMPLES -->
+        <section id="timeline" class="tab-content">
+            <h1>Timeline Examples</h1>
+            <div class="roadmap-box">
+                <p>
+                    Sample timelines illustrate typical progression.
+                </p>
+                <ul>
+                    <li>6–12 months: beginner → intermediate skills</li>
+                    <li>12–24 months: intermediate → advanced, portfolio & GitHub projects</li>
+                    <li>24+ months: specialized roles, internships, career readiness</li>
+                </ul>
+                <div class="level-bar"><div class="level-fill" style="width:75%"></div></div>
+            </div>
+        </section>
+
+        <!-- COMMON MISTAKES -->
+        <section id="mistakes" class="tab-content">
+            <h1>Common Mistakes to Avoid</h1>
+            <div class="roadmap-box">
+                <p>
+                    Avoid pitfalls that slow down learning or career progress.
+                </p>
+                <ul>
+                    <li>Skipping fundamentals and rushing to advanced topics</li>
+                    <li>Focusing only on tutorials without hands-on projects</li>
+                    <li>Neglecting version control or documentation</li>
+                    <li>Not seeking mentorship or feedback</li>
+                </ul>
+                <div class="warning">Warning: These mistakes can lead to long-term skill gaps!</div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+        <div class="status-panel">Roadmap Loaded</div>
+        <div class="status-panel">Career Explorer</div>
+    </div>
+
+</div>
+
+<script>
+function showTab(id, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+
+    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+
+function toggleTheme() {
+    document.body.dataset.theme =
+        document.body.dataset.theme === "dark" ? "" : "dark";
+}
+</script>
+</body>
+</html>
