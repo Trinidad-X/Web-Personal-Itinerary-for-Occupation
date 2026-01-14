@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DDBB Curriculum – Win98 Edition</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* === WIN98 STYLE SYSTEM === */
+:root{
+--bg-desktop:#008080;--bg-window:#C0C0C0;--bg-content:#fff;
+--text-main:#000;
+--border-light:#fff;--border-dark:#808080;
+--border-med:#DFDFDF;--border-black:#000;
+--title-grad-1:#000080;--title-grad-2:#1084D0;
+--bevel-outset:inset -1px -1px var(--border-black),
+inset 1px 1px var(--border-light),
+inset -2px -2px var(--border-dark),
+inset 2px 2px var(--border-med);
+--bevel-inset:inset -1px -1px var(--border-light),
+inset 1px 1px var(--border-black),
+inset -2px -2px var(--border-med),
+inset 2px 2px var(--border-dark);
+}
+
+*{box-sizing:border-box}
+body{
+margin:0;height:100vh;
+background:var(--bg-desktop);
+display:flex;align-items:center;justify-content:center;
+font-family:Segoe UI,Tahoma,sans-serif;
+}
+
+.window{
+width:950px;height:92vh;
+background:var(--bg-window);
+box-shadow:var(--bevel-outset);
+display:flex;flex-direction:column;padding:3px;
+}
+
+.title-bar{
+background:linear-gradient(90deg,var(--title-grad-1),var(--title-grad-2));
+color:#fff;font-size:13px;font-weight:bold;
+padding:4px 6px;
+display:flex;justify-content:space-between;
+}
+
+.menu-bar,.toolbar,.address-bar{
+padding:5px;border-bottom:1px solid var(--border-dark);
+}
+
+.toolbar button{
+background:var(--bg-window);
+box-shadow:var(--bevel-outset);
+border:0;padding:4px 10px;cursor:pointer;
+}
+
+.content-frame{flex:1;display:flex;gap:5px;padding:5px}
+
+.sidebar{
+width:240px;background:#fff;
+box-shadow:var(--bevel-inset);
+padding:8px;overflow:auto;
+}
+
+.main-view{
+flex:1;background:#fff;
+box-shadow:var(--bevel-inset);
+padding:20px;overflow:auto;
+}
+
+h1{font-family:"Times New Roman";border-bottom:2px solid #000}
+h2{color:#000080;border-bottom:1px solid #ccc}
+.nav-folder{font-weight:bold;margin-top:10px}
+.nav-item{margin-left:16px;cursor:pointer;padding:2px}
+.nav-item:hover{background:#000080;color:#fff}
+
+table{
+border-collapse:collapse;width:100%;margin:10px 0;font-size:13px;
+}
+th,td{
+border:1px solid #000;padding:4px;text-align:left;
+}
+th{background:#C0C0C0}
+
+.visual-box{display:flex;gap:10px;margin:10px 0}
+.node{
+padding:6px 10px;
+background:#C0C0C0;
+box-shadow:var(--bevel-outset);
+font-size:12px;
+}
+
+.query-box{
+background:#eee;padding:6px;font-family:monospace;
+border:1px solid #000;margin-top:6px;
+}
+
+button.demo{margin-top:6px}
+</style>
+</head>
+
+<body>
+<div class="window">
+
+<div class="title-bar">
+Databases (DDBB) Curriculum – Windows 98 Edition
+<div>🗕 🗖 ✖</div>
+</div>
+
+<div class="menu-bar">File | Database | SQL | Help</div>
+
+<div class="toolbar">
+<button onclick="navTo('home')">🏠 Home</button>
+<button onclick="navTo('resources')">📚 Resources</button>
+</div>
+
+<div class="address-bar">
+Address:
+<input style="width:80%" value="C:\DATABASES\CURRICULUM\HOME.HTM" readonly>
+</div>
+
+<div class="content-frame">
+<div class="sidebar">
+
+<div class="nav-folder">📘 Beginner</div>
+<div class="nav-item" onclick="navTo('intro')">What is a Database?</div>
+<div class="nav-item" onclick="navTo('tables')">Tables & Rows</div>
+<div class="nav-item" onclick="navTo('pk')">Primary Keys</div>
+
+<div class="nav-folder">📗 Intermediate</div>
+<div class="nav-item" onclick="navTo('select')">SELECT Queries</div>
+<div class="nav-item" onclick="navTo('where')">WHERE & ORDER BY</div>
+<div class="nav-item" onclick="navTo('joins')">JOINs (Visual)</div>
+<div class="nav-item" onclick="navTo('indexes')">Indexes</div>
+
+<div class="nav-folder">📕 Advanced</div>
+<div class="nav-item" onclick="navTo('normalization')">Normalization</div>
+<div class="nav-item" onclick="navTo('transactions')">Transactions (ACID)</div>
+<div class="nav-item" onclick="navTo('nosql')">NoSQL Overview</div>
+
+</div>
+
+<div class="main-view" id="main"></div>
+</div>
+</div>
+
+<script>
+const pages={
+home:`
+<h1>DDBB Learning Path</h1>
+<p>This curriculum teaches <b>database fundamentals and SQL</b> step by step.</p>
+<ul>
+<li>Understand how data is stored</li>
+<li>Write SQL queries</li>
+<li>Design efficient schemas</li>
+</ul>
+<p><b>Path:</b> Beginner → Intermediate → Advanced</p>
+`,
+
+intro:`
+<h1>What is a Database?</h1>
+<p>A database is an organized collection of data.</p>
+<div class="visual-box">
+<div class="node">Application</div>
+<div class="node">DBMS</div>
+<div class="node">Database</div>
+</div>
+<p>Examples: MySQL, PostgreSQL, Oracle.</p>
+`,
+
+tables:`
+<h1>Tables, Rows & Columns</h1>
+<table>
+<tr><th>id</th><th>name</th><th>email</th></tr>
+<tr><td>1</td><td>Ana</td><td>a@mail.com</td></tr>
+<tr><td>2</td><td>Carlos</td><td>c@mail.com</td></tr>
+</table>
+<p>Each row is a record. Columns define attributes.</p>
+`,
+
+pk:`
+<h1>Primary Keys</h1>
+<p>A primary key uniquely identifies each row.</p>
+<ul>
+<li>No duplicates</li>
+<li>Cannot be NULL</li>
+</ul>
+<pre>PRIMARY KEY (id)</pre>
+`,
+
+select:`
+<h1>SELECT Query</h1>
+<div class="query-box">SELECT * FROM users;</div>
+<table>
+<tr><th>id</th><th>name</th></tr>
+<tr><td>1</td><td>Ana</td></tr>
+<tr><td>2</td><td>Carlos</td></tr>
+</table>
+`,
+
+where:`
+<h1>WHERE & ORDER BY</h1>
+<div class="query-box">
+SELECT * FROM users WHERE id = 1 ORDER BY name;
+</div>
+<p>Filters and sorts data.</p>
+`,
+
+joins:`
+<h1>JOINs</h1>
+<p>JOINs combine tables.</p>
+<div class="visual-box">
+<div class="node">Users</div>
+<div class="node">Orders</div>
+</div>
+<pre>
+SELECT *
+FROM users
+JOIN orders ON users.id = orders.user_id;
+</pre>
+`,
+
+indexes:`
+<h1>Indexes</h1>
+<p>Indexes speed up searches.</p>
+<ul>
+<li>Faster SELECT</li>
+<li>Slower INSERT/UPDATE</li>
+</ul>
+`,
+
+normalization:`
+<h1>Normalization</h1>
+<p>Reduces data duplication.</p>
+<ul>
+<li>1NF – Atomic values</li>
+<li>2NF – No partial dependency</li>
+<li>3NF – No transitive dependency</li>
+</ul>
+`,
+
+transactions:`
+<h1>Transactions (ACID)</h1>
+<ul>
+<li><b>A</b>tomicity</li>
+<li><b>C</b>onsistency</li>
+<li><b>I</b>solation</li>
+<li><b>D</b>urability</li>
+</ul>
+<p>Ensures safe data changes.</p>
+`,
+
+nosql:`
+<h1>NoSQL Databases</h1>
+<ul>
+<li>Document (MongoDB)</li>
+<li>Key-Value (Redis)</li>
+<li>Column (Cassandra)</li>
+</ul>
+<p>Used for scalability and flexibility.</p>
+`,
+
+resources:`
+<h1>Database Resources</h1>
+<ul>
+<li><a href="https://sqlbolt.com" target="_blank">SQLBolt</a></li>
+<li><a href="https://use-the-index-luke.com" target="_blank">Use the Index, Luke</a></li>
+<li><a href="https://www.postgresql.org/docs/" target="_blank">PostgreSQL Docs</a></li>
+<li><a href="https://www.mysqltutorial.org" target="_blank">MySQL Tutorial</a></li>
+</ul>
+`
+};
+
+function navTo(id){
+document.getElementById("main").innerHTML=pages[id];
+}
+
+navTo("home");
+</script>
+</body>
+</html>
