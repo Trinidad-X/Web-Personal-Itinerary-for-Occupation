@@ -2,211 +2,580 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Programming Sectors – US Market</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programming Sectors – US Market Analysis</title>
 
-<link rel="stylesheet" href="styles/general.css">
-
-<!-- ONLY new styles -->
 <style>
-.tab-content { display: none; }
-.tab-content.active { display: block; }
+    /* --- CSS VARIABLES (THEMING) --- */
+    :root {
+        /* Light Theme (Classic Windows 95/98 vibe) */
+        --bg-color: #008080;
+        --win-bg: #c0c0c0;
+        --text-main: #000000;
+        --text-dim: #555555;
+        --accent: #000080; /* Classic Navy */
+        --accent-text: #ffffff;
+        
+        /* 3D Bevels */
+        --bevel-light: #ffffff;
+        --bevel-med: #dfdfdf;
+        --bevel-dark: #808080;
+        --bevel-black: #000000;
+        
+        --border-out: 2px solid var(--bevel-light);
+        --box-out: inset 1px 1px var(--bevel-light), inset -1px -1px var(--bevel-dark);
+        --box-in: inset 1px 1px var(--bevel-dark), inset -1px -1px var(--bevel-light);
+        
+        /* Meters */
+        --meter-bg: #e0e0e0;
+        --meter-fill-grad: linear-gradient(90deg, #000080, #1084d0);
+    }
 
-.sector-box {
-    box-shadow: var(--bevel-inset);
-    padding: 14px;
-    margin-bottom: 20px;
-}
+    [data-theme="dark"] {
+        /* Dark Theme (Cyberpunk Terminal vibe) */
+        --bg-color: #1a1a1a;
+        --win-bg: #2d2d2d;
+        --text-main: #e0e0e0;
+        --text-dim: #a0a0a0;
+        --accent: #00ff41; /* Matrix Green */
+        --accent-text: #000000;
 
-.metric {
-    font-size: 13px;
-    margin-bottom: 6px;
-}
+        --bevel-light: #444;
+        --bevel-med: #333;
+        --bevel-dark: #111;
+        --bevel-black: #000;
 
-.meter {
-    height: 16px;
-    background: var(--border-med);
-    box-shadow: var(--bevel-inset);
-    margin-bottom: 10px;
-}
+        --meter-bg: #111;
+        --meter-fill-grad: linear-gradient(90deg, #008f11, #00ff41);
+    }
 
-.meter-fill {
-    height: 100%;
-    background: var(--title-grad-1);
-}
+    /* --- RESET & BASE --- */
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        height: 100vh;
+        background-color: var(--bg-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        transition: background-color 0.3s;
+    }
 
-[data-theme="dark"] .meter-fill {
-    background: var(--text-main);
-}
+    /* --- WINDOW COMPONENT --- */
+    .window {
+        width: 900px;
+        max-width: 95vw;
+        height: 650px;
+        max-height: 95vh;
+        background: var(--win-bg);
+        box-shadow: 2px 2px 10px rgba(0,0,0,0.5), var(--box-out);
+        display: flex;
+        flex-direction: column;
+        border: 2px solid var(--win-bg);
+    }
+
+    /* --- TITLE BAR --- */
+    .title-bar {
+        background: var(--accent);
+        color: var(--accent-text);
+        padding: 4px 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+        font-size: 14px;
+    }
+
+    .title-controls button {
+        width: 20px;
+        height: 20px;
+        background: var(--win-bg);
+        border: none;
+        box-shadow: var(--box-out);
+        font-weight: bold;
+        line-height: 18px;
+        cursor: pointer;
+        margin-left: 4px;
+    }
+    
+    .title-controls button:active { box-shadow: var(--box-in); }
+
+    /* --- MENU BAR --- */
+    .menu-bar {
+        display: flex;
+        padding: 4px 8px;
+        border-bottom: 1px solid var(--bevel-dark);
+        background: var(--win-bg);
+    }
+    .menu-item {
+        margin-right: 15px;
+        cursor: pointer;
+        font-size: 13px;
+        color: var(--text-main);
+    }
+    .menu-item:hover { text-decoration: underline; }
+
+    /* --- TOOLBAR (TABS) --- */
+    .toolbar {
+        padding: 10px;
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        border-bottom: 1px solid var(--bevel-light);
+    }
+
+    .tool-btn {
+        background: var(--win-bg);
+        border: none;
+        box-shadow: var(--box-out);
+        padding: 6px 12px;
+        cursor: pointer;
+        font-size: 13px;
+        color: var(--text-main);
+        transition: transform 0.05s;
+    }
+
+    .tool-btn:hover { background: var(--bevel-med); }
+    
+    .tool-btn:active, .tool-btn.active {
+        box-shadow: var(--box-in);
+        background: var(--bevel-med);
+        font-weight: bold;
+        transform: translateY(1px);
+    }
+
+    /* --- CONTENT AREA --- */
+    .window-content {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        background: var(--win-bg);
+    }
+
+    .tab-content { 
+        display: none; 
+        animation: fadeIn 0.3s ease;
+    }
+    .tab-content.active { display: block; }
+
+    h1 {
+        margin-top: 0;
+        border-bottom: 2px solid var(--bevel-dark);
+        padding-bottom: 10px;
+        font-size: 24px;
+        color: var(--text-main);
+    }
+
+    /* --- SECTOR DASHBOARD GRID --- */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 20px;
+    }
+    
+    @media (max-width: 700px) {
+        .dashboard-grid { grid-template-columns: 1fr; }
+    }
+
+    .sector-card {
+        background: var(--win-bg);
+        box-shadow: var(--box-in);
+        padding: 15px;
+        height: 100%;
+    }
+
+    p { color: var(--text-main); line-height: 1.5; font-size: 14px; }
+    
+    /* --- METRICS & BARS --- */
+    .metric-group { margin-bottom: 15px; }
+    .metric-label { 
+        display: flex; 
+        justify-content: space-between; 
+        font-size: 12px; 
+        color: var(--text-dim); 
+        margin-bottom: 4px;
+    }
+    
+    .meter {
+        height: 20px;
+        background: var(--meter-bg);
+        box-shadow: inset 1px 1px 3px rgba(0,0,0,0.3);
+        border-radius: 2px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .meter-fill {
+        height: 100%;
+        background: var(--meter-fill-grad);
+        width: 0%; /* Start at 0 for animation */
+        transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* --- TECH STACK PILLS --- */
+    .tech-stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 15px;
+    }
+    .tech-pill {
+        font-size: 11px;
+        background: var(--text-main);
+        color: var(--win-bg);
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-weight: bold;
+    }
+
+    /* --- SALARY BOX --- */
+    .salary-box {
+        text-align: center;
+        padding: 20px;
+        border: 2px dashed var(--bevel-dark);
+        margin-top: 20px;
+    }
+    .salary-title { font-size: 12px; color: var(--text-dim); text-transform: uppercase; }
+    .salary-val { font-size: 28px; font-weight: bold; color: var(--accent); margin: 10px 0; }
+    .salary-sub { font-size: 11px; color: var(--text-main); }
+
+    /* --- STATUS BAR --- */
+    .status-bar {
+        height: 25px;
+        background: var(--win-bg);
+        border-top: 1px solid var(--bevel-light);
+        display: flex;
+        align-items: center;
+        padding: 0 5px;
+        gap: 5px;
+        font-family: monospace;
+        font-size: 12px;
+        color: var(--text-main);
+    }
+    .status-panel {
+        box-shadow: var(--box-in);
+        padding: 2px 6px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+    }
+    .panel-main { flex: 1; }
+    .panel-width { width: 100px; justify-content: center; }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 </style>
 </head>
 
 <body>
+
 <div class="window">
 
-    <!-- TITLE BAR -->
     <div class="title-bar">
-        <div class="title-text">🗂 Professional Programming Sectors</div>
+        <div class="title-text">🗂 Market_Analysis_v2.0.exe</div>
         <div class="title-controls">
-            <button class="win-btn" onclick="toggleTheme()">☼</button>
+            <button onclick="minimize()">_</button>
+            <button onclick="toggleTheme()" title="Toggle Theme">☼</button>
+            <button onclick="closeWin()">X</button>
         </div>
     </div>
 
-    <!-- MENU -->
     <div class="menu-bar">
-        <div class="menu-item">File</div>
+        <div class="menu-item" onclick="alert('System Ready')">File</div>
+        <div class="menu-item">Edit</div>
         <div class="menu-item">View</div>
-        <div class="menu-item">Help</div>
+        <div class="menu-item" onclick="alert('Generated by AI Assistant')">Help</div>
     </div>
 
-    <!-- TOOLBAR -->
     <div class="toolbar">
-        <button class="tool-btn active" onclick="showTab('web', this)">Web</button>
+        <button class="tool-btn active" onclick="showTab('web', this)">Web Dev</button>
         <button class="tool-btn" onclick="showTab('mobile', this)">Mobile</button>
         <button class="tool-btn" onclick="showTab('data', this)">Data & AI</button>
-        <button class="tool-btn" onclick="showTab('security', this)">Cybersecurity</button>
-        <button class="tool-btn" onclick="showTab('games', this)">Games</button>
-        <button class="tool-btn" onclick="showTab('embedded', this)">Embedded</button>
-        <button class="tool-btn" onclick="showTab('cloud', this)">Cloud & DevOps</button>
+        <button class="tool-btn" onclick="showTab('security', this)">Cybersec</button>
+        <button class="tool-btn" onclick="showTab('games', this)">Gamedev</button>
+        <button class="tool-btn" onclick="showTab('cloud', this)">Cloud/Ops</button>
     </div>
 
-    <!-- CONTENT -->
     <div class="window-content">
 
-        <!-- WEB -->
         <section id="web" class="tab-content active">
             <h1>Web Development</h1>
-            <div class="sector-box">
-                <p>
-                    Web development is the largest and most accessible programming sector,
-                    covering frontend, backend, and full-stack roles.
-                </p>
-                <div class="metric">Market Size</div>
-                <div class="meter"><div class="meter-fill" style="width:90%"></div></div>
+            <div class="dashboard-grid">
+                <div>
+                    <div class="sector-card">
+                        <p>Web development remains the largest sector. It encompasses visual interfaces (Frontend), server logic (Backend), and holistic system design (Full-Stack). It creates the primary way humans interact with the internet.</p>
+                        
+                        <div class="tech-stack">
+                            <span class="tech-pill">React</span>
+                            <span class="tech-pill">TypeScript</span>
+                            <span class="tech-pill">Node.js</span>
+                            <span class="tech-pill">PostgreSQL</span>
+                            <span class="tech-pill">AWS</span>
+                        </div>
+                    </div>
+                    
+                    <div class="salary-box">
+                        <div class="salary-title">Avg. US Base Salary (Mid-Level)</div>
+                        <div class="salary-val">$118,000</div>
+                        <div class="salary-sub">Range: $70k - $160k+</div>
+                    </div>
+                </div>
 
-                <div class="metric">Entry-Level Accessibility</div>
-                <div class="meter"><div class="meter-fill" style="width:85%"></div></div>
+                <div class="sector-card">
+                    <div class="metric-group">
+                        <div class="metric-label"><span>Job Volume</span><span>Very High</span></div>
+                        <div class="meter"><div class="meter-fill" data-width="95%"></div></div>
+                    </div>
+                    <div class="metric-group">
+                        <div class="metric-label"><span>Barrier to Entry</span><span>Low</span></div>
+                        <div class="meter"><div class="meter-fill" data-width="30%"></div></div>
+                    </div>
+                    <div class="metric-group">
+                        <div class="metric-label"><span>Remote Friendly</span><span>Excellent</span></div>
+                        <div class="meter"><div class="meter-fill" data-width="90%"></div></div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- MOBILE -->
         <section id="mobile" class="tab-content">
             <h1>Mobile Development</h1>
-            <div class="sector-box">
-                <p>
-                    Mobile developers build native and cross-platform applications
-                    for iOS and Android ecosystems.
-                </p>
-                <div class="metric">Demand Stability</div>
-                <div class="meter"><div class="meter-fill" style="width:70%"></div></div>
-
-                <div class="metric">Platform Specialization</div>
-                <div class="meter"><div class="meter-fill" style="width:80%"></div></div>
+            <div class="dashboard-grid">
+                <div>
+                    <div class="sector-card">
+                        <p>Mobile developers build applications for iOS (Apple) and Android devices. The market is split between "Native" development and "Cross-Platform" frameworks that allow one codebase to run everywhere.</p>
+                        <div class="tech-stack">
+                            <span class="tech-pill">Swift (iOS)</span>
+                            <span class="tech-pill">Kotlin (Android)</span>
+                            <span class="tech-pill">React Native</span>
+                            <span class="tech-pill">Flutter</span>
+                        </div>
+                    </div>
+                    <div class="salary-box">
+                        <div class="salary-title">Avg. US Base Salary (Mid-Level)</div>
+                        <div class="salary-val">$124,000</div>
+                        <div class="salary-sub">Range: $85k - $175k</div>
+                    </div>
+                </div>
+                <div class="sector-card">
+                    <div class="metric-group">
+                        <div class="metric-label"><span>Market Stability</span><span>High</span></div>
+                        <div class="meter"><div class="meter-fill" data-width="80%"></div></div>
+                    </div>
+                    <div class="metric-group">
+                        <div class="metric-label"><span>Learning Curve</span><span>Medium</span></div>
+                        <div class="meter"><div class="meter-fill" data-width="60%"></div></div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- DATA -->
         <section id="data" class="tab-content">
             <h1>Data Science & AI</h1>
-            <div class="sector-box">
-                <p>
-                    This sector focuses on machine learning, analytics, and
-                    data-driven systems powering modern businesses.
-                </p>
-                <div class="metric">Salary Potential</div>
-                <div class="meter"><div class="meter-fill" style="width:90%"></div></div>
-
-                <div class="metric">Education Barrier</div>
-                <div class="meter"><div class="meter-fill" style="width:75%"></div></div>
+            <div class="dashboard-grid">
+                <div>
+                    <div class="sector-card">
+                        <p>The fastest-growing sector. Professionals here analyze massive datasets, build predictive models, and create generative AI systems. Requires strong math foundations.</p>
+                        <div class="tech-stack">
+                            <span class="tech-pill">Python</span>
+                            <span class="tech-pill">PyTorch</span>
+                            <span class="tech-pill">TensorFlow</span>
+                            <span class="tech-pill">SQL</span>
+                            <span class="tech-pill">R</span>
+                        </div>
+                    </div>
+                    <div class="salary-box">
+                        <div class="salary-title">Avg. US Base Salary (Mid-Level)</div>
+                        <div class="salary-val">$145,000</div>
+                        <div class="salary-sub">Range: $100k - $220k+</div>
+                    </div>
+                </div>
+                <div class="sector-card">
+                    <div class="metric-group">
+                        <div class="metric-label"><span>Future Growth</span><span>Explosive</span></div>
+                        <div class="meter"><div class="meter-fill" data-width="98%"></div></div>
+                    </div>
+                    <div class="metric-group">
+                        <div class="metric-label"><span>Math Heavy</span><span>Very High</span></div>
+                        <div class="meter"><div class="meter-fill" data-width="90%"></div></div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- SECURITY -->
         <section id="security" class="tab-content">
             <h1>Cybersecurity</h1>
-            <div class="sector-box">
-                <p>
-                    Cybersecurity developers design secure systems, tools,
-                    and defenses against digital threats.
-                </p>
-                <div class="metric">Job Growth</div>
-                <div class="meter"><div class="meter-fill" style="width:85%"></div></div>
-
-                <div class="metric">Regulatory Demand</div>
-                <div class="meter"><div class="meter-fill" style="width:80%"></div></div>
+            <div class="dashboard-grid">
+                <div>
+                    <div class="sector-card">
+                        <p>Focuses on protecting systems, networks, and data from digital attacks. Includes Penetration Testing (Ethical Hacking) and Security Engineering (Building defenses).</p>
+                        <div class="tech-stack">
+                            <span class="tech-pill">Python</span>
+                            <span class="tech-pill">Linux</span>
+                            <span class="tech-pill">C++</span>
+                            <span class="tech-pill">Bash</span>
+                            <span class="tech-pill">Cryptography</span>
+                        </div>
+                    </div>
+                    <div class="salary-box">
+                        <div class="salary-title">Avg. US Base Salary (Mid-Level)</div>
+                        <div class="salary-val">$130,000</div>
+                        <div class="salary-sub">Range: $95k - $185k</div>
+                    </div>
+                </div>
+                <div class="sector-card">
+                    <div class="metric-group">
+                        <div class="metric-label"><span>Stress Level</span><span>High</span></div>
+                        <div class="meter"><div class="meter-fill" data-width="85%"></div></div>
+                    </div>
+                    <div class="metric-group">
+                        <div class="metric-label"><span>Certifications Needed</span><span>High</span></div>
+                        <div class="meter"><div class="meter-fill" data-width="90%"></div></div>
+                    </div>
+                </div>
             </div>
         </section>
-
-        <!-- GAMES -->
+        
         <section id="games" class="tab-content">
             <h1>Game Development</h1>
-            <div class="sector-box">
-                <p>
-                    Game development combines software engineering with
-                    graphics, physics, and real-time systems.
-                </p>
-                <div class="metric">Competition Level</div>
-                <div class="meter"><div class="meter-fill" style="width:90%"></div></div>
-
-                <div class="metric">Salary Ceiling</div>
-                <div class="meter"><div class="meter-fill" style="width:60%"></div></div>
+            <div class="dashboard-grid">
+                <div>
+                    <div class="sector-card">
+                        <p>A highly competitive field combining physics, graphics, and logic. Includes Indie dev (small teams) and AAA dev (huge studios). Known for "crunch culture" but high passion.</p>
+                        <div class="tech-stack">
+                            <span class="tech-pill">C++</span>
+                            <span class="tech-pill">C#</span>
+                            <span class="tech-pill">Unreal Engine</span>
+                            <span class="tech-pill">Unity</span>
+                            <span class="tech-pill">OpenGL</span>
+                        </div>
+                    </div>
+                    <div class="salary-box">
+                        <div class="salary-title">Avg. US Base Salary (Mid-Level)</div>
+                        <div class="salary-val">$95,000</div>
+                        <div class="salary-sub">Range: $60k - $140k</div>
+                    </div>
+                </div>
+                <div class="sector-card">
+                    <div class="metric-group">
+                        <div class="metric-label"><span>Competition</span><span>Extreme</span></div>
+                        <div class="meter"><div class="meter-fill" data-width="95%"></div></div>
+                    </div>
+                    <div class="metric-group">
+                        <div class="metric-label"><span>Creativity</span><span>High</span></div>
+                        <div class="meter"><div class="meter-fill" data-width="90%"></div></div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- EMBEDDED -->
-        <section id="embedded" class="tab-content">
-            <h1>Embedded Systems</h1>
-            <div class="sector-box">
-                <p>
-                    Embedded developers work close to hardware in industries
-                    like automotive, medical, and aerospace.
-                </p>
-                <div class="metric">Skill Specialization</div>
-                <div class="meter"><div class="meter-fill" style="width:85%"></div></div>
-
-                <div class="metric">Remote Availability</div>
-                <div class="meter"><div class="meter-fill" style="width:30%"></div></div>
-            </div>
-        </section>
-
-        <!-- CLOUD -->
         <section id="cloud" class="tab-content">
             <h1>Cloud & DevOps</h1>
-            <div class="sector-box">
-                <p>
-                    Cloud and DevOps engineers build scalable infrastructure,
-                    CI/CD pipelines, and distributed systems.
-                </p>
-                <div class="metric">Enterprise Demand</div>
-                <div class="meter"><div class="meter-fill" style="width:90%"></div></div>
-
-                <div class="metric">Senior-Level Bias</div>
-                <div class="meter"><div class="meter-fill" style="width:80%"></div></div>
+            <div class="dashboard-grid">
+                <div>
+                    <div class="sector-card">
+                        <p>The backbone of modern software. Engineers here manage infrastructure, automate deployment (CI/CD), and ensure servers stay running at scale.</p>
+                        <div class="tech-stack">
+                            <span class="tech-pill">Docker</span>
+                            <span class="tech-pill">Kubernetes</span>
+                            <span class="tech-pill">Terraform</span>
+                            <span class="tech-pill">AWS/Azure</span>
+                            <span class="tech-pill">Go</span>
+                        </div>
+                    </div>
+                    <div class="salary-box">
+                        <div class="salary-title">Avg. US Base Salary (Mid-Level)</div>
+                        <div class="salary-val">$140,000</div>
+                        <div class="salary-sub">Range: $110k - $190k</div>
+                    </div>
+                </div>
+                <div class="sector-card">
+                    <div class="metric-group">
+                        <div class="metric-label"><span>Complexity</span><span>Very High</span></div>
+                        <div class="meter"><div class="meter-fill" data-width="90%"></div></div>
+                    </div>
+                    <div class="metric-group">
+                        <div class="metric-label"><span>On-Call Req.</span><span>Likely</span></div>
+                        <div class="meter"><div class="meter-fill" data-width="80%"></div></div>
+                    </div>
+                </div>
             </div>
         </section>
 
     </div>
 
-    <!-- STATUS BAR -->
     <div class="status-bar">
-        <div class="status-panel">Sectors Loaded</div>
-        <div class="status-panel">Career Explorer</div>
+        <div class="status-panel panel-main">Ready</div>
+        <div class="status-panel panel-width" id="clock">12:00 PM</div>
     </div>
 
 </div>
 
 <script>
-function showTab(id, btn) {
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+    // Initialize
+    document.addEventListener("DOMContentLoaded", () => {
+        animateMeters('web');
+        updateClock();
+        setInterval(updateClock, 1000);
+    });
 
-    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-}
+    function showTab(id, btn) {
+        // Toggle Tabs
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
 
-function toggleTheme() {
-    document.body.dataset.theme =
-        document.body.dataset.theme === "dark" ? "" : "dark";
-}
+        // Toggle Buttons
+        document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Trigger Animations
+        animateMeters(id);
+        
+        // Update Status
+        document.querySelector('.panel-main').innerText = `Viewing: ${btn.innerText}`;
+    }
+
+    function animateMeters(tabId) {
+        // Reset width to 0 for all meters in this tab to trigger transition
+        const meters = document.querySelectorAll(`#${tabId} .meter-fill`);
+        
+        meters.forEach(m => {
+            m.style.width = '0%';
+        });
+
+        // Small timeout to allow the browser to register the 0% before animating up
+        setTimeout(() => {
+            meters.forEach(m => {
+                const target = m.getAttribute('data-width');
+                m.style.width = target;
+            });
+        }, 50);
+    }
+
+    function toggleTheme() {
+        const body = document.body;
+        const current = body.dataset.theme;
+        body.dataset.theme = current === "dark" ? "" : "dark";
+    }
+
+    function closeWin() {
+        document.querySelector('.window').style.display = 'none';
+        setTimeout(() => alert("Refresh the page to reboot system."), 500);
+    }
+    
+    function minimize() {
+        alert("Minimizing not supported in demo mode.");
+    }
+
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }
 </script>
 </body>
 </html>
