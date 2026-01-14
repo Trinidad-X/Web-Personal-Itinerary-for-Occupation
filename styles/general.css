@@ -1,0 +1,191 @@
+/* --- WIN98 GENERAL STYLE SHEET --- */
+
+:root {
+    /* Classic Light Theme */
+    --bg-desktop: #008080;
+    --bg-window: #C0C0C0;
+    --bg-content: #FFFFFF;
+    --text-main: #000000;
+    --text-dim: #808080;
+    
+    --border-light: #FFFFFF;
+    --border-med: #DFDFDF;
+    --border-dark: #808080;
+    --border-black: #000000;
+    
+    --title-grad-1: #000080;
+    --title-grad-2: #1084D0;
+    --title-text: #FFFFFF;
+    
+    --link-color: #0000FF;
+    
+    /* 3D Bevel Logic */
+    --bevel-outset: inset -1px -1px var(--border-black), inset 1px 1px var(--border-light), inset -2px -2px var(--border-dark), inset 2px 2px var(--border-med);
+    --bevel-inset: inset -1px -1px var(--border-light), inset 1px 1px var(--border-black), inset -2px -2px var(--border-med), inset 2px 2px var(--border-dark);
+}
+
+[data-theme="dark"] {
+    /* Hacker / High Contrast Theme */
+    --bg-desktop: #000000;
+    --bg-window: #202020;
+    --bg-content: #000000;
+    --text-main: #00FF00;
+    --text-dim: #008800;
+    
+    --border-light: #00FF00;
+    --border-med: #008800;
+    --border-dark: #004400;
+    --border-black: #00FF00;
+    
+    --title-grad-1: #004400;
+    --title-grad-2: #000000;
+    --title-text: #00FF00;
+    
+    --link-color: #00FF00;
+    
+    --bevel-outset: 1px solid var(--border-med);
+    --bevel-inset: 1px solid var(--border-med);
+}
+
+/* --- GLOBAL RESET --- */
+* { box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-desktop);
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: var(--text-main);
+}
+
+a { color: var(--link-color); }
+a:hover { background: var(--link-color); color: var(--bg-content); text-decoration: none; }
+
+/* --- WINDOW CONTAINER --- */
+.window {
+    width: 900px;
+    max-width: 98vw;
+    height: 95vh;
+    background-color: var(--bg-window);
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.5), var(--bevel-outset);
+    display: flex;
+    flex-direction: column;
+    padding: 3px;
+}
+
+/* --- TITLE BAR --- */
+.title-bar {
+    background: linear-gradient(90deg, var(--title-grad-1), var(--title-grad-2));
+    padding: 3px 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    margin-bottom: 2px;
+}
+
+.title-text {
+    color: var(--title-text);
+    font-weight: bold;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 0.5px;
+}
+
+.title-controls { display: flex; gap: 2px; }
+
+.win-btn {
+    width: 16px; height: 14px;
+    background: var(--bg-window);
+    box-shadow: var(--bevel-outset);
+    border: none;
+    font-size: 9px; line-height: 10px;
+    cursor: pointer; color: var(--text-main);
+    display: flex; align-items: center; justify-content: center;
+}
+.win-btn:active { box-shadow: var(--bevel-inset); padding-top: 2px; }
+
+/* --- TOOLBAR & MENU --- */
+.menu-bar { display: flex; padding: 2px 0; border-bottom: 1px solid var(--border-dark); box-shadow: 0 1px 0 var(--border-light); flex-shrink: 0; }
+.menu-item { padding: 2px 8px; font-size: 13px; cursor: default; }
+.menu-item::first-letter { text-decoration: underline; }
+.menu-item:hover { background: var(--title-grad-1); color: white; }
+
+.toolbar {
+    display: flex; align-items: center; gap: 5px; padding: 6px;
+    border-bottom: 1px solid var(--border-dark);
+    box-shadow: 0 1px 0 var(--border-light);
+    flex-shrink: 0;
+}
+
+.tool-btn {
+    background: var(--bg-window);
+    box-shadow: var(--bevel-outset);
+    border: 0; padding: 4px 10px; font-size: 12px;
+    display: flex; align-items: center; gap: 6px;
+    cursor: pointer; color: var(--text-main); text-decoration: none;
+}
+.tool-btn:hover { background: #e0e0e0; }
+[data-theme="dark"] .tool-btn:hover { background: #333; }
+.tool-btn:active { box-shadow: var(--bevel-inset); transform: translateY(1px); }
+
+/* --- ADDRESS BAR --- */
+.address-bar {
+    display: flex; align-items: center; gap: 8px; padding: 6px;
+    font-size: 12px;
+    border-bottom: 1px solid var(--border-dark);
+    box-shadow: 0 1px 0 var(--border-light);
+    flex-shrink: 0;
+}
+.address-input {
+    flex-grow: 1; background: var(--bg-content);
+    box-shadow: var(--bevel-inset); padding: 3px 6px;
+    font-family: monospace;
+}
+
+/* --- MAIN CONTENT AREA --- */
+.window-content {
+    flex-grow: 1;
+    background-color: var(--bg-content);
+    box-shadow: var(--bevel-inset);
+    margin: 5px;
+    padding: 30px;
+    overflow-y: auto;
+    line-height: 1.6;
+}
+
+/* TYPOGRAPHY FOR CONTENT */
+h1 { 
+    font-family: 'Times New Roman', serif; 
+    font-size: 32px; margin-top: 0; border-bottom: 2px solid var(--text-main); 
+    padding-bottom: 10px;
+}
+h2 { font-size: 20px; color: var(--title-grad-1); margin-top: 25px; border-bottom: 1px solid var(--border-med); }
+[data-theme="dark"] h2 { color: var(--text-main); }
+h3 { font-size: 16px; font-weight: bold; margin-bottom: 5px; margin-top: 20px; }
+p { font-size: 14px; margin-bottom: 15px; }
+ul { margin-bottom: 20px; padding-left: 20px; font-size: 14px; }
+li { margin-bottom: 5px; }
+code { background: #eee; padding: 2px 4px; font-family: monospace; border: 1px solid #ccc; }
+[data-theme="dark"] code { background: #333; border-color: #555; }
+
+/* --- STATUS BAR --- */
+.status-bar {
+    display: flex; gap: 2px; padding: 3px; margin-top: 2px;
+    flex-shrink: 0; font-size: 12px;
+}
+.status-panel {
+    box-shadow: var(--bevel-inset); padding: 3px 6px;
+}
+
+/* --- SCROLLBARS --- */
+::-webkit-scrollbar { width: 16px; background: var(--bg-window); }
+::-webkit-scrollbar-thumb { background: var(--bg-window); box-shadow: var(--bevel-outset); }
+::-webkit-scrollbar-track { background: repeating-linear-gradient(45deg, #ccc 0, #ccc 1px, #fff 0, #fff 2px); }
+[data-theme="dark"] ::-webkit-scrollbar-track { background: #000; }
