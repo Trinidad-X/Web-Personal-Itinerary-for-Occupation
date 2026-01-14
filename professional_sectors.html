@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Programming Sectors – US Market</title>
+
+<link rel="stylesheet" href="styles/general.css">
+
+<!-- ONLY new styles -->
+<style>
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.sector-box {
+    box-shadow: var(--bevel-inset);
+    padding: 14px;
+    margin-bottom: 20px;
+}
+
+.metric {
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.meter {
+    height: 16px;
+    background: var(--border-med);
+    box-shadow: var(--bevel-inset);
+    margin-bottom: 10px;
+}
+
+.meter-fill {
+    height: 100%;
+    background: var(--title-grad-1);
+}
+
+[data-theme="dark"] .meter-fill {
+    background: var(--text-main);
+}
+</style>
+</head>
+
+<body>
+<div class="window">
+
+    <!-- TITLE BAR -->
+    <div class="title-bar">
+        <div class="title-text">🗂 Professional Programming Sectors</div>
+        <div class="title-controls">
+            <button class="win-btn" onclick="toggleTheme()">☼</button>
+        </div>
+    </div>
+
+    <!-- MENU -->
+    <div class="menu-bar">
+        <div class="menu-item">File</div>
+        <div class="menu-item">View</div>
+        <div class="menu-item">Help</div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+        <button class="tool-btn active" onclick="showTab('web', this)">Web</button>
+        <button class="tool-btn" onclick="showTab('mobile', this)">Mobile</button>
+        <button class="tool-btn" onclick="showTab('data', this)">Data & AI</button>
+        <button class="tool-btn" onclick="showTab('security', this)">Cybersecurity</button>
+        <button class="tool-btn" onclick="showTab('games', this)">Games</button>
+        <button class="tool-btn" onclick="showTab('embedded', this)">Embedded</button>
+        <button class="tool-btn" onclick="showTab('cloud', this)">Cloud & DevOps</button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="window-content">
+
+        <!-- WEB -->
+        <section id="web" class="tab-content active">
+            <h1>Web Development</h1>
+            <div class="sector-box">
+                <p>
+                    Web development is the largest and most accessible programming sector,
+                    covering frontend, backend, and full-stack roles.
+                </p>
+                <div class="metric">Market Size</div>
+                <div class="meter"><div class="meter-fill" style="width:90%"></div></div>
+
+                <div class="metric">Entry-Level Accessibility</div>
+                <div class="meter"><div class="meter-fill" style="width:85%"></div></div>
+            </div>
+        </section>
+
+        <!-- MOBILE -->
+        <section id="mobile" class="tab-content">
+            <h1>Mobile Development</h1>
+            <div class="sector-box">
+                <p>
+                    Mobile developers build native and cross-platform applications
+                    for iOS and Android ecosystems.
+                </p>
+                <div class="metric">Demand Stability</div>
+                <div class="meter"><div class="meter-fill" style="width:70%"></div></div>
+
+                <div class="metric">Platform Specialization</div>
+                <div class="meter"><div class="meter-fill" style="width:80%"></div></div>
+            </div>
+        </section>
+
+        <!-- DATA -->
+        <section id="data" class="tab-content">
+            <h1>Data Science & AI</h1>
+            <div class="sector-box">
+                <p>
+                    This sector focuses on machine learning, analytics, and
+                    data-driven systems powering modern businesses.
+                </p>
+                <div class="metric">Salary Potential</div>
+                <div class="meter"><div class="meter-fill" style="width:90%"></div></div>
+
+                <div class="metric">Education Barrier</div>
+                <div class="meter"><div class="meter-fill" style="width:75%"></div></div>
+            </div>
+        </section>
+
+        <!-- SECURITY -->
+        <section id="security" class="tab-content">
+            <h1>Cybersecurity</h1>
+            <div class="sector-box">
+                <p>
+                    Cybersecurity developers design secure systems, tools,
+                    and defenses against digital threats.
+                </p>
+                <div class="metric">Job Growth</div>
+                <div class="meter"><div class="meter-fill" style="width:85%"></div></div>
+
+                <div class="metric">Regulatory Demand</div>
+                <div class="meter"><div class="meter-fill" style="width:80%"></div></div>
+            </div>
+        </section>
+
+        <!-- GAMES -->
+        <section id="games" class="tab-content">
+            <h1>Game Development</h1>
+            <div class="sector-box">
+                <p>
+                    Game development combines software engineering with
+                    graphics, physics, and real-time systems.
+                </p>
+                <div class="metric">Competition Level</div>
+                <div class="meter"><div class="meter-fill" style="width:90%"></div></div>
+
+                <div class="metric">Salary Ceiling</div>
+                <div class="meter"><div class="meter-fill" style="width:60%"></div></div>
+            </div>
+        </section>
+
+        <!-- EMBEDDED -->
+        <section id="embedded" class="tab-content">
+            <h1>Embedded Systems</h1>
+            <div class="sector-box">
+                <p>
+                    Embedded developers work close to hardware in industries
+                    like automotive, medical, and aerospace.
+                </p>
+                <div class="metric">Skill Specialization</div>
+                <div class="meter"><div class="meter-fill" style="width:85%"></div></div>
+
+                <div class="metric">Remote Availability</div>
+                <div class="meter"><div class="meter-fill" style="width:30%"></div></div>
+            </div>
+        </section>
+
+        <!-- CLOUD -->
+        <section id="cloud" class="tab-content">
+            <h1>Cloud & DevOps</h1>
+            <div class="sector-box">
+                <p>
+                    Cloud and DevOps engineers build scalable infrastructure,
+                    CI/CD pipelines, and distributed systems.
+                </p>
+                <div class="metric">Enterprise Demand</div>
+                <div class="meter"><div class="meter-fill" style="width:90%"></div></div>
+
+                <div class="metric">Senior-Level Bias</div>
+                <div class="meter"><div class="meter-fill" style="width:80%"></div></div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+        <div class="status-panel">Sectors Loaded</div>
+        <div class="status-panel">Career Explorer</div>
+    </div>
+
+</div>
+
+<script>
+function showTab(id, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+
+    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+
+function toggleTheme() {
+    document.body.dataset.theme =
+        document.body.dataset.theme === "dark" ? "" : "dark";
+}
+</script>
+</body>
+</html>
