@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CV Booster 98</title>
+<style>
+    /* --- CORE WIN98 THEME --- */
+    :root {
+        --bg-desktop: #008080;
+        --bg-window: #C0C0C0;
+        --bg-content: #FFFFFF;
+        --text-main: #000000;
+        --text-dim: #666666;
+        --border-light: #FFFFFF;
+        --border-med: #DFDFDF;
+        --border-dark: #808080;
+        --border-black: #000000;
+        --title-grad-1: #000080;
+        --title-grad-2: #1084D0;
+        --title-text: #FFFFFF;
+        --accent: #000080;
+        
+        --bevel-outset: inset -1px -1px var(--border-black), inset 1px 1px var(--border-light), inset -2px -2px var(--border-dark), inset 2px 2px var(--border-med);
+        --bevel-inset: inset -1px -1px var(--border-light), inset 1px 1px var(--border-black), inset -2px -2px var(--border-med), inset 2px 2px var(--border-dark);
+    }
+
+    [data-theme="dark"] {
+        --bg-desktop: #000000;
+        --bg-window: #202020;
+        --bg-content: #111111;
+        --text-main: #00FF00;
+        --text-dim: #008800;
+        --border-light: #00FF00;
+        --border-med: #008800;
+        --border-dark: #004400;
+        --border-black: #00FF00;
+        --title-grad-1: #004400;
+        --title-grad-2: #000000;
+        --title-text: #00FF00;
+        --accent: #00FF00;
+        
+        --bevel-outset: 1px solid var(--border-med);
+        --bevel-inset: 1px solid var(--border-med);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+        background-color: var(--bg-desktop);
+        font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+        margin: 0; height: 100vh;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--text-main);
+        overflow: hidden;
+    }
+
+    /* --- LAYOUT --- */
+    .window {
+        width: 1000px; max-width: 98vw; height: 95vh;
+        background-color: var(--bg-window);
+        box-shadow: 4px 4px 10px rgba(0,0,0,0.5), var(--bevel-outset);
+        display: flex; flex-direction: column; padding: 3px;
+    }
+
+    .title-bar {
+        background: linear-gradient(90deg, var(--title-grad-1), var(--title-grad-2));
+        padding: 4px; display: flex; justify-content: space-between; align-items: center;
+        color: var(--title-text); font-weight: bold; font-size: 13px; margin-bottom: 2px;
+    }
+    
+    .main-layout {
+        display: flex; flex-grow: 1; gap: 4px; margin: 4px; overflow: hidden;
+    }
+
+    /* --- LEFT: INTERACTIVE MAP --- */
+    .map-container {
+        flex: 2;
+        background: var(--bg-content);
+        box-shadow: var(--bevel-inset);
+        position: relative;
+        overflow: auto;
+        padding: 20px;
+        /* Dot grid pattern */
+        background-image: radial-gradient(var(--border-dark) 1px, transparent 1px);
+        background-size: 20px 20px;
+    }
+
+    /* --- RIGHT: INFO PANEL --- */
+    .info-panel {
+        flex: 1;
+        min-width: 300px;
+        background: var(--bg-window);
+        display: flex; flex-direction: column; gap: 10px;
+    }
+
+    .info-box {
+        background: var(--bg-content);
+        box-shadow: var(--bevel-inset);
+        padding: 15px;
+        flex-grow: 1;
+        overflow-y: auto;
+    }
+
+    /* --- GRAPHIC ELEMENTS --- */
+    .node {
+        width: 140px;
+        padding: 8px;
+        background: var(--bg-window);
+        box-shadow: var(--bevel-outset);
+        position: absolute;
+        text-align: center;
+        font-size: 12px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 2;
+        transition: transform 0.1s;
+        border: 1px solid transparent;
+    }
+    
+    .node:active { box-shadow: var(--bevel-inset); transform: translateY(1px); }
+    .node:hover { outline: 1px dotted var(--text-main); }
+    
+    .node.selected {
+        background: var(--title-grad-1);
+        color: white;
+        border: 1px solid var(--border-light);
+    }
+
+    /* Node Categories */
+    .cat-cloud { border-bottom: 3px solid #008080; }
+    .cat-code { border-bottom: 3px solid #800000; }
+    .cat-mgmt { border-bottom: 3px solid #808000; }
+    .cat-soft { border-bottom: 3px solid #000080; }
+
+    /* SVG Lines */
+    .connections {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;
+    }
+    line { stroke: var(--border-dark); stroke-width: 2; }
+    [data-theme="dark"] line { stroke: var(--border-med); }
+
+    /* --- INFO PANEL STYLES --- */
+    h2 { margin-top: 0; border-bottom: 1px solid var(--border-dark); padding-bottom: 5px; font-size: 18px; font-family: 'Times New Roman', serif; }
+    .badge {
+        display: inline-block; padding: 2px 6px; font-size: 10px;
+        background: var(--title-grad-1); color: white; margin-bottom: 10px;
+    }
+    
+    .stat-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 12px; }
+    .bar-container { width: 60%; background: var(--border-med); height: 12px; box-shadow: var(--bevel-inset); }
+    .bar-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.5s ease; }
+
+    .desc-text { font-size: 13px; line-height: 1.5; margin-top: 15px; }
+    
+    .perk-list { margin: 10px 0; padding-left: 20px; font-size: 13px; }
+    .perk-list li { margin-bottom: 5px; }
+
+    .empty-state {
+        display: flex; align-items: center; justify-content: center; height: 100%; 
+        color: var(--text-dim); text-align: center; font-style: italic;
+    }
+</style>
+</head>
+<body>
+
+<div class="window">
+    <div class="title-bar">
+        <span>🎓 Career Accomplishment Tree.exe</span>
+        <div style="display:flex; gap:2px;">
+            <button class="win-btn" onclick="toggleTheme()">☼</button>
+            <button class="win-btn">X</button>
+        </div>
+    </div>
+
+    <div style="padding: 5px; border-bottom: 1px solid var(--border-dark);">
+        Click a node to view curriculum value details.
+    </div>
+
+    <div class="main-layout">
+        <div class="map-container" id="map-area">
+            <svg class="connections" id="svg-lines">
+                </svg>
+
+            <div class="node cat-code" id="n-degree" style="top: 50px; left: 420px;" onclick="selectNode('degree')">
+                Computer Science<br>Degree / Bootcamp
+            </div>
+
+            <div class="node cat-cloud" id="n-aws" style="top: 180px; left: 150px;" onclick="selectNode('aws')">
+                AWS Solutions<br>Architect
+            </div>
+            
+            <div class="node cat-code" id="n-github" style="top: 180px; left: 420px;" onclick="selectNode('github')">
+                Active GitHub<br>& Open Source
+            </div>
+
+            <div class="node cat-mgmt" id="n-agile" style="top: 180px; left: 690px;" onclick="selectNode('agile')">
+                Agile / Scrum<br>Master (CSM)
+            </div>
+
+            <div class="node cat-cloud" id="n-docker" style="top: 320px; left: 80px;" onclick="selectNode('docker')">
+                Docker / K8s<br>Certification
+            </div>
+
+            <div class="node cat-cloud" id="n-security" style="top: 320px; left: 220px;" onclick="selectNode('security')">
+                CompTIA Sec+ /<br>CISSP
+            </div>
+
+            <div class="node cat-code" id="n-hack" style="top: 320px; left: 420px;" onclick="selectNode('hack')">
+                Hackathon<br>Winner
+            </div>
+
+            <div class="node cat-soft" id="n-lang" style="top: 320px; left: 690px;" onclick="selectNode('lang')">
+                Languages<br>(C1/C2 Level)
+            </div>
+
+        </div>
+
+        <div class="info-panel">
+            <div class="info-box" id="info-content">
+                <div class="empty-state">
+                    <p>Select an item from the<br>roadmap to view details.</p>
+                </div>
+            </div>
+            
+            <div style="padding: 10px; background: var(--bg-window); border-top: 1px solid var(--border-light);">
+                <small><strong>Legend:</strong></small><br>
+                <span style="color:#008080">■</span> Cloud/Infra &nbsp;
+                <span style="color:#800000">■</span> Code &nbsp;
+                <span style="color:#808000">■</span> Process
+            </div>
+        </div>
+    </div>
+    
+    <div style="display:flex; gap:2px; margin-top:2px; font-size:12px;">
+        <div style="box-shadow:var(--bevel-inset); padding:2px 5px; flex-grow:1;">Ready</div>
+        <div style="box-shadow:var(--bevel-inset); padding:2px 5px; width:100px;">CAPS LOCK</div>
+    </div>
+</div>
+
+<script>
+    // --- DATABASE ---
+    const data = {
+        'degree': {
+            title: "CS Degree / Bootcamp",
+            type: "Foundation",
+            difficulty: 80,
+            impact: 90,
+            desc: "The bedrock of your resume. Whether a traditional 4-year degree or an intensive bootcamp, this proves you have the fundamental discipline to learn complex topics.",
+            perks: [
+                "Passes automated HR filters.",
+                "Demonstrates long-term commitment.",
+                "Provides foundational algorithms knowledge."
+            ]
+        },
+        'aws': {
+            title: "AWS Solutions Architect (SAA-C03)",
+            type: "Certification",
+            difficulty: 65,
+            impact: 95,
+            desc: "The 'Gold Standard' of cloud certifications. It proves you understand how to design distributed systems, not just code them. Highly sought after by almost every enterprise.",
+            perks: [
+                "Instant keyword match for recruiters.",
+                "Shows architectural 'big picture' thinking.",
+                "Validates knowledge of scalability & cost-optimization."
+            ]
+        },
+        'github': {
+            title: "Open Source / Active GitHub",
+            type: "Portfolio",
+            difficulty: 50,
+            impact: 85,
+            desc: "A green contribution graph shows passion. It proves you code outside of work/school hours and understand Git workflows in a real-world context.",
+            perks: [
+                "Visual proof of coding ability.",
+                "Demonstrates collaboration (Pull Requests).",
+                "Startups value this over degrees often."
+            ]
+        },
+        'agile': {
+            title: "Certified Scrum Master (CSM)",
+            type: "Management",
+            difficulty: 30,
+            impact: 60,
+            desc: "Shows you understand the modern software development lifecycle (SDLC). Essential for Senior roles or Team Leads.",
+            perks: [
+                "Shows you can work in a team.",
+                "Good for transitioning to management.",
+                "Validates understanding of Sprints/Jira."
+            ]
+        },
+        'docker': {
+            title: "CKA / Docker Associate",
+            type: "DevOps",
+            difficulty: 85,
+            impact: 80,
+            desc: "Containerization is standard now. Kubernetes (CKA) is extremely hard but commands a high salary premium.",
+            perks: [
+                "High salary correlation.",
+                "Separates you from 'just frontend' devs.",
+                "Critical for Backend/Fullstack roles."
+            ]
+        },
+        'security': {
+            title: "CompTIA Sec+ / CISSP",
+            type: "Security",
+            difficulty: 70,
+            impact: 75,
+            desc: "Even for non-security roles, this shows you write 'secure code' and understand compliance. CISSP is for experts; Sec+ is a great entry point.",
+            perks: [
+                "Required for government/defense jobs.",
+                "Differentiator for standard developers.",
+                "Shows responsibility."
+            ]
+        },
+        'hack': {
+            title: "Hackathon Winner",
+            type: "Achievement",
+            difficulty: 90,
+            impact: 70,
+            desc: "Winning a hackathon proves you can build a working MVP under extreme time pressure and pitch it effectively.",
+            perks: [
+                "Great conversation starter in interviews.",
+                "Proves rapid prototyping skills.",
+                "Shows ability to work under pressure."
+            ]
+        },
+        'lang': {
+            title: "Foreign Languages",
+            type: "Soft Skill",
+            difficulty: 90,
+            impact: 40,
+            desc: "Being fluent (C1/C2) in a second language (Spanish, Chinese, German) opens up global roles and client-facing opportunities.",
+            perks: [
+                "Crucial for multinational companies.",
+                "Demonstrates cognitive flexibility.",
+                "Unlock relocation opportunities."
+            ]
+        }
+    };
+
+    // --- LOGIC ---
+
+    function selectNode(id) {
+        // Highlight Node
+        document.querySelectorAll('.node').forEach(n => n.classList.remove('selected'));
+        document.getElementById('n-' + id).classList.add('selected');
+
+        // Populate Info Panel
+        const item = data[id];
+        const panel = document.getElementById('info-content');
+        
+        panel.innerHTML = `
+            <h2>${item.title}</h2>
+            <span class="badge">${item.type}</span>
+            
+            <div class="stat-row">
+                <span>CV Impact:</span>
+                <div class="bar-container"><div class="bar-fill" style="width:${item.impact}%"></div></div>
+            </div>
+            <div class="stat-row">
+                <span>Difficulty:</span>
+                <div class="bar-container"><div class="bar-fill" style="width:${item.difficulty}%; background: #800000;"></div></div>
+            </div>
+
+            <p class="desc-text">${item.desc}</p>
+            
+            <strong>Why it looks good:</strong>
+            <ul class="perk-list">
+                ${item.perks.map(p => `<li>${p}</li>`).join('')}
+            </ul>
+        `;
+    }
+
+    function drawLine(startId, endId) {
+        const svg = document.getElementById('svg-lines');
+        const start = document.getElementById(startId);
+        const end = document.getElementById(endId);
+
+        // Get centers
+        const startRect = start.getBoundingClientRect();
+        const endRect = end.getBoundingClientRect();
+        const mapRect = document.getElementById('map-area').getBoundingClientRect();
+
+        const x1 = (startRect.left + startRect.width/2) - mapRect.left;
+        const y1 = (startRect.top + startRect.height/2) - mapRect.top;
+        const x2 = (endRect.left + endRect.width/2) - mapRect.left;
+        const y2 = (endRect.top + endRect.height/2) - mapRect.top;
+
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', x1 + document.getElementById('map-area').scrollLeft);
+        line.setAttribute('y1', y1 + document.getElementById('map-area').scrollTop);
+        line.setAttribute('x2', x2 + document.getElementById('map-area').scrollLeft);
+        line.setAttribute('y2', y2 + document.getElementById('map-area').scrollTop);
+        
+        svg.appendChild(line);
+    }
+
+    // Connect nodes on load
+    window.onload = function() {
+        // Foundation -> Level 2
+        drawLine('n-degree', 'n-aws');
+        drawLine('n-degree', 'n-github');
+        drawLine('n-degree', 'n-agile');
+
+        // Level 2 -> Level 3
+        drawLine('n-aws', 'n-docker');
+        drawLine('n-aws', 'n-security');
+        drawLine('n-github', 'n-hack');
+        drawLine('n-agile', 'n-lang');
+    };
+
+    function toggleTheme() {
+        const body = document.body;
+        if (body.dataset.theme === "dark") {
+            delete body.dataset.theme;
+        } else {
+            body.dataset.theme = "dark";
+        }
+    }
+</script>
+
+</body>
+</html>
