@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Internship Acquisition Protocol</title>
+<style>
+    /* --- TACTICAL UI THEME --- */
+    :root {
+        --bg-dark: #1a1a1a;
+        --bg-panel: #2d2d2d;
+        --bg-light: #3d3d3d;
+        --text-main: #e0e0e0;
+        --accent-green: #4caf50;
+        --accent-blue: #2196f3;
+        --accent-orange: #ff9800;
+        --border: 1px solid #555;
+        --font-mono: 'Consolas', 'Monaco', monospace;
+    }
+
+    * { box-sizing: border-box; }
+    
+    body {
+        background-color: var(--bg-dark);
+        font-family: 'Segoe UI', sans-serif;
+        color: var(--text-main);
+        height: 100vh; margin: 0;
+        display: flex; align-items: center; justify-content: center;
+    }
+
+    /* --- LAYOUT --- */
+    .dashboard {
+        width: 1100px; max-width: 98vw; height: 90vh;
+        background: var(--bg-panel);
+        border: 1px solid #444;
+        box-shadow: 0 0 20px rgba(0,0,0,0.8);
+        display: flex; flex-direction: column;
+    }
+
+    .top-bar {
+        background: #111; padding: 10px 15px; border-bottom: var(--border);
+        display: flex; justify-content: space-between; align-items: center;
+        font-family: var(--font-mono); color: var(--accent-green);
+    }
+
+    .main-area {
+        display: flex; flex: 1; overflow: hidden;
+    }
+
+    /* --- SIDEBAR NAV --- */
+    .sidebar {
+        width: 220px; background: #222; border-right: var(--border);
+        display: flex; flex-direction: column;
+    }
+
+    .nav-btn {
+        padding: 15px; cursor: pointer; border-bottom: 1px solid #333;
+        transition: background 0.2s; display: flex; align-items: center; gap: 10px;
+        color: #aaa;
+    }
+    .nav-btn:hover { background: #333; color: white; }
+    .nav-btn.active {
+        background: #333; color: var(--accent-blue); border-left: 4px solid var(--accent-blue);
+    }
+    
+    /* --- CONTENT PANELS --- */
+    .content-panel {
+        flex: 1; padding: 25px; overflow-y: auto; display: none;
+    }
+    .content-panel.active { display: block; animation: fadeIn 0.3s; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* --- WIDGETS --- */
+    h1 { margin-top: 0; border-bottom: 2px solid var(--accent-blue); padding-bottom: 10px; font-family: var(--font-mono); }
+    h2 { color: var(--accent-blue); margin-top: 25px; font-size: 18px; }
+
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 15px; }
+    
+    .info-card {
+        background: var(--bg-light); border: var(--border); padding: 15px;
+        border-radius: 4px;
+    }
+    .info-card strong { color: white; display: block; margin-bottom: 5px; }
+
+    .checklist { list-style: none; padding: 0; }
+    .checklist li {
+        padding: 8px; border-bottom: 1px solid #444; display: flex; align-items: center; gap: 10px;
+    }
+    .checklist input[type="checkbox"] { accent-color: var(--accent-green); }
+
+    /* --- EMAIL GENERATOR --- */
+    .email-builder {
+        background: #222; padding: 15px; border: 1px dashed #555; margin-top: 15px;
+    }
+    .code-block {
+        background: #000; color: #0f0; padding: 10px; font-family: var(--font-mono);
+        font-size: 12px; white-space: pre-wrap; margin-top: 10px; border-left: 3px solid var(--accent-green);
+    }
+
+    /* --- PIPELINE VISUALIZER --- */
+    .funnel-container { display: flex; gap: 5px; height: 100px; margin: 20px 0; align-items: flex-end; }
+    .funnel-step {
+        flex: 1; background: var(--accent-blue); color: black; font-weight: bold;
+        display: flex; align-items: center; justify-content: center; font-size: 12px;
+        text-align: center; border-top-left-radius: 5px; border-top-right-radius: 5px;
+        transition: height 0.5s; position: relative;
+    }
+    .funnel-step:hover::after {
+        content: attr(data-val); position: absolute; top: -25px; color: white;
+    }
+    
+    /* Gradients for funnel */
+    .f1 { background: #2196f3; height: 100%; opacity: 0.3; }
+    .f2 { background: #2196f3; height: 60%; opacity: 0.5; }
+    .f3 { background: #2196f3; height: 30%; opacity: 0.7; }
+    .f4 { background: #4caf50; height: 10%; opacity: 1.0; }
+
+</style>
+</head>
+<body>
+
+<div class="dashboard">
+    <div class="top-bar">
+        <span>INTERNSHIP_OS v4.0</span>
+        <span id="clock">SYSTEM ONLINE</span>
+    </div>
+
+    <div class="main-area">
+        <div class="sidebar">
+            <div class="nav-btn active" onclick="showTab('assets', this)">📂 Phase 1: Assets</div>
+            <div class="nav-btn" onclick="showTab('network', this)">📡 Phase 2: Networking</div>
+            <div class="nav-btn" onclick="showTab('outreach', this)">✉️ Cold Outreach</div>
+            <div class="nav-btn" onclick="showTab('interview', this)">🎤 Interview Prep</div>
+        </div>
+
+        <div id="assets" class="content-panel active">
+            <h1>Phase 1: Asset Configuration</h1>
+            <p>Before you sell the product (You), you must package it correctly.</p>
+
+            <div class="card-grid">
+                <div class="info-card">
+                    <strong>📄 The Resume (XYZ Formula)</strong>
+                    <p style="font-size:13px; color:#aaa;">"Accomplished [X] as measured by [Y], by doing [Z]"</p>
+                    <ul class="checklist">
+                        <li><label><input type="checkbox"> One page max</label></li>
+                        <li><label><input type="checkbox"> PDF Format</label></li>
+                        <li><label><input type="checkbox"> Hyperlinked GitHub/LinkedIn</label></li>
+                        <li><label><input type="checkbox"> Parsable (No photos/fancy columns)</label></li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <strong>💼 LinkedIn Optimization</strong>
+                    <ul class="checklist">
+                        <li><label><input type="checkbox"> <strong>Headline:</strong> "CS Student @ Uni | Ex-Intern @ Co"</label></li>
+                        <li><label><input type="checkbox"> <strong>About:</strong> Tell your story, not just skills.</label></li>
+                        <li><label><input type="checkbox"> <strong>URL:</strong> Customize (linkedin.com/in/yourname)</label></li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2>Personal Branding ("Build in Public")</h2>
+            <div class="code-block">
+STRATEGY:
+1. Build a project.
+2. Tweet/Post about the *struggle* and the *solution* while building.
+3. Post a demo video (loom/screen recording) when done.
+RESULT: Recruiters see passion + proof of work.
+            </div>
+        </div>
+
+        <div id="network" class="content-panel">
+            <h1>Phase 2: The Network Funnel</h1>
+            <p>Applying online has a < 2% success rate. Referrals have > 40%.</p>
+            
+            <div class="funnel-container">
+                <div class="funnel-step f1" data-val="100 Applications">Online<br>Apps</div>
+                <div class="funnel-step f2" data-val="30 Cold Messages">Cold<br>DMs</div>
+                <div class="funnel-step f3" data-val="5 Coffee Chats">Coffee<br>Chats</div>
+                <div class="funnel-step f4" data-val="1 Offer">Offer</div>
+            </div>
+
+            <div class="card-grid">
+                <div class="info-card">
+                    <strong>The "Weak Ties" Theory</strong>
+                    <p style="font-size:13px;">Your close friends have the same info you do. You need "weak ties" (Alumni, friends of friends) to find new opportunities.</p>
+                </div>
+                <div class="info-card">
+                    <strong>Informational Interviews</strong>
+                    <p style="font-size:13px;">Do NOT ask for a job. Ask for advice. The job offer comes later once they like you.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="outreach" class="content-panel">
+            <h1>Phase 3: Tactical Outreach</h1>
+            <p>How to slide into DMs without being annoying.</p>
+
+            <div class="email-builder">
+                <strong>📨 Cold Message Generator</strong>
+                <p style="font-size:12px; color:#aaa;">Select a scenario to generate a template:</p>
+                
+                <div style="margin:10px 0;">
+                    <button onclick="setTemplate('alum')">🎓 Alumni</button>
+                    <button onclick="setTemplate('project')">🛠️ Project Admirer</button>
+                    <button onclick="setTemplate('recruiter')">👔 Recruiter</button>
+                </div>
+
+                <div id="email-output" class="code-block">Select a button above...</div>
+            </div>
+
+            <h2>Tools of the Trade</h2>
+            <ul>
+                <li><strong>Hunter.io:</strong> Find anyone's corporate email.</li>
+                <li><strong>Mailtrack:</strong> See if they opened your email.</li>
+                <li><strong>LinkedIn Sales Nav:</strong> (Free trial) Advanced filtering.</li>
+            </ul>
+        </div>
+
+        <div id="interview" class="content-panel">
+            <h1>Phase 4: The Showdown</h1>
+            
+            <div class="card-grid">
+                <div class="info-card" style="border-left: 3px solid var(--accent-orange);">
+                    <strong>Behavioral (The STAR Method)</strong>
+                    <p style="font-size:13px;">Prepare 5 stories that can fit any question (Conflict, Leadership, Failure).</p>
+                    <br>
+                    <strong>S</strong>ituation<br>
+                    <strong>T</strong>ask<br>
+                    <strong>A</strong>ction (Focus on "I", not "We")<br>
+                    <strong>R</strong>esult (Metrics!)
+                </div>
+
+                <div class="info-card" style="border-left: 3px solid var(--accent-blue);">
+                    <strong>Technical (The Grind)</strong>
+                    <ul class="checklist">
+                        <li><label><input type="checkbox"> LeetCode Blind 75</label></li>
+                        <li><label><input type="checkbox"> Mock Interviews (Pramp/Peers)</label></li>
+                        <li><label><input type="checkbox"> "Cracking the Coding Interview"</label></li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2>Questions to ask THEM</h2>
+            <p>Always have questions. It shows intelligence.</p>
+            <div class="code-block">
+1. "How does the engineering team balance technical debt vs new features?"
+2. "What does a successful intern look like in 3 months?"
+3. "Can you tell me about a time the team failed and how you handled it?"
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function showTab(id, btn) {
+        // Hide panels
+        document.querySelectorAll('.content-panel').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        
+        // Update nav
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    const templates = {
+        'alum': `Subject: Quick question from a [University] student
+
+Hi [Name],
+
+I'm a CS Junior at [University] and found your profile while looking for alumni working in [Industry]. 
+
+I see you transitioned from [Company A] to [Company B]—I'm trying to make a similar move and would love to ask one specific question about how you positioned your resume.
+
+Do you have 5 minutes for a quick chat next week? No pressure at all.
+
+Best,
+[Your Name]`,
+        
+        'project': `Subject: Loved your article on [Topic]
+
+Hi [Name],
+
+I just read your engineering blog post about how you scaled [Service]. The part about [Specific Detail] was super clever.
+
+I actually built a smaller version of this recently (Link) and struggled with that exact issue.
+
+I noticed [Company] is hiring interns. I'd love to bring this same curiosity to your team. Are you open to a quick chat?
+
+Best,
+[Your Name]`,
+
+        'recruiter': `Subject: Application for [Role ID] - [Your Name]
+
+Hi [Name],
+
+I just applied for the [Role] position. I know you're swamped, but I wanted to personally reach out.
+
+I have experience in [Skill 1] and [Skill 2] from my last internship where I [Result]. I think I'd be a great fit for [Team Name].
+
+Attached is my resume. Thanks for your time!
+
+Best,
+[Your Name]`
+    };
+
+    function setTemplate(type) {
+        document.getElementById('email-output').innerText = templates[type];
+    }
+</script>
+
+</body>
+</html>
