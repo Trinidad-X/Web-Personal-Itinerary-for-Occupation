@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Best Practices - Win98 Manual</title>
+    <style>
+        /* --- WIN98 STYLES (Identical to previous) --- */
+        :root {
+            --bg-desktop: #008080;
+            --bg-window: #C0C0C0;
+            --bg-content: #FFFFFF;
+            --text-main: #000000;
+            --text-dim: #808080;
+            --border-light: #FFFFFF;
+            --border-med: #DFDFDF;
+            --border-dark: #808080;
+            --border-black: #000000;
+            --title-grad-1: #000080;
+            --title-grad-2: #1084D0;
+            --title-text: #FFFFFF;
+            --link-color: #0000FF;
+            --bevel-outset: inset -1px -1px var(--border-black), inset 1px 1px var(--border-light), inset -2px -2px var(--border-dark), inset 2px 2px var(--border-med);
+            --bevel-inset: inset -1px -1px var(--border-light), inset 1px 1px var(--border-black), inset -2px -2px var(--border-med), inset 2px 2px var(--border-dark);
+        }
+
+        [data-theme="dark"] {
+            --bg-desktop: #000000;
+            --bg-window: #202020;
+            --bg-content: #000000;
+            --text-main: #00FF00;
+            --text-dim: #008800;
+            --border-light: #00FF00;
+            --border-med: #008800;
+            --border-dark: #004400;
+            --border-black: #00FF00;
+            --title-grad-1: #004400;
+            --title-grad-2: #000000;
+            --title-text: #00FF00;
+            --link-color: #00FF00;
+            --bevel-outset: 1px solid var(--border-med);
+            --bevel-inset: 1px solid var(--border-med);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-desktop);
+            font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            color: var(--text-main);
+        }
+
+        /* WINDOW STRUCTURE */
+        .window {
+            width: 950px;
+            max-width: 98vw;
+            height: 90vh;
+            background-color: var(--bg-window);
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.5), var(--bevel-outset);
+            display: flex; flex-direction: column; padding: 3px;
+        }
+
+        .title-bar {
+            background: linear-gradient(90deg, var(--title-grad-1), var(--title-grad-2));
+            padding: 3px 4px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; margin-bottom: 2px;
+        }
+        .title-text { color: var(--title-text); font-weight: bold; font-size: 13px; display: flex; align-items: center; gap: 6px; }
+        .win-btn {
+            width: 16px; height: 14px; background: var(--bg-window); box-shadow: var(--bevel-outset); border: none;
+            font-size: 9px; cursor: pointer; color: var(--text-main); display: flex; align-items: center; justify-content: center;
+        }
+        .win-btn:active { box-shadow: var(--bevel-inset); padding-top: 2px; }
+
+        .toolbar {
+            display: flex; align-items: center; gap: 5px; padding: 6px; border-bottom: 1px solid var(--border-dark); box-shadow: 0 1px 0 var(--border-light); flex-shrink: 0;
+        }
+        .tool-btn {
+            background: var(--bg-window); box-shadow: var(--bevel-outset); border: 0; padding: 4px 10px; font-size: 12px;
+            display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text-main);
+        }
+        .tool-btn:hover { background: #e0e0e0; }
+        [data-theme="dark"] .tool-btn:hover { background: #333; }
+        .tool-btn:active { box-shadow: var(--bevel-inset); transform: translateY(1px); }
+
+        .address-bar {
+            display: flex; align-items: center; gap: 8px; padding: 6px; font-size: 12px;
+            border-bottom: 1px solid var(--border-dark); box-shadow: 0 1px 0 var(--border-light); flex-shrink: 0;
+        }
+        .address-input {
+            flex-grow: 1; background: var(--bg-content); box-shadow: var(--bevel-inset); padding: 3px 6px;
+            font-family: monospace; border: none; outline: none; color: var(--text-main);
+        }
+
+        .content-frame { flex-grow: 1; display: flex; margin: 5px; gap: 5px; overflow: hidden; }
+        
+        .sidebar {
+            width: 220px; background-color: var(--bg-content); box-shadow: var(--bevel-inset); overflow-y: auto; padding: 10px; flex-shrink: 0;
+        }
+        .main-view {
+            flex-grow: 1; background-color: var(--bg-content); box-shadow: var(--bevel-inset); overflow-y: auto; padding: 30px; line-height: 1.6;
+        }
+
+        /* TYPOGRAPHY */
+        h1 { font-family: 'Times New Roman', serif; font-size: 32px; margin-top: 0; border-bottom: 2px solid var(--text-main); padding-bottom: 10px; }
+        h2 { font-size: 20px; color: var(--title-grad-1); margin-top: 25px; border-bottom: 1px solid var(--border-med); }
+        [data-theme="dark"] h2 { color: var(--text-main); }
+        h3 { font-size: 16px; font-weight: bold; margin-bottom: 5px; margin-top: 20px; }
+        p, li { font-size: 14px; }
+        code { background: #eee; padding: 2px 4px; font-family: monospace; border: 1px solid #ccc; font-size: 13px; color: #d63384; }
+        [data-theme="dark"] code { background: #333; border-color: #555; color: #ff79c6; }
+        
+        .code-block {
+            background: #f4f4f4; padding: 15px; border: 1px solid #999; 
+            font-family: monospace; overflow-x: auto; margin: 10px 0; font-size: 13px;
+        }
+        [data-theme="dark"] .code-block { background: #2b2b2b; border-color: #555; }
+        
+        .good-practice { border-left: 4px solid #008000; padding-left: 10px; margin-bottom: 10px; }
+        .bad-practice { border-left: 4px solid #FF0000; padding-left: 10px; margin-bottom: 10px; }
+
+        .status-bar { display: flex; gap: 2px; padding: 3px; margin-top: 2px; flex-shrink: 0; font-size: 12px; }
+        .status-panel { box-shadow: var(--bevel-inset); padding: 3px 6px; }
+        .status-main { flex-grow: 1; }
+
+        /* NAVIGATION */
+        .nav-folder { cursor: pointer; margin-bottom: 4px; font-weight: bold; font-size: 13px; }
+        .nav-folder:before { content: '📁 '; }
+        .nav-item { margin-left: 20px; cursor: pointer; font-size: 13px; padding: 2px 4px; display: block; }
+        .nav-item:before { content: '📄 '; }
+        .nav-item:hover { background-color: var(--title-grad-1); color: white; }
+
+        ::-webkit-scrollbar { width: 16px; background: var(--bg-window); }
+        ::-webkit-scrollbar-thumb { background: var(--bg-window); box-shadow: var(--bevel-outset); }
+        ::-webkit-scrollbar-track { background: repeating-linear-gradient(45deg, #ccc 0, #ccc 1px, #fff 0, #fff 2px); }
+        [data-theme="dark"] ::-webkit-scrollbar-track { background: #000; }
+    </style>
+</head>
+<body>
+
+    <div class="window">
+        <div class="title-bar">
+            <div class="title-text">
+                <span style="font-family: serif; font-style: italic; font-weight: bold; background: white; color: black; padding: 0 4px; margin-right: 5px;">i</span>
+                Clean Code Handbook v98
+            </div>
+            <div class="title-controls">
+                <button class="win-btn">_</button>
+                <button class="win-btn">□</button>
+                <button class="win-btn">×</button>
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <button class="tool-btn" onclick="navTo('home')">🏠 Index</button>
+            <button class="tool-btn" onclick="toggleTheme()">🌗 High Contrast</button>
+            <div style="width: 1px; height: 20px; background: var(--border-dark); margin: 0 5px;"></div>
+            <button class="tool-btn" onclick="navTo('checklist')">✅ Quick Checklist</button>
+        </div>
+
+        <div class="address-bar">
+            <span>Address:</span>
+            <input type="text" class="address-input" id="addr-bar" value="C:\BEST_PRACTICES\INDEX.HTM" readonly>
+        </div>
+
+        <div class="content-frame">
+            <div class="sidebar">
+                <div class="nav-folder">Core Principles</div>
+                <div class="nav-item" onclick="navTo('dry-kiss')">DRY & KISS</div>
+                <div class="nav-item" onclick="navTo('solid')">SOLID Principles</div>
+                <div class="nav-item" onclick="navTo('yagni')">YAGNI</div>
+
+                <div style="height:10px"></div>
+
+                <div class="nav-folder">Clean Code</div>
+                <div class="nav-item" onclick="navTo('naming')">Naming Conventions</div>
+                <div class="nav-item" onclick="navTo('functions')">Functions & Methods</div>
+                <div class="nav-item" onclick="navTo('comments')">Comments & Docs</div>
+
+                <div style="height:10px"></div>
+
+                <div class="nav-folder">Architecture</div>
+                <div class="nav-item" onclick="navTo('separation')">Separation of Concerns</div>
+                <div class="nav-item" onclick="navTo('testing')">Testing & TDD</div>
+                <div class="nav-item" onclick="navTo('git')">Git Etiquette</div>
+            </div>
+
+            <div class="main-view" id="main-content">
+                </div>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-panel status-main" id="status-msg">Ready</div>
+            <div class="status-panel" style="width: 100px;">Local Intranet</div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONTENT DATABASE ---
+        const contentDB = {
+            'home': `
+                <h1>Programming Best Practices</h1>
+                <p>Welcome to the digital handbook of Software Engineering standards. Writing code that works is easy; writing code that is maintainable, scalable, and readable is the true challenge.</p>
+                <hr>
+                <h3>Why do we need standards?</h3>
+                <ul>
+                    <li><strong>Readability:</strong> Code is read 10x more than it is written.</li>
+                    <li><strong>Maintainability:</strong> Lowering the cost of future changes.</li>
+                    <li><strong>Debuggability:</strong> Isolating bugs becomes trivial with clean architecture.</li>
+                </ul>
+                <p><em>Select a topic from the directory on the left to begin.</em></p>
+            `,
+            'checklist': `
+                <h1>Quick Code Review Checklist</h1>
+                <p>Before you commit, verify these points:</p>
+                <ul>
+                    <li>[ ] Variable names are descriptive (no <code>x</code>, <code>val</code>, <code>data</code>).</li>
+                    <li>[ ] Functions do <strong>one</strong> thing only.</li>
+                    <li>[ ] No duplicated logic (DRY).</li>
+                    <li>[ ] No magic numbers/strings (use constants).</li>
+                    <li>[ ] Error handling is implemented (try/catch).</li>
+                    <li>[ ] Tests cover the critical paths.</li>
+                </ul>
+            `,
+            'dry-kiss': `
+                <h1>DRY & KISS</h1>
+                
+                <h2>D.R.Y. (Don't Repeat Yourself)</h2>
+                <p>Every piece of knowledge must have a single, unambiguous, authoritative representation within a system.</p>
+                <div class="bad-practice">
+                    <strong>Bad:</strong> Copy-pasting validation logic in two different forms.
+                </div>
+                <div class="good-practice">
+                    <strong>Good:</strong> Extract validation into a shared utility function <code>validateUser()</code>.
+                </div>
+
+                <h2>K.I.S.S. (Keep It Simple, Stupid)</h2>
+                <p>Most systems work best if they are kept simple rather than made complicated. Avoid over-engineering.</p>
+                <ul>
+                    <li>Don't implement a complex Design Pattern if a simple function suffices.</li>
+                    <li>Readable code > Clever code (one-liners).</li>
+                </ul>
+            `,
+            'solid': `
+                <h1>SOLID Principles</h1>
+                <p>Five design principles intended to make software designs more understandable, flexible, and maintainable.</p>
+
+                <h3>1. Single Responsibility (SRP)</h3>
+                <p>A class/module should have one, and only one, reason to change.</p>
+
+                <h3>2. Open-Closed (OCP)</h3>
+                <p>Entities should be open for extension, but closed for modification.</p>
+
+                <h3>3. Liskov Substitution (LSP)</h3>
+                <p>Objects of a superclass shall be replaceable with objects of its subclasses without breaking the application.</p>
+
+                <h3>4. Interface Segregation (ISP)</h3>
+                <p>Many client-specific interfaces are better than one general-purpose interface.</p>
+
+                <h3>5. Dependency Inversion (DIP)</h3>
+                <p>Depend upon abstractions (interfaces), not concretions (classes).</p>
+            `,
+            'yagni': `
+                <h1>YAGNI</h1>
+                <h2>"You Aren't Gonna Need It"</h2>
+                <p>A principle of Extreme Programming (XP) that states a programmer should not add functionality until deemed necessary.</p>
+                
+                <h3>The Trap:</h3>
+                <p><em>"I'll add this extra parameter to the function now, just in case we need to filter by date next year."</em></p>
+                
+                <h3>The Solution:</h3>
+                <p>Implement exactly what is required <strong>today</strong>. Presumptive features add complexity, bugs, and testing overhead for code that might never run.</p>
+            `,
+            'naming': `
+                <h1>Naming Conventions</h1>
+                <p>Naming is the hardest part of computer science.</p>
+
+                <h3>Variables</h3>
+                <p>Use nouns. Be specific.</p>
+                <div class="code-block">
+let d; // BAD (elapsed time? day? distance?)
+let daysSinceCreation; // GOOD
+                </div>
+
+                <h3>Functions</h3>
+                <p>Use verbs. Describe the action.</p>
+                <div class="code-block">
+function userData() {...} // BAD
+function getUserData() {...} // GOOD
+function isUserValid() {...} // GOOD (returns boolean)
+                </div>
+
+                <h3>Booleans</h3>
+                <p>Prefix with <code>is</code>, <code>has</code>, or <code>should</code>.</p>
+                <code>let isOpen = true;</code>
+            `,
+            'functions': `
+                <h1>Functions & Methods</h1>
+                
+                <h2>Size Matters</h2>
+                <p>Functions should be small. If a function is longer than 20-30 lines, it is likely doing too much.</p>
+
+                <h2>One Job</h2>
+                <p>A function should do one thing and do it well. If you have a function named <code>processUserAndSaveToDB()</code>, you have already violated this rule.</p>
+
+                <h2>Arguments</h2>
+                <p>Limit arguments to 3 or fewer. If you need more, pass an object (config object).</p>
+                <div class="code-block">
+// BAD
+createUser("John", "Doe", 25, "NY", true, "admin");
+
+// GOOD
+createUser({
+  firstName: "John", 
+  lastName: "Doe", 
+  age: 25, 
+  role: "admin" 
+});
+                </div>
+            `,
+            'comments': `
+                <h1>Comments & Documentation</h1>
+                
+                <h2>Self-Documenting Code</h2>
+                <p>Ideally, your code should be so readable that comments are unnecessary.</p>
+
+                <div class="bad-practice">
+                    <strong>Bad:</strong><br>
+                    <code>// Check if user is old enough</code><br>
+                    <code>if (user.age > 21) { ... }</code>
+                </div>
+
+                <div class="good-practice">
+                    <strong>Good:</strong><br>
+                    <code>if (user.isLegalDrinkingAge()) { ... }</code>
+                </div>
+
+                <h2>When to Comment</h2>
+                <ul>
+                    <li>To explain <strong>WHY</strong> something is done (business logic context).</li>
+                    <li>To explain complex Regex or Math.</li>
+                    <li>To warn about side effects or hacks.</li>
+                </ul>
+            `,
+            'separation': `
+                <h1>Separation of Concerns</h1>
+                <p>A design principle for separating a computer program into distinct sections such that each section addresses a separate concern.</p>
+
+                <h3>MVC Pattern Example:</h3>
+                <ul>
+                    <li><strong>Model:</strong> Data and Database logic.</li>
+                    <li><strong>View:</strong> UI and Presentation.</li>
+                    <li><strong>Controller:</strong> Business logic that connects the two.</li>
+                </ul>
+                <p>Never mix database queries directly into your UI components.</p>
+            `,
+            'testing': `
+                <h1>Testing & TDD</h1>
+                
+                <h2>The Pyramid</h2>
+                <ul>
+                    <li><strong>Unit Tests:</strong> Fast, cheap, cover individual functions (70%).</li>
+                    <li><strong>Integration Tests:</strong> Ensure modules work together (20%).</li>
+                    <li><strong>E2E Tests:</strong> Simulate real user behavior (10%).</li>
+                </ul>
+
+                <h2>TDD (Test Driven Development)</h2>
+                <ol>
+                    <li>Write a failing test.</li>
+                    <li>Write just enough code to pass the test.</li>
+                    <li>Refactor the code.</li>
+                </ol>
+            `,
+            'git': `
+                <h1>Git Etiquette</h1>
+
+                <h2>Commit Messages</h2>
+                <p>Use the imperative mood (like a command).</p>
+                <ul>
+                    <li>❌ <em>"Added feature"</em></li>
+                    <li>✅ <em>"Add login validation logic"</em></li>
+                    <li>✅ <em>"Fix crash on startup"</em></li>
+                </ul>
+
+                <h2>Atomic Commits</h2>
+                <p>One commit should represent one logical unit of work. Do not combine a bug fix and a new feature in one commit.</p>
+            `
+        };
+
+        // --- APP LOGIC ---
+
+        function navTo(pageId) {
+            const contentDiv = document.getElementById('main-content');
+            const addrBar = document.getElementById('addr-bar');
+            const statusMsg = document.getElementById('status-msg');
+
+            // Simulate Loading
+            statusMsg.textContent = "Accessing Disk...";
+            
+            if (contentDB[pageId]) {
+                contentDiv.innerHTML = contentDB[pageId];
+            } else {
+                contentDiv.innerHTML = "<h1>404 File Not Found</h1><p>The requested knowledge sector is corrupted or missing.</p>";
+            }
+
+            // Update Status & Addr
+            setTimeout(() => {
+                statusMsg.textContent = "Ready";
+                // Scroll top
+                contentDiv.scrollTop = 0;
+            }, 200);
+
+            const formattedName = pageId.toUpperCase().replace('-', '_');
+            addrBar.value = `C:\\BEST_PRACTICES\\${formattedName}.HTM`;
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            if (body.hasAttribute('data-theme')) {
+                body.removeAttribute('data-theme');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+            }
+        }
+
+        // Init
+        navTo('home');
+
+    </script>
+</body>
+</html>
