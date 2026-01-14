@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Scholarships & Financial Aid</title>
+
+<link rel="stylesheet" href="styles/general.css">
+
+<!-- ONLY new styles -->
+<style>
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.finaid-box {
+    box-shadow: var(--bevel-inset);
+    padding: 14px;
+    margin-bottom: 20px;
+}
+
+.metric {
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.progress {
+    height: 16px;
+    background: var(--border-med);
+    box-shadow: var(--bevel-inset);
+    margin-bottom: 12px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--title-grad-1);
+}
+
+[data-theme="dark"] .progress-fill {
+    background: var(--text-main);
+}
+</style>
+</head>
+
+<body>
+<div class="window">
+
+    <!-- TITLE BAR -->
+    <div class="title-bar">
+        <div class="title-text">💰 Scholarships & Financial Aid</div>
+        <div class="title-controls">
+            <button class="win-btn" onclick="toggleTheme()">☼</button>
+        </div>
+    </div>
+
+    <!-- MENU -->
+    <div class="menu-bar">
+        <div class="menu-item">File</div>
+        <div class="menu-item">View</div>
+        <div class="menu-item">Help</div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+        <button class="tool-btn active" onclick="showTab('fafsa', this)">FAFSA Basics</button>
+        <button class="tool-btn" onclick="showTab('grants', this)">Grants & Waivers</button>
+        <button class="tool-btn" onclick="showTab('workstudy', this)">Work-Study / Part-Time</button>
+        <button class="tool-btn" onclick="showTab('budget', this)">Budgeting & Cost of Living</button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="window-content">
+
+        <!-- FAFSA -->
+        <section id="fafsa" class="tab-content active">
+            <h1>FAFSA Basics</h1>
+            <div class="finaid-box">
+                <p>
+                    FAFSA (Free Application for Federal Student Aid) is the first step to
+                    receive federal grants, loans, and work-study eligibility.
+                </p>
+                <ul>
+                    <li>Open to US citizens and eligible non-citizens</li>
+                    <li>Submitted online annually</li>
+                    <li>Determines Expected Family Contribution (EFC)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- GRANTS -->
+        <section id="grants" class="tab-content">
+            <h1>Grants and Tuition Waivers</h1>
+            <div class="finaid-box">
+                <p>
+                    Grants are non-repayable aid; tuition waivers reduce or eliminate fees.
+                </p>
+                <ul>
+                    <li>Pell Grant: need-based federal grant</li>
+                    <li>State grants: vary by state and program</li>
+                    <li>Merit-based waivers for academic or athletic achievement</li>
+                </ul>
+                <div class="metric">Funding Coverage</div>
+                <div class="progress"><div class="progress-fill" style="width:70%"></div></div>
+            </div>
+        </section>
+
+        <!-- WORK-STUDY -->
+        <section id="workstudy" class="tab-content">
+            <h1>Work-Study and Part-Time Work</h1>
+            <div class="finaid-box">
+                <p>
+                    Work-study programs allow students to earn income while gaining relevant experience.
+                </p>
+                <ul>
+                    <li>On-campus or partner organizations</li>
+                    <li>Flexible hours to accommodate class schedules</li>
+                    <li>Part-time jobs also supplement living costs</li>
+                </ul>
+                <div class="metric">Typical Contribution</div>
+                <div class="progress"><div class="progress-fill" style="width:50%"></div></div>
+            </div>
+        </section>
+
+        <!-- BUDGETING -->
+        <section id="budget" class="tab-content">
+            <h1>Budgeting & Cost of Living</h1>
+            <div class="finaid-box">
+                <p>
+                    Effective budgeting helps manage tuition, rent, food, transport, and personal expenses.
+                </p>
+                <ul>
+                    <li>Track monthly expenses</li>
+                    <li>Plan for textbooks and software tools</li>
+                    <li>Consider shared housing or meal plans</li>
+                </ul>
+                <div class="metric">Budget Coverage</div>
+                <div class="progress"><div class="progress-fill" style="width:60%"></div></div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+        <div class="status-panel">Financial Aid Info Loaded</div>
+        <div class="status-panel">Career Explorer</div>
+    </div>
+
+</div>
+
+<script>
+function showTab(id, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+
+    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+
+function toggleTheme() {
+    document.body.dataset.theme =
+        document.body.dataset.theme === "dark" ? "" : "dark";
+}
+</script>
+</body>
+</html>
