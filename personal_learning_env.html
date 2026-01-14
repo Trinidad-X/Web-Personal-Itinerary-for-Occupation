@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Personal Learning Environment</title>
+
+<link rel="stylesheet" href="styles/general.css">
+
+<!-- ONLY new styles -->
+<style>
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.env-box {
+    box-shadow: var(--bevel-inset);
+    padding: 14px;
+    margin-bottom: 20px;
+}
+
+.requirement {
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.progress {
+    height: 16px;
+    background: var(--border-med);
+    box-shadow: var(--bevel-inset);
+    margin-bottom: 12px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--title-grad-1);
+}
+
+[data-theme="dark"] .progress-fill {
+    background: var(--text-main);
+}
+</style>
+</head>
+
+<body>
+<div class="window">
+
+    <!-- TITLE BAR -->
+    <div class="title-bar">
+        <div class="title-text">🧰 Personal Learning Environment</div>
+        <div class="title-controls">
+            <button class="win-btn" onclick="toggleTheme()">☼</button>
+        </div>
+    </div>
+
+    <!-- MENU -->
+    <div class="menu-bar">
+        <div class="menu-item">File</div>
+        <div class="menu-item">View</div>
+        <div class="menu-item">Help</div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+        <button class="tool-btn active" onclick="showTab('hardware', this)">Hardware</button>
+        <button class="tool-btn" onclick="showTab('os', this)">OS</button>
+        <button class="tool-btn" onclick="showTab('tools', this)">Dev Tools</button>
+        <button class="tool-btn" onclick="showTab('git', this)">Version Control</button>
+        <button class="tool-btn" onclick="showTab('productivity', this)">Productivity</button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="window-content">
+
+        <!-- HARDWARE -->
+        <section id="hardware" class="tab-content active">
+            <h1>Hardware Requirements</h1>
+            <div class="env-box">
+                <p>
+                    Modern software development benefits more from RAM and SSD speed
+                    than raw CPU performance.
+                </p>
+
+                <div class="requirement">RAM Importance</div>
+                <div class="progress"><div class="progress-fill" style="width:85%"></div></div>
+
+                <div class="requirement">CPU Importance</div>
+                <div class="progress"><div class="progress-fill" style="width:65%"></div></div>
+
+                <div class="requirement">Storage (SSD)</div>
+                <div class="progress"><div class="progress-fill" style="width:90%"></div></div>
+            </div>
+        </section>
+
+        <!-- OS -->
+        <section id="os" class="tab-content">
+            <h1>Operating Systems</h1>
+            <div class="env-box">
+                <p>
+                    Most developers use Unix-like systems due to tooling,
+                    package managers, and server parity.
+                </p>
+                <ul>
+                    <li><strong>Linux:</strong> Maximum control and compatibility</li>
+                    <li><strong>macOS:</strong> Unix-based with strong commercial tooling</li>
+                    <li><strong>Windows:</strong> Best with WSL for development</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- TOOLS -->
+        <section id="tools" class="tab-content">
+            <h1>Development Tools & IDEs</h1>
+            <div class="env-box">
+                <p>
+                    IDEs and editors improve productivity through refactoring,
+                    debugging, and code intelligence.
+                </p>
+                <ul>
+                    <li>VS Code (most common)</li>
+                    <li>JetBrains IDEs</li>
+                    <li>Vim / Neovim / Emacs</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- GIT -->
+        <section id="git" class="tab-content">
+            <h1>Version Control (Git & GitHub)</h1>
+            <div class="env-box">
+                <p>
+                    Version control is mandatory for collaboration and personal learning.
+                </p>
+                <ul>
+                    <li>Git fundamentals: commits, branches, merges</li>
+                    <li>GitHub for hosting and collaboration</li>
+                    <li>Pull requests and code reviews</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- PRODUCTIVITY -->
+        <section id="productivity" class="tab-content">
+            <h1>Productivity & Note-Taking</h1>
+            <div class="env-box">
+                <p>
+                    Learning efficiency improves when knowledge is captured,
+                    reviewed, and connected.
+                </p>
+                <ul>
+                    <li>Markdown notes (Obsidian, Notion)</li>
+                    <li>Task tracking (Todo lists, Kanban)</li>
+                    <li>Spaced repetition for retention</li>
+                </ul>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+        <div class="status-panel">Environment Ready</div>
+        <div class="status-panel">Learning Mode</div>
+    </div>
+
+</div>
+
+<script>
+function showTab(id, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+
+    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+
+function toggleTheme() {
+    document.body.dataset.theme =
+        document.body.dataset.theme === "dark" ? "" : "dark";
+}
+</script>
+</body>
+</html>
