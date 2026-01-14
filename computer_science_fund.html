@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS Fundamentals System Check</title>
+<style>
+    /* --- SYSTEM THEME --- */
+    :root {
+        --bg-screen: #000000;
+        --bg-window: #c0c0c0;
+        --bg-panel: #ffffff;
+        --text-norm: #000000;
+        --text-inv: #ffffff;
+        --blue-sel: #000080;
+        --border-light: #dfdfdf;
+        --border-dark: #808080;
+        --border-black: #000000;
+        
+        --font-sys: 'Courier New', Courier, monospace; 
+        --font-ui: 'Segoe UI', Tahoma, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    
+    body {
+        background-color: #2c3e50;
+        font-family: var(--font-ui);
+        height: 100vh; margin: 0;
+        display: flex; align-items: center; justify-content: center;
+        overflow: hidden;
+    }
+
+    .window {
+        width: 1000px; max-width: 98vw; height: 90vh;
+        background: var(--bg-window);
+        border: 2px solid var(--border-light);
+        box-shadow: 4px 4px 0px var(--border-black);
+        display: flex; flex-direction: column;
+    }
+
+    .title-bar {
+        background: linear-gradient(90deg, #000080, #1084d0);
+        padding: 4px 8px; color: white; font-weight: bold;
+        display: flex; justify-content: space-between; align-items: center;
+    }
+    .win-btns button { width: 16px; height: 16px; font-size: 10px; border: 1px solid white; background: #c0c0c0; }
+
+    .menu-bar {
+        padding: 4px 8px; border-bottom: 1px solid var(--border-dark);
+        font-size: 12px;
+    }
+    .menu-bar span { margin-right: 15px; cursor: pointer; }
+    .menu-bar span:hover { text-decoration: underline; }
+
+    /* --- MAIN CONTENT --- */
+    .content-area {
+        flex: 1; display: flex; padding: 10px; gap: 10px; overflow: hidden;
+    }
+
+    /* LEFT: TREE VIEW */
+    .tree-panel {
+        flex: 1; min-width: 250px;
+        background: var(--bg-panel);
+        border: 2px inset var(--border-dark);
+        padding: 10px; overflow-y: auto;
+        font-family: var(--font-sys); font-size: 13px;
+    }
+
+    .tree-item {
+        padding: 2px 0; cursor: pointer; white-space: nowrap;
+    }
+    .tree-item:hover { background: #eee; }
+    .tree-item.selected { background: var(--blue-sel); color: white; }
+    
+    .indent-1 { padding-left: 10px; font-weight: bold; margin-top: 10px; color: #444; pointer-events: none; }
+    .indent-2 { padding-left: 30px; }
+    .indent-3 { padding-left: 50px; color: #555; font-size: 11px; font-style: italic; }
+
+    /* RIGHT: DETAILS VIEW */
+    .details-panel {
+        flex: 2;
+        background: var(--bg-panel);
+        border: 2px inset var(--border-dark);
+        padding: 20px;
+        overflow-y: auto;
+        display: flex; flex-direction: column;
+    }
+
+    h2 { margin-top: 0; border-bottom: 2px solid var(--text-norm); padding-bottom: 5px; font-family: var(--font-sys); }
+    
+    .tag-row { display: flex; gap: 5px; margin-bottom: 15px; }
+    .tag { 
+        background: #000; color: #0f0; padding: 3px 6px; 
+        font-size: 11px; font-family: var(--font-sys); border-radius: 2px; 
+    }
+
+    .section-box {
+        border: 1px solid var(--border-dark);
+        padding: 10px; margin-bottom: 15px;
+        background: #fdfdfd;
+    }
+    .section-title { font-weight: bold; color: var(--blue-sel); font-size: 12px; margin-bottom: 5px; text-transform: uppercase; }
+
+    .resource-link {
+        display: block; padding: 5px; background: #eaeaea; margin-top: 5px;
+        border-left: 3px solid var(--blue-sel); font-size: 13px;
+    }
+
+    .img-placeholder {
+        width: 100%; height: 120px; background: #222; 
+        display: flex; align-items: center; justify-content: center;
+        color: #0f0; font-family: var(--font-sys); font-size: 12px;
+        margin: 10px 0; border: 1px solid #000;
+        text-align: center; padding: 10px;
+    }
+
+    /* STATUS BAR */
+    .status-bar {
+        border-top: 1px solid var(--border-dark);
+        padding: 4px 8px; font-size: 11px; background: #c0c0c0;
+        display: flex; gap: 20px;
+    }
+</style>
+</head>
+<body>
+
+<div class="window">
+    <div class="title-bar">
+        <span>🖥️ CS_Knowledge_Base.exe - System Architecture</span>
+        <div class="win-btns">
+            <button>_</button><button>X</button>
+        </div>
+    </div>
+    <div class="menu-bar">
+        <span>File</span> <span>View</span> <span>Help</span>
+    </div>
+
+    <div class="content-area">
+        <div class="tree-panel">
+            <div class="indent-1">📂 00_FOUNDATION</div>
+            <div class="tree-item indent-2" onclick="loadContent('math')">├── Discrete Math & Logic</div>
+            <div class="tree-item indent-2" onclick="loadContent('arch')">└── Computer Architecture</div>
+
+            <div class="indent-1">📂 01_KERNEL_SPACE</div>
+            <div class="tree-item indent-2" onclick="loadContent('os')">├── Operating Systems</div>
+            <div class="tree-item indent-2" onclick="loadContent('net')">├── Networking (TCP/IP)</div>
+            <div class="tree-item indent-2" onclick="loadContent('algo')">└── Algorithms (DSA)</div>
+
+            <div class="indent-1">📂 02_USER_SPACE</div>
+            <div class="tree-item indent-2" onclick="loadContent('db')">├── Databases (SQL/NoSQL)</div>
+            <div class="tree-item indent-2" onclick="loadContent('dist')">├── Distributed Systems</div>
+            <div class="tree-item indent-2" onclick="loadContent('security')">└── Security & Crypto</div>
+            
+            <div class="indent-1">📂 03_COMPILER</div>
+            <div class="tree-item indent-2" onclick="loadContent('lang')">└── Languages & Compilers</div>
+        </div>
+
+        <div class="details-panel" id="main-display">
+            <div style="text-align:center; padding-top:50px; color:#666;">
+                <h3>&lt; SYSTEM READY &gt;</h3>
+                <p>Select a module from the left to inspect curriculum requirements.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="status-bar">
+        <span id="status-txt">Status: Idle</span>
+        <span>Mem: 640K OK</span>
+    </div>
+</div>
+
+<script>
+    const data = {
+        'math': {
+            title: "Discrete Math & Digital Logic",
+            tags: ["Required", "Theory", "Logic"],
+            desc: "The language of computers. Before you code, you must understand the logic that governs true/false statements, probability, and proofs.",
+            content: `
+                <div class="section-box">
+                    <div class="section-title">What you will learn</div>
+                    <ul>
+                        <li>Boolean Algebra (True/False logic).</li>
+                        <li>Set Theory & Combinatorics (How to count complex sets).</li>
+                        <li>Graph Theory (The math behind networks and maps).</li>
+                    </ul>
+                </div>
+                
+                <div class="img-placeholder">
+                   
+
+[Image of Basic Logic Gates AND OR NOT symbols]
+
+                </div>
+
+                <div class="section-box">
+                    <div class="section-title">Recommended Resources</div>
+                    <div class="resource-link">📚 Book: "Concrete Mathematics" by Knuth</div>
+                    <div class="resource-link">🎓 Course: MIT 6.042J (OpenCourseWare)</div>
+                </div>
+            `
+        },
+        'arch': {
+            title: "Computer Architecture",
+            tags: ["Hardware", "Low-Level", "CPU"],
+            desc: "How do electricity and silicon become calculation? This layer bridges the gap between hardware physics and software instructions.",
+            content: `
+                <div class="section-box">
+                    <div class="section-title">Key Concepts</div>
+                    <ul>
+                        <li>Von Neumann Architecture (CPU, Memory, I/O).</li>
+                        <li>Instruction Set Architecture (Assembly Language).</li>
+                        <li>Memory Hierarchy (L1/L2 Cache, RAM, Disk).</li>
+                    </ul>
+                </div>
+
+                <div class="img-placeholder">
+                    
+
+[Image of Von Neumann Architecture diagram]
+
+                </div>
+
+                <div class="section-box">
+                    <div class="section-title">Best Resource</div>
+                    <div class="resource-link">🛠️ <strong>Nand2Tetris</strong> (Build a computer from scratch)</div>
+                    <div class="resource-link">📚 Book: "Computer Systems: A Programmer's Perspective"</div>
+                </div>
+            `
+        },
+        'os': {
+            title: "Operating Systems (OS)",
+            tags: ["Kernel", "Processes", "Threads"],
+            desc: "The manager of the computer's resources. You cannot write efficient high-performance code without understanding the OS scheduler and memory manager.",
+            content: `
+                <div class="section-box">
+                    <div class="section-title">Core Topics</div>
+                    <ul>
+                        <li>Process Management & Threads (Concurrency).</li>
+                        <li>Deadlocks & Race Conditions (The hardest bugs to fix).</li>
+                        <li>File Systems & Virtual Memory.</li>
+                    </ul>
+                </div>
+
+                <div class="section-box">
+                    <div class="section-title">Bible of OS</div>
+                    <div class="resource-link">📚 Book: "Operating Systems: Three Easy Pieces" (OSTEP) - Free Online</div>
+                    <div class="resource-link">📚 Book: "Modern Operating Systems" by Tanenbaum</div>
+                </div>
+            `
+        },
+        'net': {
+            title: "Computer Networking",
+            tags: ["Internet", "Protocols", "TCP/IP"],
+            desc: "Modern software is connected software. You need to understand how packets travel across the world and why latency exists.",
+            content: `
+                <div class="section-box">
+                    <div class="section-title">The Layers (OSI Model)</div>
+                    <ul>
+                        <li><strong>Application:</strong> HTTP/DNS (Web).</li>
+                        <li><strong>Transport:</strong> TCP vs UDP (Reliability vs Speed).</li>
+                        <li><strong>Network:</strong> IP & Routing.</li>
+                    </ul>
+                </div>
+
+                <div class="img-placeholder">
+                    
+                </div>
+
+                <div class="section-box">
+                    <div class="section-title">Resources</div>
+                    <div class="resource-link">📚 Book: "Computer Networking: A Top-Down Approach"</div>
+                    <div class="resource-link">🛠️ Tool: Wireshark (Analyze your own traffic)</div>
+                </div>
+            `
+        },
+        'algo': {
+            title: "Data Structures & Algorithms (DSA)",
+            tags: ["Interviews", "Optimization", "Core"],
+            desc: "The holy grail of technical interviews and the toolkit for solving problems efficiently.",
+            content: `
+                <div class="section-box">
+                    <div class="section-title">Must Know</div>
+                    <ul>
+                        <li><strong>Structures:</strong> Arrays, Linked Lists, Trees, Graphs, Hash Maps.</li>
+                        <li><strong>Algorithms:</strong> Sorting (Merge/Quick), Searching (Binary), DFS/BFS.</li>
+                        <li><strong>Complexity:</strong> Big O Notation (Time vs Space).</li>
+                    </ul>
+                </div>
+
+                <div class="img-placeholder">
+                    
+                </div>
+
+                <div class="section-box">
+                    <div class="section-title">Top Picks</div>
+                    <div class="resource-link">📚 Book: "Grokking Algorithms" (Best for beginners)</div>
+                    <div class="resource-link">📚 Book: "Introduction to Algorithms" (CLRS) (The Academic Bible)</div>
+                    <div class="resource-link">💻 Site: LeetCode / NeetCode (Practice)</div>
+                </div>
+            `
+        },
+        'db': {
+            title: "Databases & Storage",
+            tags: ["Data", "SQL", "ACID"],
+            desc: "Software is useless if it forgets everything. Learn how to store, retrieve, and organize massive amounts of data reliably.",
+            content: `
+                <div class="section-box">
+                    <div class="section-title">Topics</div>
+                    <ul>
+                        <li><strong>Relational:</strong> SQL, Normalization, ACID Properties.</li>
+                        <li><strong>NoSQL:</strong> Document stores (MongoDB), Key-Value (Redis).</li>
+                        <li><strong>Internals:</strong> Indexing (B-Trees) and Sharding.</li>
+                    </ul>
+                </div>
+
+                <div class="section-box">
+                    <div class="section-title">Resources</div>
+                    <div class="resource-link">📚 Book: "Designing Data-Intensive Applications" (Must Read for Seniors)</div>
+                    <div class="resource-link">💻 Course: Stanford DB Class (Jennifer Widom)</div>
+                </div>
+            `
+        },
+        'dist': {
+            title: "Distributed Systems",
+            tags: ["Cloud", "Scale", "Advanced"],
+            desc: "When one computer isn't enough. This is how Google/Netflix operate. It's about handling failure when thousands of machines work together.",
+            content: `
+                <div class="section-box">
+                    <div class="section-title">Concepts</div>
+                    <ul>
+                        <li>CAP Theorem.</li>
+                        <li>Load Balancing.</li>
+                        <li>Consensus Algorithms (Paxos/Raft).</li>
+                    </ul>
+                </div>
+                
+                <div class="section-box">
+                    <div class="section-title">Resources</div>
+                    <div class="resource-link">📄 Paper: "The Google File System"</div>
+                    <div class="resource-link">📚 Book: "Designing Data-Intensive Applications"</div>
+                </div>
+            `
+        },
+        'security': {
+            title: "Security & Cryptography",
+            tags: ["Safety", "Encryption", "Hacking"],
+            desc: "Understanding how systems break is the best way to build systems that don't break.",
+            content: `
+                <div class="section-box">
+                    <div class="section-title">Key Areas</div>
+                    <ul>
+                        <li>Public Key Cryptography (RSA, HTTPS).</li>
+                        <li>Hashing & Salting (Passwords).</li>
+                        <li>Common Attacks: SQL Injection, XSS, Buffer Overflow.</li>
+                    </ul>
+                </div>
+            `
+        },
+        'lang': {
+            title: "Languages & Compilers",
+            tags: ["Code", "Parsing", "Meta"],
+            desc: "Don't just use languages; understand how they are built. How does text become an executable program?",
+            content: `
+                <div class="section-box">
+                    <div class="section-title">Concepts</div>
+                    <ul>
+                        <li>Lexical Analysis & Parsing.</li>
+                        <li>Interpreters vs Compilers.</li>
+                        <li>Functional vs OOP Paradigms.</li>
+                    </ul>
+                </div>
+                
+                <div class="section-box">
+                    <div class="section-title">The Classic</div>
+                    <div class="resource-link">📚 Book: "SICP" (Structure and Interpretation of Computer Programs)</div>
+                    <div class="resource-link">📚 Book: "Crafting Interpreters" (Robert Nystrom)</div>
+                </div>
+            `
+        }
+    };
+
+    function loadContent(key) {
+        // Highlight logic
+        document.querySelectorAll('.tree-item').forEach(el => el.classList.remove('selected'));
+        event.target.classList.add('selected');
+
+        const item = data[key];
+        const display = document.getElementById('main-display');
+        const status = document.getElementById('status-txt');
+
+        // Render content
+        display.innerHTML = `
+            <h2>${item.title}</h2>
+            <div class="tag-row">
+                ${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+            </div>
+            <p><strong>${item.desc}</strong></p>
+            <hr style="border:0; border-top:1px dashed #999; margin: 15px 0;">
+            ${item.content}
+        `;
+
+        status.innerText = `Status: Loaded module [${key.toUpperCase()}]`;
+    }
+</script>
+
+</body>
+</html>
