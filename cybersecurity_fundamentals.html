@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Algorithms & Data Structures Curriculum – Win98</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* === KEEPING YOUR ORIGINAL STYLE (UNCHANGED) === */
+:root {
+    --bg-desktop:#008080; --bg-window:#C0C0C0; --bg-content:#fff;
+    --text-main:#000; --text-dim:#808080;
+    --border-light:#fff; --border-med:#DFDFDF;
+    --border-dark:#808080; --border-black:#000;
+    --title-grad-1:#000080; --title-grad-2:#1084D0;
+    --title-text:#fff; --link-color:#0000FF;
+    --bevel-outset: inset -1px -1px var(--border-black),
+        inset 1px 1px var(--border-light),
+        inset -2px -2px var(--border-dark),
+        inset 2px 2px var(--border-med);
+    --bevel-inset: inset -1px -1px var(--border-light),
+        inset 1px 1px var(--border-black),
+        inset -2px -2px var(--border-med),
+        inset 2px 2px var(--border-dark);
+}
+*{box-sizing:border-box}
+body{
+    background:var(--bg-desktop);
+    font-family:Segoe UI,Tahoma,sans-serif;
+    margin:0;height:100vh;
+    display:flex;align-items:center;justify-content:center;
+}
+.window{
+    width:920px;height:92vh;
+    background:var(--bg-window);
+    box-shadow:var(--bevel-outset);
+    display:flex;flex-direction:column;padding:3px;
+}
+.title-bar{
+    background:linear-gradient(90deg,var(--title-grad-1),var(--title-grad-2));
+    color:#fff;font-size:13px;font-weight:bold;
+    padding:3px 6px;display:flex;justify-content:space-between;
+}
+.menu-bar,.toolbar,.address-bar{
+    padding:5px;border-bottom:1px solid var(--border-dark);
+}
+.toolbar button{
+    box-shadow:var(--bevel-outset);
+    border:0;background:var(--bg-window);
+    padding:4px 10px;cursor:pointer;
+}
+.content-frame{flex:1;display:flex;gap:5px;padding:5px}
+.sidebar{
+    width:220px;background:#fff;
+    box-shadow:var(--bevel-inset);
+    padding:8px;overflow:auto;
+}
+.main-view{
+    flex:1;background:#fff;
+    box-shadow:var(--bevel-inset);
+    padding:20px;overflow:auto;
+}
+h1{font-family:"Times New Roman";border-bottom:2px solid #000}
+h2{color:#000080;border-bottom:1px solid #ccc}
+.nav-folder{font-weight:bold;cursor:pointer;margin-top:8px}
+.nav-item{margin-left:16px;cursor:pointer}
+.nav-item:hover{background:#000080;color:#fff}
+.visual-box{
+    display:flex;gap:5px;margin:10px 0;
+}
+.visual-node{
+    width:40px;height:40px;
+    background:#C0C0C0;
+    box-shadow:var(--bevel-outset);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:bold;
+}
+button.demo{
+    margin-top:6px;
+}
+code,pre{background:#eee;padding:4px}
+</style>
+</head>
+
+<body>
+<div class="window">
+
+<div class="title-bar">
+    Algorithms & Data Structures Curriculum – 1998 Edition
+    <div>🗕 🗖 ✖</div>
+</div>
+
+<div class="menu-bar">File | View | Curriculum | Help</div>
+
+<div class="toolbar">
+    <button onclick="navTo('home')">🏠 Home</button>
+    <button onclick="navTo('resources')">📚 Resources</button>
+</div>
+
+<div class="address-bar">
+    Address: <input style="width:80%" value="C:\CS\CURRICULUM\HOME.HTM" readonly>
+</div>
+
+<div class="content-frame">
+<div class="sidebar">
+
+<div class="nav-folder">📘 Beginner</div>
+<div class="nav-item" onclick="navTo('intro')">What is an Algorithm?</div>
+<div class="nav-item" onclick="navTo('big-o')">Big-O Notation</div>
+<div class="nav-item" onclick="navTo('arrays')">Arrays</div>
+
+<div class="nav-folder">📗 Intermediate</div>
+<div class="nav-item" onclick="navTo('linked')">Linked Lists</div>
+<div class="nav-item" onclick="navTo('stack')">Stacks (Interactive)</div>
+<div class="nav-item" onclick="navTo('queue')">Queues</div>
+
+<div class="nav-folder">📕 Advanced</div>
+<div class="nav-item" onclick="navTo('trees')">Trees</div>
+<div class="nav-item" onclick="navTo('sorting')">Sorting Algorithms</div>
+<div class="nav-item" onclick="navTo('graphs')">Graphs</div>
+
+</div>
+
+<div class="main-view" id="main"></div>
+</div>
+
+</div>
+
+<script>
+let stack=[1,2,3];
+
+const pages={
+home:`
+<h1>Curriculum Overview</h1>
+<p>This site is a <b>step-by-step curriculum</b> for mastering Algorithms and Data Structures.</p>
+<ul>
+<li>✔ Learn concepts visually</li>
+<li>✔ Interact with data structures</li>
+<li>✔ Practice with external tools</li>
+</ul>
+<p><b>Recommended path:</b> Beginner → Intermediate → Advanced</p>
+`,
+
+intro:`
+<h1>What is an Algorithm?</h1>
+<p>An algorithm is a <b>step-by-step procedure</b> to solve a problem.</p>
+<pre>
+Input → Steps → Output
+</pre>
+<p>Algorithms must be:</p>
+<ul>
+<li>Correct</li>
+<li>Efficient</li>
+<li>Finite</li>
+</ul>
+`,
+
+"big-o":`
+<h1>Big-O Notation</h1>
+<p>Big-O measures how an algorithm scales.</p>
+<ul>
+<li>O(1) – Constant</li>
+<li>O(n) – Linear</li>
+<li>O(n²) – Quadratic</li>
+</ul>
+<p>Focus on <b>growth</b>, not exact speed.</p>
+`,
+
+arrays:`
+<h1>Arrays</h1>
+<p>Contiguous memory, fast access.</p>
+
+<div class="visual-box">
+<div class="visual-node">4</div>
+<div class="visual-node">8</div>
+<div class="visual-node">15</div>
+<div class="visual-node">16</div>
+</div>
+
+<p>Index access is <code>O(1)</code></p>
+`,
+
+linked:`
+<h1>Linked Lists</h1>
+<p>Each node points to the next.</p>
+<pre>
+[data | next] → [data | next]
+</pre>
+<p>Insertion is fast, access is slower.</p>
+`,
+
+stack:`
+<h1>Stack (LIFO)</h1>
+<p>Last In, First Out</p>
+
+<div class="visual-box" id="stackBox"></div>
+<button class="demo" onclick="pushStack()">Push</button>
+<button class="demo" onclick="popStack()">Pop</button>
+`,
+
+queue:`
+<h1>Queue (FIFO)</h1>
+<p>First In, First Out</p>
+<p>Used in scheduling, buffering, BFS.</p>
+`,
+
+trees:`
+<h1>Trees</h1>
+<p>Hierarchical data structure.</p>
+<pre>
+      10
+     /  \\
+    5   15
+</pre>
+<p>Balanced trees give <code>O(log n)</code> search.</p>
+`,
+
+sorting:`
+<h1>Sorting Algorithms</h1>
+<ul>
+<li>Bubble Sort – O(n²)</li>
+<li>Merge Sort – O(n log n)</li>
+<li>Quick Sort – Avg O(n log n)</li>
+</ul>
+<p>Visualization helps understanding!</p>
+`,
+
+graphs:`
+<h1>Graphs</h1>
+<p>Nodes connected by edges.</p>
+<ul>
+<li>BFS – Queue based</li>
+<li>DFS – Stack/Recursion</li>
+</ul>
+`,
+
+resources:`
+<h1>Learning Resources</h1>
+<ul>
+<li><a href="https://visualgo.net" target="_blank">VisuAlgo (Best Visualizer)</a></li>
+<li><a href="https://leetcode.com" target="_blank">LeetCode Practice</a></li>
+<li><a href="https://cp-algorithms.com" target="_blank">CP-Algorithms</a></li>
+<li><a href="https://neetcode.io" target="_blank">NeetCode Roadmap</a></li>
+</ul>
+`
+};
+
+function navTo(id){
+document.getElementById("main").innerHTML=pages[id];
+if(id==="stack") renderStack();
+}
+
+function renderStack(){
+let box=document.getElementById("stackBox");
+box.innerHTML="";
+stack.forEach(v=>{
+let d=document.createElement("div");
+d.className="visual-node";
+d.textContent=v;
+box.appendChild(d);
+});
+}
+
+function pushStack(){
+stack.push(Math.floor(Math.random()*9));
+renderStack();
+}
+function popStack(){
+stack.pop();
+renderStack();
+}
+
+navTo("home");
+</script>
+</body>
+</html>
