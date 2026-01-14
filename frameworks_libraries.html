@@ -1,370 +1,388 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Framework.js - Interactive Guide</title>
-<style>
-    /* --- IDE THEME (One Dark / Dracula inspired) --- */
-    :root {
-        --bg-main: #1e1e1e;
-        --bg-sidebar: #252526;
-        --bg-activity: #333333;
-        --bg-tab: #2d2d2d;
-        --bg-active-tab: #1e1e1e;
-        --text-main: #d4d4d4;
-        --text-comment: #6a9955;
-        --text-keyword: #569cd6;
-        --text-string: #ce9178;
-        --text-func: #dcdcaa;
-        --border: #3e3e42;
-        --accent: #007acc;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ComponentWorks 6.0 - Frameworks vs Libraries</title>
+    <style>
+        /* --- VB6 / VS98 THEME --- */
+        :root {
+            --bg-face: #C0C0C0;
+            --bg-dark: #808080;
+            --bg-darker: #404040;
+            --bg-light: #FFFFFF;
+            --text-main: #000000;
+            --title-blue: #000080;
+            --title-text: #FFFFFF;
+            --code-bg: #FFFFFF;
+            --highlight: #000080;
+        }
+
+        * { box-sizing: border-box; user-select: none; }
         
-        --font-code: 'Consolas', 'Monaco', 'Courier New', monospace;
-    }
+        body {
+            background-color: #557;
+            font-family: 'Tahoma', 'Segoe UI', sans-serif;
+            font-size: 11px;
+            margin: 0; height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+        }
 
-    * { box-sizing: border-box; }
-    
-    body {
-        background-color: #000;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        margin: 0; height: 100vh;
-        display: flex; align-items: center; justify-content: center;
-        color: var(--text-main);
-        overflow: hidden;
-    }
+        /* --- WINDOW CHROME --- */
+        .ide-window {
+            width: 1000px; height: 90vh;
+            background-color: var(--bg-face);
+            border: 2px solid var(--bg-face);
+            box-shadow: 2px 2px 0 #000;
+            display: flex; flex-direction: column;
+        }
 
-    /* --- WINDOW CONTAINER --- */
-    .ide-window {
-        width: 1100px; max-width: 98vw; height: 90vh;
-        background-color: var(--bg-main);
-        border: 1px solid #444;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        display: flex; flex-direction: column;
-    }
+        .title-bar {
+            background: linear-gradient(90deg, var(--title-blue), #1084D0);
+            padding: 3px 6px; display: flex; justify-content: space-between; align-items: center;
+            color: var(--title-text); font-weight: bold; letter-spacing: 0.5px;
+        }
+        
+        .menu-bar {
+            display: flex; padding: 2px 5px; border-bottom: 1px solid #808080;
+        }
+        .menu-item { padding: 2px 8px; cursor: pointer; }
+        .menu-item:hover { background: #000080; color: white; }
+        .menu-item u { text-decoration: underline; }
 
-    /* --- TOP BAR --- */
-    .title-bar {
-        background: #3c3c3c; padding: 5px 10px; font-size: 12px; text-align: center; color: #ccc;
-        display: flex; justify-content: space-between;
-    }
-    .dots { display: flex; gap: 6px; }
-    .dot { width: 10px; height: 10px; border-radius: 50%; background: #555; }
-    .dot.r { background: #ff5f56; } .dot.y { background: #ffbd2e; } .dot.g { background: #27c93f; }
+        .toolbar {
+            display: flex; gap: 5px; padding: 4px; 
+            border-top: 1px solid white; border-bottom: 1px solid #808080;
+        }
+        .tool-btn {
+            width: 24px; height: 24px; border: 1px solid transparent;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+        }
+        .tool-btn:hover { border-color: white #808080 #808080 white; border-style: solid; border-width: 1px; }
+        .tool-btn.active { border-color: #808080 white white #808080; border-style: solid; border-width: 1px; background: #ddd; }
 
-    /* --- MAIN LAYOUT --- */
-    .workspace {
-        display: flex; flex: 1; overflow: hidden;
-    }
+        /* --- MAIN WORKSPACE --- */
+        .workspace {
+            flex-grow: 1; display: flex; padding: 2px; gap: 2px;
+            background: #808080;
+        }
 
-    /* --- SIDEBAR --- */
-    .activity-bar { width: 40px; background: var(--bg-activity); display: flex; flex-direction: column; align-items: center; padding-top: 10px; gap: 15px; }
-    .icon { font-size: 20px; opacity: 0.6; cursor: pointer; }
-    .icon:hover, .icon.active { opacity: 1; border-left: 2px solid white; }
+        /* --- PANELS (Bevel Inset) --- */
+        .panel {
+            background: var(--bg-face); border: 2px solid;
+            border-color: white #404040 #404040 white;
+            display: flex; flex-direction: column;
+        }
+        .panel-header {
+            background: #808080; color: white; padding: 2px 4px; font-weight: bold;
+            display: flex; justify-content: space-between;
+        }
+        .panel-content {
+            flex-grow: 1; background: white; border: 2px solid;
+            border-color: #404040 white white #404040;
+            overflow: auto; padding: 10px;
+        }
 
-    .sidebar {
-        width: 220px; background: var(--bg-sidebar); border-right: 1px solid var(--border);
-        display: flex; flex-direction: column;
-    }
-    .sidebar-title { padding: 10px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
-    
-    .file-explorer { list-style: none; padding: 0; margin: 0; font-family: var(--font-ui); font-size: 13px; }
-    .file-item {
-        padding: 5px 15px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #ccc;
-    }
-    .file-item:hover { background: #2a2d2e; }
-    .file-item.active { background: #37373d; color: white; }
-    .file-icon { width: 14px; text-align: center; }
+        /* --- SPECIFIC PANELS --- */
+        .project-explorer { width: 220px; }
+        .main-stage { flex-grow: 1; display: flex; flex-direction: column; }
+        .properties { height: 150px; }
 
-    /* --- EDITOR AREA --- */
-    .editor-area {
-        flex: 1; display: flex; flex-direction: column; background: var(--bg-main);
-    }
+        /* --- TREE VIEW --- */
+        .tree-node {
+            padding: 2px 0 2px 20px; cursor: pointer; position: relative;
+            white-space: nowrap;
+        }
+        .tree-node::before {
+            content: '📄'; margin-right: 5px; font-size: 10px;
+        }
+        .tree-node.folder::before { content: 'yw📂'; color: #aa0; margin-right: 5px; }
+        .tree-node:hover { background: #000080; color: white; }
+        .tree-node.active { background: #000080; color: white; border: 1px dotted white; }
 
-    .tabs { display: flex; background: var(--bg-tab); overflow-x: auto; }
-    .tab {
-        padding: 8px 15px; font-size: 12px; background: var(--bg-tab); color: #888;
-        border-right: 1px solid var(--border); cursor: pointer; min-width: 120px;
-        display: flex; align-items: center; gap: 8px;
-    }
-    .tab.active { background: var(--bg-active-tab); color: white; border-top: 2px solid var(--accent); }
+        /* --- CONTENT TYPOGRAPHY --- */
+        h1 { margin-top: 0; font-size: 18px; border-bottom: 1px solid #000; padding-bottom: 5px; }
+        h3 { color: #000080; margin-bottom: 5px; font-size: 14px; }
+        p { line-height: 1.4; margin-bottom: 15px; font-size: 13px; }
+        
+        /* --- CODE BLOCK --- */
+        .code-window {
+            background: #FFFFFF; border: 2px inset; font-family: 'Courier New', monospace;
+            padding: 10px; margin: 10px 0; font-size: 13px;
+        }
+        .kw { color: #000080; font-weight: bold; } /* Keyword */
+        .str { color: #800000; } /* String */
+        .com { color: #008000; } /* Comment */
 
-    .code-view {
-        padding: 20px; overflow-y: auto; flex: 1;
-        font-family: var(--font-code); font-size: 14px; line-height: 1.6;
-    }
+        /* --- INTERACTIVE ELEMENTS --- */
+        .vb-button {
+            background: #C0C0C0; border: 2px outset white;
+            padding: 5px 15px; font-family: 'Tahoma'; font-size: 12px;
+            cursor: pointer; margin-right: 10px;
+        }
+        .vb-button:active { border-style: inset; transform: translate(1px, 1px); }
 
-    /* --- TERMINAL --- */
-    .terminal-panel {
-        height: 150px; background: var(--bg-main); border-top: 1px solid var(--border);
-        padding: 10px; font-family: var(--font-code); font-size: 12px; display: flex; flex-direction: column;
-    }
-    .term-header { display: flex; gap: 15px; border-bottom: 1px solid var(--border); padding-bottom: 5px; margin-bottom: 5px; color: #888; text-transform: uppercase; font-size: 10px; }
-    .term-content { flex: 1; color: #ccc; overflow-y: auto; }
-    .cursor { display: inline-block; width: 6px; height: 12px; background: white; animation: blink 1s infinite; }
-    @keyframes blink { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+        .toolbox-item {
+            border: 1px solid #ddd; padding: 5px; margin-bottom: 5px;
+            background: #eee; cursor: grab; display: flex; align-items: center; gap: 5px;
+        }
+        .toolbox-item:active { cursor: grabbing; }
+        
+        .drop-zone {
+            height: 100px; border: 2px dashed #888; background: #f0f0f0;
+            display: flex; align-items: center; justify-content: center;
+            margin: 10px 0; font-style: italic; color: #666;
+        }
+        .drop-zone.highlight { background: #e0e0ff; border-color: #000080; }
 
-    /* --- SYNTAX HIGHLIGHTING CLASSES --- */
-    .k { color: var(--text-keyword); } /* Keyword */
-    .s { color: var(--text-string); }  /* String */
-    .f { color: var(--text-func); }    /* Function */
-    .c { color: var(--text-comment); } /* Comment */
-    .n { color: #b5cea8; }             /* Number */
-    .tag { color: #569cd6; }           /* HTML Tag */
-    .attr { color: #9cdcfe; }          /* Attribute */
+        /* --- STATUS BAR --- */
+        .status-bar {
+            display: flex; border-top: 1px solid white; padding: 2px; background: var(--bg-face);
+        }
+        .status-panel {
+            border: 1px solid; border-color: #808080 white white #808080;
+            padding: 2px 5px; margin-right: 2px;
+        }
 
-    h1 { color: #dcdcaa; font-size: 20px; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px; }
-    .interactive-btn {
-        background: #0e639c; color: white; border: none; padding: 5px 10px; 
-        font-family: var(--font-ui); cursor: pointer; font-size: 12px; margin-top: 10px;
-    }
-    .interactive-btn:hover { background: #1177bb; }
-
-    .visual-box {
-        border: 1px dashed #555; background: #252526; padding: 15px; margin: 15px 0; border-radius: 4px;
-        text-align: center;
-    }
-</style>
+    </style>
 </head>
 <body>
 
-<div class="ide-window">
-    <div class="title-bar">
-        <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
-        <span>Framework_Explorer - Visual Studio Code</span>
-        <div></div>
-    </div>
-
-    <div class="workspace">
-        <div class="activity-bar">
-            <div class="icon active">📂</div>
-            <div class="icon">🔍</div>
-            <div class="icon">🌿</div>
-            <div class="icon">🧩</div>
-        </div>
-
-        <div class="sidebar">
-            <div class="sidebar-title">Explorer</div>
-            <div style="padding: 5px 10px; font-weight: bold; font-size: 11px;">🔻 CURRICULUM</div>
-            <ul class="file-explorer">
-                <li class="file-item active" onclick="loadFile('concept')">
-                    <span class="file-icon">📝</span> 01_Concept.md
-                </li>
-                <li class="file-item" onclick="loadFile('frontend')">
-                    <span class="file-icon">⚛️</span> 02_Frontend.jsx
-                </li>
-                <li class="file-item" onclick="loadFile('backend')">
-                    <span class="file-icon">🐍</span> 03_Backend.py
-                </li>
-                <li class="file-item" onclick="loadFile('css')">
-                    <span class="file-icon">#️⃣</span> 04_Styles.css
-                </li>
-                <li class="file-item" onclick="loadFile('path')">
-                    <span class="file-icon">🗺️</span> 05_Roadmap.json
-                </li>
-            </ul>
-        </div>
-
-        <div class="editor-area">
-            <div class="tabs">
-                <div class="tab active" id="active-tab-name">01_Concept.md</div>
+    <div class="ide-window">
+        <div class="title-bar">
+            <span>ComponentWorks 6.0 - [Lesson1_Intro.frm]</span>
+            <div>
+                <button style="font-size:8px">_</button>
+                <button style="font-size:8px">□</button>
+                <button style="font-size:8px">X</button>
             </div>
-            <div class="code-view" id="code-content">
+        </div>
+
+        <div class="menu-bar">
+            <div class="menu-item"><u>F</u>ile</div>
+            <div class="menu-item"><u>E</u>dit</div>
+            <div class="menu-item"><u>V</u>iew</div>
+            <div class="menu-item"><u>P</u>roject</div>
+            <div class="menu-item"><u>H</u>elp</div>
+        </div>
+
+        <div class="toolbar">
+            <div class="tool-btn" title="Add Standard EXE">📄</div>
+            <div class="tool-btn" title="Add Form">🗔</div>
+            <div style="width:1px; background:#808080; margin:0 5px;"></div>
+            <div class="tool-btn" onclick="navTo('intro')">▶</div> <div class="tool-btn">||</div> <div class="tool-btn">■</div> </div>
+
+        <div class="workspace">
+            
+            <div class="panel project-explorer">
+                <div class="panel-header">
+                    <span>Project Explorer</span>
+                    <span>X</span>
                 </div>
+                <div class="panel-content" style="padding:0; background:white;">
+                    <div class="tree-node folder" onclick="toggleTree('root')"><b>Project1 (Curriculum)</b></div>
+                    <div id="tree-root" style="display:block">
+                        <div class="tree-node folder" style="padding-left:30px">Forms</div>
+                        <div class="tree-node active" style="padding-left:45px" onclick="navTo('intro')">frmIntro.vb</div>
+                        <div class="tree-node" style="padding-left:45px" onclick="navTo('library')">frmLibrary.vb</div>
+                        <div class="tree-node" style="padding-left:45px" onclick="navTo('framework')">frmFramework.vb</div>
+                        <div class="tree-node" style="padding-left:45px" onclick="navTo('ioc')">frmIoC.vb</div>
+                        <div class="tree-node folder" style="padding-left:30px">Modules</div>
+                        <div class="tree-node" style="padding-left:45px" onclick="navTo('quiz')">modQuiz.bas</div>
+                    </div>
+                </div>
+                <div class="panel-header" style="margin-top:2px;">Properties</div>
+                <div class="panel-content properties" style="background:#fff;">
+                    <table width="100%" cellspacing="0" cellpadding="2" style="font-size:11px;">
+                        <tr><td style="background:#eee">Name</td><td>frmIntro</td></tr>
+                        <tr><td style="background:#eee">Caption</td><td>Introduction</td></tr>
+                        <tr><td style="background:#eee">BackColor</td><td>&H8000000F</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel main-stage">
+                <div class="panel-header">
+                    <span id="doc-title">frmIntro</span>
+                    <span>_ □ X</span>
+                </div>
+                <div class="panel-content" id="main-content">
+                    </div>
+            </div>
+
+            <div class="panel" style="width: 140px;">
+                <div class="panel-header">Toolbox</div>
+                <div class="panel-content" style="background:#ddd; padding:2px;">
+                    <div class="toolbox-item">Cursor</div>
+                    <div class="toolbox-item">Label</div>
+                    <div class="toolbox-item">TextBox</div>
+                    <div class="toolbox-item">CommandBtn</div>
+                    <div class="toolbox-item">React.js</div>
+                    <div class="toolbox-item">Angular</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="status-bar">
+            <div class="status-panel" style="flex-grow:1">Ready</div>
+            <div class="status-panel" style="width:100px">Ln 1, Col 1</div>
+            <div class="status-panel" style="width:50px">INS</div>
         </div>
     </div>
 
-    <div class="terminal-panel">
-        <div class="term-header">
-            <span>Problems</span> <span>Output</span> <span style="color:white; border-bottom: 1px solid white;">Terminal</span> <span>Git</span>
-        </div>
-        <div class="term-content" id="term-text">
-            user@dev-machine:~$ node welcome.js<br>
-            > Welcome to the Interactive Framework Curriculum.<br>
-            > Click a file in the sidebar to start learning...<br>
-            <span class="cursor"></span>
-        </div>
-    </div>
-</div>
-
-<script>
-    const database = {
-        'concept': {
-            name: '01_Concept.md',
-            content: `
-<h1># Library vs. Framework</h1>
-<span class="c">&lt;!-- The fundamental difference is "Inversion of Control" --&gt;</span>
-
-<span class="k">### 1. Library (The "Tool")</span>
-You are in charge. You call the library when you need it.
-Think of it like buying furniture from IKEA. You buy the pieces, you decide where they go.
-<span class="c">// Example: React (mostly), jQuery, Lodash</span>
-
-<span class="k">### 2. Framework (The "Factory")</span>
-The framework is in charge. It calls your code.
-Think of it like buying a model home. The structure is built; you just paint the walls.
-<span class="c">// Example: Angular, Django, Ruby on Rails</span>
-
-<div class="visual-box">
-    <strong>VISUALIZATION:</strong><br><br>
-    LIBRARY: Your Code ➔ Calls ➔ Library<br>
-    FRAMEWORK: Framework ➔ Calls ➔ Your Code
-</div>
+    <script>
+        const contentData = {
+            'intro': `
+                <h1>The Component Confusion</h1>
+                <p>Welcome, Developer. You are about to build an application. You have two choices for your tools:</p>
+                <ul>
+                    <li><strong>Libraries:</strong> Specific tools for specific jobs.</li>
+                    <li><strong>Frameworks:</strong> A complete structural system.</li>
+                </ul>
+                <p>The confusion arises because both are just "code written by someone else." The difference is <strong>Control</strong>.</p>
+                <hr>
+                <div style="background:#eee; padding:10px; border:1px solid #999; margin-top:20px;">
+                    <strong>Analogy: House Building</strong><br>
+                    <br><br>
+                    - A <strong>Library</strong> is like a <em>Hammer</em>. You pick it up when you need to drive a nail. You put it down when you are done.<br>
+                    - A <strong>Framework</strong> is like a <em>Model Home Kit</em>. The walls are already up. You can paint them, but you can't move the bathroom to the kitchen.
+                </div>
+                <br>
+                <button class="vb-button" onclick="navTo('library')">Next: What is a Library? ></button>
             `,
-            term: "> Loaded Concept Module.\n> Remember: Libraries offer freedom; Frameworks offer structure."
-        },
-        'frontend': {
-            name: '02_Frontend.jsx',
-            content: `
-<span class="k">import</span> React, { Vue, Angular } <span class="k">from</span> <span class="s">'ecosystem'</span>;
+            'library': `
+                <h1>1. The Library</h1>
+                <h3>"You call the code."</h3>
+                <p>A library is a collection of functions. Your code is the "Boss." Your code decides when to call the library.</p>
+                
+                <div class="code-window">
+                    <span class="com">' EXAMPLE: Using a Date Library (Moment.js)</span><br>
+                    <span class="kw">function</span> ShowTime() {<br>
+                    &nbsp;&nbsp;<span class="com">' We are in control. We decide when to ask for the date.</span><br>
+                    &nbsp;&nbsp;<span class="kw">let</span> now = moment().format(<span class="str">"MMMM Do YYYY"</span>);<br>
+                    &nbsp;&nbsp;print(now);<br>
+                    }
+                </div>
 
-<span class="c">// 1. React.js (The Industry Standard)</span>
-<span class="k">const</span> <span class="f">React</span> = {
-    type: <span class="s">"Library"</span>,
-    philosophy: <span class="s">"Learn Once, Write Anywhere"</span>,
-    pros: [<span class="s">"Huge Job Market"</span>, <span class="s">"Massive Ecosystem"</span>],
-    cons: [<span class="s">"Requires extra tools for routing/state"</span>]
-};
-
-<span class="c">// 2. Vue.js (The Progressive Framework)</span>
-<span class="k">const</span> <span class="f">Vue</span> = {
-    type: <span class="s">"Hybrid"</span>,
-    philosophy: <span class="s">"Approachable & Versatile"</span>,
-    pros: [<span class="s">"Easy to learn"</span>, <span class="s">"Great documentation"</span>]
-};
-
-<span class="c">// 3. Angular (The Heavyweight)</span>
-<span class="k">const</span> <span class="f">Angular</span> = {
-    type: <span class="s">"Full Framework"</span>,
-    opinionated: <span class="k">true</span>,
-    pros: [<span class="s">"Batteries included"</span>, <span class="s">"Enterprise standard"</span>]
-};
+                <p>Examples: <strong>React</strong> (mostly), <strong>Lodash</strong>, <strong>jQuery</strong>.</p>
+                <p><em>Note: React calls itself a library because you can drop a single React component into a larger legacy app without rewriting the whole app.</em></p>
+                
+                <button class="vb-button" onclick="navTo('framework')">Next: What is a Framework? ></button>
             `,
-            term: "> Suggestion: Start with React or Vue.\n> Angular has a steeper learning curve but is powerful for banks/enterprises."
-        },
-        'backend': {
-            name: '03_Backend.py',
-            content: `
-<span class="k">class</span> <span class="f">BackendSelection</span>:
-    <span class="c">"""
-    Choosing your server-side technology.
-    """</span>
+            'framework': `
+                <h1>2. The Framework</h1>
+                <h3>"The code calls you."</h3>
+                <p>A framework provides the skeleton. It says: "I will run the application. You just fill in these specific blanks."</p>
 
-    <span class="k">def</span> <span class="f">express_js</span>(self):
-        <span class="k">return</span> {
-            <span class="s">"desc"</span>: <span class="s">"Minimalist Node.js framework"</span>,
-            <span class="s">"best_for"</span>: <span class="s">"MERN Stack, Microservices"</span>,
-            <span class="s">"freedom"</span>: <span class="s">"High"</span>
+                <div class="code-window">
+                    <span class="com">' EXAMPLE: Angular or Vue Component</span><br>
+                    <span class="kw">export default</span> {<br>
+                    &nbsp;&nbsp;<span class="com">' The Framework decides when to run this. Not you.</span><br>
+                    &nbsp;&nbsp;mounted() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;console.log(<span class="str">"I am alive!"</span>);<br>
+                    &nbsp;&nbsp;}<br>
+                    }
+                </div>
+
+                <p>If you remove the Framework, your code does nothing. It has no entry point.</p>
+                <p>Examples: <strong>Angular</strong>, <strong>Django</strong>, <strong>Ruby on Rails</strong>.</p>
+
+                <button class="vb-button" onclick="navTo('ioc')">Next: The Critical Difference ></button>
+            `,
+            'ioc': `
+                <h1>3. Inversion of Control (IoC)</h1>
+                <p>This is the technical term for "The Hollywood Principle": <em>Don't call us, we'll call you.</em></p>
+                
+                <table border="1" style="border-collapse:collapse; background:white; width:100%; border-color:#888;">
+                    <tr style="background:#ddd"><th>Feature</th><th>Library</th><th>Framework</th></tr>
+                    <tr><td>Control</td><td>You control the flow</td><td>Framework controls flow</td></tr>
+                    <tr><td>Flexibility</td><td>High (Mix & Match)</td><td>Low (Follow the rules)</td></tr>
+                    <tr><td>Replacability</td><td>Easy</td><td>Hard (Rewrite needed)</td></tr>
+                </table>
+
+                <br>
+                <h3>Visual Demonstration</h3>
+                <p>Drag the items below into the correct bin.</p>
+
+                <div style="display:flex; gap:10px;">
+                    <div id="drag-angular" class="toolbox-item" draggable="true" ondragstart="drag(event)" data-type="frame">Angular</div>
+                    <div id="drag-lodash" class="toolbox-item" draggable="true" ondragstart="drag(event)" data-type="lib">Lodash</div>
+                    <div id="drag-rails" class="toolbox-item" draggable="true" ondragstart="drag(event)" data-type="frame">Rails</div>
+                </div>
+
+                <div style="display:flex; gap:20px;">
+                    <div id="bin-frame" class="drop-zone" style="flex:1" ondrop="drop(event, 'frame')" ondragover="allowDrop(event)">
+                        Drop FRAMEWORKS here
+                    </div>
+                    <div id="bin-lib" class="drop-zone" style="flex:1" ondrop="drop(event, 'lib')" ondragover="allowDrop(event)">
+                        Drop LIBRARIES here
+                    </div>
+                </div>
+                <div id="drag-feedback" style="height:20px; font-weight:bold;"></div>
+            `,
+            'quiz': `
+                <h1>Final Review</h1>
+                <p>Answer to complete the module.</p>
+                
+                <div style="background:#eee; padding:10px; border:1px solid #aaa;">
+                    <p><strong>Scenario:</strong> You are building a small widget to calculate taxes on a single page of a 10-year-old website. You don't want to rewrite the site.</p>
+                    <p>Do you use a Library or a Framework?</p>
+                    
+                    <button class="vb-button" onclick="alert('Correct! A library (like jQuery or React) can be dropped in without taking over.')">Library</button>
+                    <button class="vb-button" onclick="alert('Incorrect. A framework usually demands to control the routing and the whole page.')">Framework</button>
+                </div>
+            `
+        };
+
+        function navTo(id) {
+            // Update Title
+            document.title = `ComponentWorks 6.0 - [${id}.frm]`;
+            document.getElementById('doc-title').innerText = `frm${id.charAt(0).toUpperCase() + id.slice(1)}`;
+
+            // Update Content
+            const container = document.getElementById('main-content');
+            container.innerHTML = contentData[id];
+
+            // Update Tree Highlight
+            document.querySelectorAll('.tree-node').forEach(el => el.classList.remove('active'));
+            // In a real app we would ID the tree nodes, but this is a simple mockup
         }
 
-    <span class="k">def</span> <span class="f">django_python</span>(self):
-        <span class="k">return</span> {
-            <span class="s">"desc"</span>: <span class="s">"The framework for perfectionists with deadlines"</span>,
-            <span class="s">"features"</span>: [<span class="s">"Built-in Admin Panel"</span>, <span class="s">"Security defaults"</span>],
-            <span class="s">"speed"</span>: <span class="s">"Fast development, average execution"</span>
+        // Drag and Drop Logic
+        function allowDrop(ev) {
+            ev.preventDefault();
+            ev.currentTarget.style.backgroundColor = '#e0e0ff';
         }
-    
-    <span class="k">def</span> <span class="f">spring_boot_java</span>(self):
-        <span class="s">"The enterprise standard for large systems."</span>
-            `,
-            term: "> Running backend_analysis.py...\n> If you know JS, pick Express.\n> If you like Python/Data, pick Django/FastAPI."
-        },
-        'css': {
-            name: '04_Styles.css',
-            content: `
-<span class="c">/* --- TRADITIONAL FRAMEWORKS (Bootstrap) --- */</span>
-<span class="c">/* Pre-made components you drop in. */</span>
-<span class="tag">.btn-primary</span> {
-    <span class="attr">background-color</span>: blue;
-    <span class="attr">padding</span>: 10px;
-}
 
-<span class="c">/* --- UTILITY-FIRST (Tailwind CSS) --- */</span>
-<span class="c">/* Modern Standard. You build components using tiny utility classes. */</span>
-<span class="tag">&lt;button</span> <span class="attr">class</span>=<span class="s">"bg-blue-500 p-2 rounded text-white hover:bg-blue-700"</span><span class="tag">&gt;</span>
-    Click Me
-<span class="tag">&lt;/button&gt;</span>
-
-<span class="c">/* WHY TAILWIND WON:
-   1. No fighting overriding styles.
-   2. Smaller bundle size in production.
-   3. Copy/Paste components easily.
-*/</span>
-            `,
-            term: "> CSS loaded.\n> Warning: Bootstrap looks 'generic' out of the box.\n> Tailwind allows for custom designs much faster."
-        },
-        'path': {
-            name: '05_Roadmap.json',
-            content: `
-{
-  <span class="s">"recommended_path"</span>: [
-    {
-      <span class="s">"step"</span>: 1,
-      <span class="s">"goal"</span>: <span class="s">"Learn the Language FIRST"</span>,
-      <span class="s">"note"</span>: <span class="s">"Do not learn React before solid JavaScript."</span>
-    },
-    {
-      <span class="s">"step"</span>: 2,
-      <span class="s">"goal"</span>: <span class="s">"Pick ONE Frontend Library"</span>,
-      <span class="s">"selection"</span>: <span class="s">"React (Safest bet) or Vue"</span>
-    },
-    {
-      <span class="s">"step"</span>: 3,
-      <span class="s">"goal"</span>: <span class="s">"Pick a CSS Framework"</span>,
-      <span class="s">"selection"</span>: <span class="s">"Tailwind CSS"</span>
-    },
-    {
-      <span class="s">"step"</span>: 4,
-      <span class="s">"goal"</span>: <span class="s">"Build a Project"</span>,
-      <span class="s">"idea"</span>: <span class="s">"A Todo List or Weather App using both."</span>
-    }
-  ]
-}
-            `,
-            term: "> Roadmap initialized.\n> Consistency > Intensity.\n> Build things to learn, don't just watch videos."
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+            ev.dataTransfer.setData("type", ev.target.getAttribute('data-type'));
         }
-    };
 
-    function loadFile(key) {
-        // Highlight Sidebar
-        document.querySelectorAll('.file-item').forEach(el => el.classList.remove('active'));
-        event.currentTarget.classList.add('active');
+        function drop(ev, binType) {
+            ev.preventDefault();
+            ev.currentTarget.style.backgroundColor = '#f0f0f0';
+            
+            var data = ev.dataTransfer.getData("text");
+            var type = ev.dataTransfer.getData("type");
+            var el = document.getElementById(data);
 
-        // Update Tab
-        const data = database[key];
-        document.getElementById('active-tab-name').innerText = data.name;
-
-        // Update Content
-        document.getElementById('code-content').innerHTML = data.content;
-
-        // Typewriter Terminal Effect
-        const term = document.getElementById('term-text');
-        term.innerHTML = `user@dev-machine:~$ open ${data.name}<br>`;
-        
-        // Simple typewriter simulation
-        let i = 0;
-        const speed = 20; 
-        const txt = data.term;
-        
-        function typeWriter() {
-            if (i < txt.length) {
-                let char = txt.charAt(i);
-                if(char === '\n') char = '<br>';
-                term.innerHTML += char;
-                i++;
-                setTimeout(typeWriter, speed);
+            if (type === binType) {
+                ev.target.appendChild(el);
+                document.getElementById('drag-feedback').innerText = "Correct! Item docked successfully.";
+                document.getElementById('drag-feedback').style.color = "green";
             } else {
-                term.innerHTML += '<span class="cursor"></span>';
+                document.getElementById('drag-feedback').innerText = "Error: Type Mismatch. Cannot dock.";
+                document.getElementById('drag-feedback').style.color = "red";
             }
         }
-        typeWriter();
-    }
 
-    // Initialize
-    window.onload = function() {
-        document.querySelector('.file-item').click();
-    }
-</script>
+        // Init
+        navTo('intro');
 
+    </script>
 </body>
 </html>
