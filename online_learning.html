@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Online Learning Resources</title>
+
+<link rel="stylesheet" href="styles/general.css">
+
+<!-- ONLY new styles -->
+<style>
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.resource-box {
+    box-shadow: var(--bevel-inset);
+    padding: 14px;
+    margin-bottom: 20px;
+}
+
+.resource-metric {
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.progress {
+    height: 16px;
+    background: var(--border-med);
+    box-shadow: var(--bevel-inset);
+    margin-bottom: 12px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--title-grad-1);
+}
+
+[data-theme="dark"] .progress-fill {
+    background: var(--text-main);
+}
+</style>
+</head>
+
+<body>
+<div class="window">
+
+    <!-- TITLE BAR -->
+    <div class="title-bar">
+        <div class="title-text">🌐 Online Learning Resources</div>
+        <div class="title-controls">
+            <button class="win-btn" onclick="toggleTheme()">☼</button>
+        </div>
+    </div>
+
+    <!-- MENU -->
+    <div class="menu-bar">
+        <div class="menu-item">File</div>
+        <div class="menu-item">View</div>
+        <div class="menu-item">Help</div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+        <button class="tool-btn active" onclick="showTab('free', this)">Free Platforms</button>
+        <button class="tool-btn" onclick="showTab('paid', this)">Paid Platforms</button>
+        <button class="tool-btn" onclick="showTab('university', this)">University Courses</button>
+        <button class="tool-btn" onclick="showTab('challenges', this)">Coding Challenges</button>
+        <button class="tool-btn" onclick="showTab('docs', this)">Documentation & References</button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="window-content">
+
+        <!-- FREE -->
+        <section id="free" class="tab-content active">
+            <h1>Free Platforms</h1>
+            <div class="resource-box">
+                <p>Free platforms allow you to start learning programming without upfront cost:</p>
+                <ul>
+                    <li>freeCodeCamp</li>
+                    <li>Codecademy Free</li>
+                    <li>Khan Academy – Computing</li>
+                    <li>MIT OpenCourseWare</li>
+                </ul>
+                <div class="resource-metric">Accessibility</div>
+                <div class="progress"><div class="progress-fill" style="width:90%"></div></div>
+            </div>
+        </section>
+
+        <!-- PAID -->
+        <section id="paid" class="tab-content">
+            <h1>Paid Platforms</h1>
+            <div class="resource-box">
+                <p>Paid platforms offer structured paths, mentorship, and certificates:</p>
+                <ul>
+                    <li>Udemy</li>
+                    <li>Pluralsight</li>
+                    <li>Educative.io</li>
+                    <li>LeetCode Premium</li>
+                </ul>
+                <div class="resource-metric">Content Depth</div>
+                <div class="progress"><div class="progress-fill" style="width:80%"></div></div>
+            </div>
+        </section>
+
+        <!-- UNIVERSITY -->
+        <section id="university" class="tab-content">
+            <h1>University Open Courses</h1>
+            <div class="resource-box">
+                <p>Top universities provide free or paid online courses:</p>
+                <ul>
+                    <li>Harvard CS50 (edX)</li>
+                    <li>Stanford CS Online</li>
+                    <li>MIT OpenCourseWare</li>
+                    <li>UC Berkeley – Online CS Courses</li>
+                </ul>
+                <div class="resource-metric">Certification & Credibility</div>
+                <div class="progress"><div class="progress-fill" style="width:75%"></div></div>
+            </div>
+        </section>
+
+        <!-- CHALLENGES -->
+        <section id="challenges" class="tab-content">
+            <h1>Coding Challenges</h1>
+            <div class="resource-box">
+                <p>Coding challenges help you practice problem-solving:</p>
+                <ul>
+                    <li>HackerRank</li>
+                    <li>LeetCode</li>
+                    <li>Codewars</li>
+                    <li>Advent of Code</li>
+                </ul>
+                <div class="resource-metric">Difficulty Scaling</div>
+                <div class="progress"><div class="progress-fill" style="width:85%"></div></div>
+            </div>
+        </section>
+
+        <!-- DOCS -->
+        <section id="docs" class="tab-content">
+            <h1>Documentation & References</h1>
+            <div class="resource-box">
+                <p>Official documentation and references are critical for deep learning:</p>
+                <ul>
+                    <li>MDN Web Docs</li>
+                    <li>Python.org Documentation</li>
+                    <li>JavaDocs / API References</li>
+                    <li>Stack Overflow & Dev Community Forums</li>
+                </ul>
+                <div class="resource-metric">Reliability</div>
+                <div class="progress"><div class="progress-fill" style="width:95%"></div></div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+        <div class="status-panel">Resources Loaded</div>
+        <div class="status-panel">Career Explorer</div>
+    </div>
+
+</div>
+
+<script>
+function showTab(id, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+
+    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+
+function toggleTheme() {
+    document.body.dataset.theme =
+        document.body.dataset.theme === "dark" ? "" : "dark";
+}
+</script>
+</body>
+</html>
