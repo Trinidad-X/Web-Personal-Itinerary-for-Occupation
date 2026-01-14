@@ -2,192 +2,413 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Programming Labor Market – US</title>
-
-<!-- Link to provided CSS -->
-<link rel="stylesheet" href="styles/general.css">
-
-<!-- ONLY new styles -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Labor Market Explorer 2026</title>
 <style>
-.tab-content { display: none; }
-.tab-content.active { display: block; }
+    /* --- WIN98 CORE THEME --- */
+    :root {
+        --bg-desktop: #008080;
+        --bg-window: #C0C0C0;
+        --bg-input: #FFFFFF;
+        --text-main: #000000;
+        --border-light: #FFFFFF;
+        --border-med: #DFDFDF;
+        --border-dark: #808080;
+        --border-black: #000000;
+        --title-grad-1: #000080;
+        --title-grad-2: #1084D0;
+        --title-text: #FFFFFF;
+        
+        --bevel-outset: inset -1px -1px var(--border-black), inset 1px 1px var(--border-light), inset -2px -2px var(--border-dark), inset 2px 2px var(--border-med);
+        --bevel-inset: inset -1px -1px var(--border-light), inset 1px 1px var(--border-black), inset -2px -2px var(--border-med), inset 2px 2px var(--border-dark);
+        --bevel-input: inset 2px 2px var(--border-black), inset -1px -1px var(--border-light);
+    }
 
-.chart {
-    margin: 15px 0;
-}
-.chart-bar {
-    height: 18px;
-    background: var(--border-med);
-    box-shadow: var(--bevel-inset);
-    margin-bottom: 8px;
-}
-.chart-fill {
-    height: 100%;
-    background: var(--title-grad-1);
-}
-[data-theme="dark"] .chart-fill {
-    background: var(--text-main);
-}
+    /* Dark Mode (High Contrast) */
+    [data-theme="dark"] {
+        --bg-desktop: #000;
+        --bg-window: #000;
+        --bg-input: #000;
+        --text-main: #0F0;
+        --border-light: #0F0;
+        --border-med: #0A0;
+        --border-dark: #0F0;
+        --border-black: #0F0;
+        --title-grad-1: #0F0;
+        --title-grad-2: #0F0;
+        --title-text: #000;
+        --bevel-outset: 1px solid #0F0;
+        --bevel-inset: 1px solid #0F0;
+    }
 
-.compare-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-.compare-box {
-    box-shadow: var(--bevel-inset);
-    padding: 12px;
-}
+    body {
+        background-color: var(--bg-desktop);
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+        margin: 0; height: 100vh;
+        display: flex; align-items: center; justify-content: center;
+        overflow: hidden; user-select: none;
+    }
+
+    /* --- WINDOW STRUCTURE --- */
+    .window {
+        width: 900px; max-width: 95vw; height: 85vh;
+        background-color: var(--bg-window);
+        box-shadow: 4px 4px 0px rgba(0,0,0,0.5), var(--bevel-outset);
+        display: flex; flex-direction: column; padding: 3px;
+    }
+
+    .title-bar {
+        background: linear-gradient(90deg, var(--title-grad-1), var(--title-grad-2));
+        padding: 4px; display: flex; justify-content: space-between; align-items: center;
+        color: var(--title-text); font-weight: bold; font-size: 13px; margin-bottom: 2px;
+    }
+    .win-btn {
+        width: 16px; height: 16px; font-size: 10px; font-weight: bold;
+        background: var(--bg-window); border: none; box-shadow: var(--bevel-outset);
+        cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .win-btn:active { box-shadow: var(--bevel-inset); }
+
+    /* --- TOOLBAR & TABS --- */
+    .toolbar { 
+        display: flex; gap: 4px; padding: 6px; 
+        margin-bottom: 2px; border-bottom: 1px solid var(--border-dark);
+    }
+    .tool-btn {
+        flex: 1; padding: 6px; border: none; background: var(--bg-window); box-shadow: var(--bevel-outset);
+        font-size: 12px; cursor: pointer; color: var(--text-main);
+    }
+    .tool-btn:active, .tool-btn.active { 
+        box-shadow: var(--bevel-inset); background: var(--border-med); font-weight: bold; 
+    }
+
+    /* --- CONTENT AREA --- */
+    .window-content {
+        flex-grow: 1; background: var(--bg-window);
+        padding: 15px; overflow-y: auto; color: var(--text-main);
+    }
+    
+    .tab-content { display: none; height: 100%; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    h1 { font-size: 16px; margin-top: 0; border-bottom: 2px groove var(--border-med); padding-bottom: 5px; }
+
+    /* --- WIDGET: CHART BARS --- */
+    .chart-container { background: #fff; border: 2px inset white; padding: 15px; box-shadow: var(--bevel-input); }
+    [data-theme="dark"] .chart-container { background: #000; border: 1px solid #0F0; }
+
+    .chart-row { margin-bottom: 12px; }
+    .row-label { font-size: 12px; display: flex; justify-content: space-between; margin-bottom: 2px; }
+    .bar-track { height: 20px; background: #eee; box-shadow: inset 1px 1px 2px #888; position: relative; }
+    .bar-fill { 
+        height: 100%; background: var(--title-grad-1); 
+        width: 0%; transition: width 1s ease-out;
+        display: flex; align-items: center; justify-content: flex-end; padding-right: 5px;
+        color: white; font-size: 11px; font-weight: bold;
+    }
+    .bar-fill.warning { background: #d35400; }
+    .bar-fill.success { background: #27ae60; }
+
+    /* --- WIDGET: CALCULATOR --- */
+    .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 100%; }
+    .fieldset { border: 2px groove var(--border-med); padding: 10px; position: relative; margin-top: 10px; }
+    .legend { position: absolute; top: -10px; left: 10px; background: var(--bg-window); padding: 0 5px; font-weight: bold; font-size: 12px; }
+    
+    .input-group { margin-bottom: 15px; }
+    .input-group label { display: block; font-size: 12px; margin-bottom: 3px; }
+    select, input { 
+        width: 100%; padding: 4px; border: 2px inset white; background: var(--bg-input); 
+        color: var(--text-main); font-family: inherit;
+    }
+
+    .lcd-display {
+        background: #000; color: #0F0; font-family: 'Courier New', monospace;
+        padding: 15px; border: 4px inset #888; margin-top: 20px;
+        text-align: right; font-size: 24px; text-shadow: 0 0 5px #0F0;
+    }
+
+    /* --- WIDGET: HEATMAP --- */
+    .heatmap-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+    .tech-card {
+        padding: 10px; border: 2px outset white; background: var(--bg-window);
+        text-align: center; cursor: help;
+    }
+    .tech-card:active { border-style: inset; }
+    .tech-name { font-weight: bold; font-size: 13px; }
+    .tech-trend { font-size: 11px; margin-top: 5px; }
+    .up { color: green; } .down { color: red; } .stable { color: blue; }
+
+    /* --- STATUS BAR --- */
+    .status-bar {
+        margin-top: 4px; padding: 2px; display: flex; gap: 4px; font-size: 11px; color: var(--text-main);
+    }
+    .status-panel {
+        box-shadow: var(--bevel-inset); padding: 3px 6px; flex-grow: 1; white-space: nowrap; overflow: hidden;
+    }
+    .status-fixed { width: 80px; text-align: center; }
+
 </style>
 </head>
 
 <body>
 <div class="window">
 
-    <!-- TITLE BAR -->
     <div class="title-bar">
-        <div class="title-text">💾 Programming Labor Market Explorer (US)</div>
+        <div class="title-text">📊 Labor_Market_Analyzer_v2.exe</div>
         <div class="title-controls">
             <button class="win-btn" onclick="toggleTheme()">☼</button>
+            <button class="win-btn">?</button>
+            <button class="win-btn">X</button>
         </div>
     </div>
 
-    <!-- MENU -->
-    <div class="menu-bar">
-        <div class="menu-item">File</div>
-        <div class="menu-item">View</div>
-        <div class="menu-item">Help</div>
+    <div style="padding: 2px 5px; font-size:12px; border-bottom:1px solid #888;">
+        <span style="margin-right:15px; text-decoration:underline">F</span>ile &nbsp; 
+        <span style="margin-right:15px; text-decoration:underline">D</span>ata &nbsp; 
+        <span style="margin-right:15px; text-decoration:underline">V</span>iew &nbsp; 
+        <span style="margin-right:15px; text-decoration:underline">H</span>elp
     </div>
 
-    <!-- TOOLBAR -->
     <div class="toolbar">
-        <button class="tool-btn active" onclick="showTab('demand', this)">Job Demand</button>
-        <button class="tool-btn" onclick="showTab('salaries', this)">Salaries</button>
-        <button class="tool-btn" onclick="showTab('levels', this)">Entry vs Senior</button>
-        <button class="tool-btn" onclick="showTab('remote', this)">Remote Work</button>
+        <button class="tool-btn active" onclick="nav('trends', this)">📈 Market Trends</button>
+        <button class="tool-btn" onclick="nav('calculator', this)">🧮 Salary Calc</button>
+        <button class="tool-btn" onclick="nav('geo', this)">🗺️ Geography</button>
+        <button class="tool-btn" onclick="nav('skills', this)">🔥 Skill Heatmap</button>
     </div>
 
-    <!-- CONTENT -->
     <div class="window-content">
 
-        <!-- JOB DEMAND -->
-        <section id="demand" class="tab-content active">
-            <h1>Job Demand & Trends</h1>
-            <p>
-                Software development continues to be one of the strongest labor markets in the US,
-                driven by cloud computing, AI, cybersecurity, and enterprise digitization.
-            </p>
-
-            <div class="chart">
-                <div class="label">Web & Application Development</div>
-                <div class="chart-bar">
-                    <div class="chart-fill" style="width:85%"></div>
+        <section id="trends" class="tab-content active">
+            <h1>2025-2026 Demand Projections</h1>
+            <p style="font-size:12px; margin-bottom:15px">Data sourced from aggregated job postings. Hover for details.</p>
+            
+            <div class="chart-container">
+                <div class="chart-row" onmouseover="setStatus('AI/ML Engineering: +24% YoY Growth')" onmouseout="resetStatus()">
+                    <div class="row-label"><span>AI / ML Engineers</span> <span>High Demand</span></div>
+                    <div class="bar-track"><div class="bar-fill success" style="width: 92%">92/100</div></div>
                 </div>
 
-                <div class="label">Data / AI / ML Engineering</div>
-                <div class="chart-bar">
-                    <div class="chart-fill" style="width:75%"></div>
+                <div class="chart-row" onmouseover="setStatus('Cloud/DevOps: Essential for infrastructure scaling')" onmouseout="resetStatus()">
+                    <div class="row-label"><span>Cloud & DevOps</span> <span>Very High</span></div>
+                    <div class="bar-track"><div class="bar-fill success" style="width: 88%">88/100</div></div>
                 </div>
 
-                <div class="label">Systems / Embedded Software</div>
-                <div class="chart-bar">
-                    <div class="chart-fill" style="width:55%"></div>
+                <div class="chart-row" onmouseover="setStatus('Full Stack: The standard for generalists')" onmouseout="resetStatus()">
+                    <div class="row-label"><span>Full Stack (React/Node)</span> <span>Stable</span></div>
+                    <div class="bar-track"><div class="bar-fill" style="width: 75%">75/100</div></div>
+                </div>
+
+                <div class="chart-row" onmouseover="setStatus('Entry Level: Highly competitive market')" onmouseout="resetStatus()">
+                    <div class="row-label"><span>Junior Web Dev</span> <span>Saturated</span></div>
+                    <div class="bar-track"><div class="bar-fill warning" style="width: 45%">45/100</div></div>
+                </div>
+            </div>
+            
+            <div style="margin-top:15px; font-size:11px; display:flex; gap:10px;">
+                <button class="win-btn" style="width:auto; padding:2px 8px;">Refresh Data</button>
+                <button class="win-btn" style="width:auto; padding:2px 8px;">Export CSV</button>
+            </div>
+        </section>
+
+        <section id="calculator" class="tab-content">
+            <h1>Compensation Estimator</h1>
+            <div class="calc-grid">
+                <div>
+                    <div class="fieldset">
+                        <span class="legend">Inputs</span>
+                        <div class="input-group">
+                            <label>Role Level:</label>
+                            <select id="calc-level" onchange="calculate()">
+                                <option value="1">Junior (0-2 YOE)</option>
+                                <option value="1.5" selected>Mid-Level (3-5 YOE)</option>
+                                <option value="2.2">Senior (5-8 YOE)</option>
+                                <option value="3.0">Staff/Principal (8+ YOE)</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Tech Stack Tier:</label>
+                            <select id="calc-stack" onchange="calculate()">
+                                <option value="1.0">Standard (Web/CMS)</option>
+                                <option value="1.2">Modern (React/Cloud)</option>
+                                <option value="1.4">Specialized (AI/Security/Rust)</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Location (Cost of Living):</label>
+                            <select id="calc-loc" onchange="calculate()">
+                                <option value="1.5">Bay Area / NYC (Tier 1)</option>
+                                <option value="1.2">Austin / Seattle / Boston (Tier 2)</option>
+                                <option value="1.0" selected>Remote (National Avg)</option>
+                                <option value="0.8">LCOL Area</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="win-btn" style="width:100%; height:30px; margin-top:10px;" onclick="calculate()">Calculate Offer Range</button>
+                </div>
+
+                <div>
+                    <div class="fieldset" style="height:100%">
+                        <span class="legend">Projection</span>
+                        <p style="font-size:12px">Estimated Total Compensation (Base + Equity):</p>
+                        <div class="lcd-display" id="result-screen">$135,000</div>
+                        
+                        <div style="margin-top:20px; font-size:11px; color:#444;">
+                            *Estimates based on aggregated 2025 offer data. Actual offers vary by negotiation skill.
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- SALARIES -->
-        <section id="salaries" class="tab-content">
-            <h1>Salaries & Career Outlook</h1>
-            <ul>
-                <li>Median software developer salary: <strong>$120k+</strong></li>
-                <li>High-paying specialties: AI, distributed systems, security</li>
-                <li>Equity & bonuses common in mid-to-senior roles</li>
-            </ul>
-
-            <p>
-                Long-term outlook remains strong due to automation, legacy system replacement,
-                and sustained tech investment across industries.
-            </p>
-        </section>
-
-        <!-- ENTRY VS SENIOR -->
-        <section id="levels" class="tab-content">
-            <h1>Entry-Level vs Senior Roles</h1>
-
-            <div class="compare-grid">
-                <div class="compare-box">
-                    <h3>Entry-Level</h3>
-                    <ul>
-                        <li>$70k–$95k salaries</li>
-                        <li>Higher competition</li>
-                        <li>Mentorship & training focused</li>
-                        <li>Generalist skill sets</li>
-                    </ul>
+        <section id="geo" class="tab-content">
+            <h1>Regional Analysis</h1>
+            <div style="display:grid; grid-template-columns: 1fr 2fr; gap:10px; height:80%;">
+                <div style="background:white; border:2px inset white; padding:5px; overflow-y:scroll;">
+                    <div style="font-weight:bold; border-bottom:1px solid #ccc; padding:2px;">Select Hub:</div>
+                    <div style="padding:4px; cursor:pointer; background:#ddd;" onclick="showHub('sf')">🇺🇸 San Francisco</div>
+                    <div style="padding:4px; cursor:pointer;" onclick="showHub('nyc')">🇺🇸 New York City</div>
+                    <div style="padding:4px; cursor:pointer;" onclick="showHub('austin')">🇺🇸 Austin, TX</div>
+                    <div style="padding:4px; cursor:pointer;" onclick="showHub('sea')">🇺🇸 Seattle, WA</div>
+                    <div style="padding:4px; cursor:pointer;" onclick="showHub('remote')">🌐 Remote / Distributed</div>
                 </div>
-
-                <div class="compare-box">
-                    <h3>Senior-Level</h3>
-                    <ul>
-                        <li>$140k–$200k+ salaries</li>
-                        <li>Strong demand</li>
-                        <li>Architecture & leadership</li>
-                        <li>Specialization rewarded</li>
+                
+                <div id="hub-details" class="fieldset" style="background:#f0f0f0;">
+                    <span class="legend">Hub Details</span>
+                    <h2 id="hub-name" style="margin-top:0">San Francisco Bay Area</h2>
+                    <ul style="font-size:13px; line-height:1.6;">
+                        <li><strong>Primary Industries:</strong> AI, VC-backed Startups, Big Tech</li>
+                        <li><strong>Avg Senior Salary:</strong> $210,000+</li>
+                        <li><strong>Cost of Living:</strong> Extremely High</li>
+                        <li><strong>Trend:</strong> Rebounding due to RTO (Return to Office) mandates.</li>
                     </ul>
                 </div>
             </div>
         </section>
 
-        <!-- REMOTE -->
-        <section id="remote" class="tab-content">
-            <h1>Remote vs On-Site Opportunities</h1>
-            <ul>
-                <li>Remote roles dominate software job postings</li>
-                <li>Hybrid models common at large enterprises</li>
-                <li>On-site roles remain in defense, hardware, and regulated sectors</li>
-            </ul>
-
-            <div class="chart">
-                <div class="label">Remote</div>
-                <div class="chart-bar">
-                    <div class="chart-fill" style="width:70%"></div>
+        <section id="skills" class="tab-content">
+            <h1>Technology Heatmap</h1>
+            <p>Click a tile to analyze market supply.</p>
+            <div class="heatmap-grid">
+                <div class="tech-card" onmouseover="setStatus('Python: #1 language for Data Science')" onmouseout="resetStatus()">
+                    <div class="tech-name">Python</div>
+                    <div class="tech-trend up">▲ +12%</div>
                 </div>
-
-                <div class="label">Hybrid</div>
-                <div class="chart-bar">
-                    <div class="chart-fill" style="width:20%"></div>
+                <div class="tech-card" onmouseover="setStatus('Rust: High demand for systems programming')" onmouseout="resetStatus()">
+                    <div class="tech-name">Rust</div>
+                    <div class="tech-trend up">▲ +45%</div>
                 </div>
-
-                <div class="label">On-Site</div>
-                <div class="chart-bar">
-                    <div class="chart-fill" style="width:10%"></div>
+                <div class="tech-card" onmouseover="setStatus('JavaScript: Essential but saturated entry level')" onmouseout="resetStatus()">
+                    <div class="tech-name">JavaScript</div>
+                    <div class="tech-trend stable">■ 0%</div>
+                </div>
+                <div class="tech-card" onmouseover="setStatus('PHP: Legacy maintenance roles primarily')" onmouseout="resetStatus()">
+                    <div class="tech-name">PHP</div>
+                    <div class="tech-trend down">▼ -5%</div>
+                </div>
+                <div class="tech-card" onmouseover="setStatus('Kubernetes: Standard for deployment')" onmouseout="resetStatus()">
+                    <div class="tech-name">K8s</div>
+                    <div class="tech-trend up">▲ +15%</div>
+                </div>
+                <div class="tech-card" onmouseover="setStatus('Solidity: Crypto winter affecting demand')" onmouseout="resetStatus()">
+                    <div class="tech-name">Blockchain</div>
+                    <div class="tech-trend down">▼ -20%</div>
                 </div>
             </div>
         </section>
 
     </div>
 
-    <!-- STATUS BAR -->
     <div class="status-bar">
-        <div class="status-panel">Ready</div>
-        <div class="status-panel">US Market Overview</div>
+        <div class="status-panel" id="status-text">System Ready. Awaiting Input.</div>
+        <div class="status-panel status-fixed">US-East</div>
+        <div class="status-panel status-fixed">CAPS</div>
     </div>
 
 </div>
 
 <script>
-function showTab(id, btn) {
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+    // --- NAVIGATION LOGIC ---
+    function nav(id, btn) {
+        // Hide all tabs
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
 
-    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-}
+        // Deactivate all buttons
+        document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
 
-function toggleTheme() {
-    document.body.dataset.theme =
-        document.body.dataset.theme === "dark" ? "" : "dark";
-}
+        setStatus("Loaded module: " + id.toUpperCase());
+    }
+
+    // --- THEME LOGIC ---
+    function toggleTheme() {
+        document.body.dataset.theme = document.body.dataset.theme === "dark" ? "" : "dark";
+    }
+
+    // --- CALCULATOR LOGIC ---
+    function calculate() {
+        const base = 85000; // Baseline salary
+        const level = parseFloat(document.getElementById('calc-level').value);
+        const stack = parseFloat(document.getElementById('calc-stack').value);
+        const loc = parseFloat(document.getElementById('calc-loc').value);
+
+        // Simple algo
+        let total = base * level * stack * loc;
+        
+        // Format Currency
+        const formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 0
+        });
+
+        // Animate Result
+        const screen = document.getElementById('result-screen');
+        screen.style.color = '#fff';
+        setTimeout(() => {
+            screen.innerText = formatter.format(total);
+            screen.style.color = '#0F0';
+        }, 100);
+        
+        setStatus("Calculation Complete.");
+    }
+
+    // --- GEO HUB LOGIC ---
+    const hubs = {
+        'sf': { name: "San Francisco Bay Area", ind: "AI, Startups", sal: "$210,000+", col: "Very High", trend: "Rebounding (RTO)" },
+        'nyc': { name: "New York City", ind: "FinTech, AdTech", sal: "$195,000+", col: "Very High", trend: "Stable" },
+        'austin': { name: "Austin, TX", ind: "Enterprise, Tesla/Oracle", sal: "$160,000+", col: "Medium-High", trend: "Cooling Off" },
+        'sea': { name: "Seattle, WA", ind: "Cloud (AWS/Azure)", sal: "$190,000+", col: "High", trend: "Stable" },
+        'remote': { name: "Remote / Distributed", ind: "All Sectors", sal: "$140,000+", col: "Variable", trend: "Declining (Hybrid rise)" }
+    };
+
+    function showHub(key) {
+        const data = hubs[key];
+        const html = `
+            <span class="legend">Hub Details</span>
+            <h2 id="hub-name" style="margin-top:0">${data.name}</h2>
+            <ul style="font-size:13px; line-height:1.6;">
+                <li><strong>Primary Industries:</strong> ${data.ind}</li>
+                <li><strong>Avg Senior Salary:</strong> ${data.sal}</li>
+                <li><strong>Cost of Living:</strong> ${data.col}</li>
+                <li><strong>Trend:</strong> ${data.trend}</li>
+            </ul>
+        `;
+        document.getElementById('hub-details').innerHTML = html;
+    }
+
+    // --- STATUS BAR LOGIC ---
+    function setStatus(text) {
+        document.getElementById('status-text').innerText = text;
+    }
+    
+    function resetStatus() {
+        document.getElementById('status-text').innerText = "Ready.";
+    }
+
+    // Init
+    calculate();
 </script>
 </body>
 </html>
