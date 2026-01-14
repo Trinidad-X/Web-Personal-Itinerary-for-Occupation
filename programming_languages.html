@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevStudio 98 - Language Reference</title>
+    <style>
+        /* --- WIN98 SYSTEM THEME --- */
+        :root {
+            --bg-desktop: #3A6EA5; /* Classic Blue Screen Blue */
+            --bg-window: #C0C0C0;
+            --bg-content: #FFFFFF;
+            --text-main: #000000;
+            --text-dim: #808080;
+            
+            --border-light: #FFFFFF;
+            --border-med: #DFDFDF;
+            --border-dark: #808080;
+            --border-black: #000000;
+            
+            --header-grad-1: #000080;
+            --header-grad-2: #1084D0;
+            --header-text: #FFFFFF;
+            
+            --code-bg: #000080; /* Turbo Pascal/C++ Blue */
+            --code-text: #FFFF00;
+            
+            --bevel-outset: inset -1px -1px var(--border-black), inset 1px 1px var(--border-light), inset -2px -2px var(--border-dark), inset 2px 2px var(--border-med);
+            --bevel-inset: inset -1px -1px var(--border-light), inset 1px 1px var(--border-black), inset -2px -2px var(--border-med), inset 2px 2px var(--border-dark);
+        }
+
+        [data-theme="hacker"] {
+            --bg-desktop: #000000;
+            --bg-window: #303030;
+            --bg-content: #111111;
+            --text-main: #00FF00;
+            --header-grad-1: #004400;
+            --header-grad-2: #002200;
+            --code-bg: #000000;
+            --code-text: #00FF00;
+        }
+
+        /* --- LAYOUT RESET --- */
+        * { box-sizing: border-box; }
+        body {
+            background-color: var(--bg-desktop);
+            font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+            margin: 0; height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; color: var(--text-main);
+        }
+
+        /* --- WINDOW --- */
+        .window {
+            width: 950px; height: 90vh;
+            background-color: var(--bg-window);
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.5), var(--bevel-outset);
+            display: flex; flex-direction: column; padding: 3px;
+        }
+
+        .title-bar {
+            background: linear-gradient(90deg, var(--header-grad-1), var(--header-grad-2));
+            padding: 3px 5px; display: flex; justify-content: space-between; align-items: center;
+            color: var(--header-text); font-weight: bold; font-size: 13px; letter-spacing: 0.5px;
+        }
+
+        .win-controls button {
+            width: 16px; height: 14px; background: var(--bg-window);
+            box-shadow: var(--bevel-outset); border: 0; font-size: 9px; line-height: 10px; margin-left: 2px;
+        }
+
+        /* --- TOOLBAR --- */
+        .toolbar {
+            display: flex; gap: 5px; padding: 6px; border-bottom: 1px solid var(--border-dark);
+        }
+        .btn {
+            background: var(--bg-window); box-shadow: var(--bevel-outset);
+            border: 0; padding: 4px 12px; font-size: 12px; cursor: pointer;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .btn:active { box-shadow: var(--bevel-inset); transform: translateY(1px); }
+
+        /* --- CONTENT SPLIT --- */
+        .split-view {
+            flex-grow: 1; display: flex; margin: 5px; gap: 5px; overflow: hidden;
+        }
+
+        .sidebar {
+            width: 220px; background: var(--bg-content);
+            box-shadow: var(--bevel-inset); padding: 5px; overflow-y: auto;
+            border: 1px solid var(--border-dark);
+        }
+
+        .doc-view {
+            flex-grow: 1; background: var(--bg-content);
+            box-shadow: var(--bevel-inset); padding: 30px; overflow-y: auto;
+            border: 1px solid var(--border-dark);
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1 { font-family: 'Times New Roman', serif; border-bottom: 2px solid var(--text-main); margin-top: 0; }
+        h2 { color: var(--header-grad-1); border-bottom: 1px dashed var(--border-dark); padding-bottom: 5px; margin-top: 25px; }
+        [data-theme="hacker"] h2 { color: #00FF00; }
+        
+        p { line-height: 1.5; font-size: 14px; margin-bottom: 15px; }
+        
+        /* --- CODE BLOCKS (The "Turbo C" Look) --- */
+        pre {
+            background: var(--code-bg); color: var(--code-text);
+            padding: 15px; border: 2px solid var(--border-dark);
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5);
+            font-family: 'Courier New', monospace; font-size: 14px;
+            overflow-x: auto;
+        }
+        .code-label {
+            font-size: 11px; font-weight: bold; background: #ccc; 
+            display: inline-block; padding: 2px 5px; border: 1px solid #888;
+            margin-bottom: -2px; position: relative; z-index: 1;
+        }
+
+        /* --- INTERACTIVE ELEMENTS --- */
+        .quiz-panel {
+            background: var(--bg-window); padding: 15px;
+            border: 1px solid var(--border-dark); box-shadow: var(--bevel-outset);
+            margin: 20px 0;
+        }
+        .quiz-option {
+            display: block; padding: 5px; cursor: pointer; margin: 5px 0;
+            border: 1px dotted transparent;
+        }
+        .quiz-option:hover { border-color: var(--border-dark); background: rgba(255,255,255,0.5); }
+        
+        .feedback { font-weight: bold; padding: 5px; display: none; margin-top: 10px; border: 1px solid; }
+        .feedback.success { background: #E0FFE0; border-color: green; color: green; }
+        .feedback.error { background: #FFE0E0; border-color: red; color: red; }
+
+        .nav-tree-item {
+            cursor: pointer; padding: 2px 0 2px 20px; font-size: 13px;
+            position: relative;
+        }
+        .nav-tree-item::before {
+            content: ''; position: absolute; left: 5px; top: 0; bottom: 0;
+            border-left: 1px dotted #888;
+        }
+        .nav-tree-item::after {
+            content: ''; position: absolute; left: 5px; top: 10px; width: 10px;
+            border-top: 1px dotted #888;
+        }
+        .nav-tree-item:hover { background: #000080; color: white; }
+        .nav-tree-item.active { background: #000080; color: white; font-weight: bold; }
+
+        .folder-label { font-weight: bold; font-size: 13px; margin-top: 10px; display: flex; align-items: center; gap: 5px; }
+        
+        /* --- STATUS BAR --- */
+        .status-bar {
+            display: flex; gap: 2px; padding: 2px; margin-top: 2px; font-size: 11px;
+        }
+        .status-panel { border: 1px solid var(--border-dark); box-shadow: var(--bevel-inset); padding: 2px 5px; }
+        .progress-outer { width: 100%; height: 100%; background: #fff; position: relative; }
+        .progress-inner { height: 100%; background: #000080; width: 0%; transition: width 0.3s; }
+    </style>
+</head>
+<body>
+
+    <div class="window">
+        <div class="title-bar">
+            <span>DevStudio 98 Reference Library</span>
+            <div class="win-controls">
+                <button>_</button><button>□</button><button>×</button>
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <button class="btn" onclick="navTo('home')">🏠 Index</button>
+            <button class="btn" onclick="toggleTheme()">🖥️ Terminal Mode</button>
+            <div style="flex-grow:1"></div>
+            <button class="btn" onclick="resetCourse()">↻ Re-Install</button>
+        </div>
+
+        <div class="split-view">
+            <div class="sidebar" id="sidebar-nav">
+                </div>
+            
+            <div class="doc-view" id="main-content">
+                </div>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-panel" style="flex-grow: 1">Status: <span id="status-text">Ready</span></div>
+            <div class="status-panel" style="width: 150px; display:flex; align-items:center; gap:5px;">
+                Installation: 
+                <div class="progress-outer"><div class="progress-inner" id="progress-bar"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- COURSE CONTENT DATABASE ---
+        const courseData = [
+            {
+                id: 'home',
+                folder: 'ROOT',
+                title: 'Welcome.txt',
+                content: `
+                    <h1>Programming Languages</h1>
+                    <p>Welcome to the DevStudio 98 Reference Library. This interactive documentation covers the evolution and anatomy of how we talk to machines.</p>
+                    
+                    <h3>Course Modules:</h3>
+                    <ul>
+                        <li><strong>Low Level:</strong> Talking to the metal (Binary & Assembly).</li>
+                        <li><strong>Compilation:</strong> How code runs.</li>
+                        <li><strong>Paradigms:</strong> Different ways of thinking (OOP vs Functional).</li>
+                        <li><strong>Typing:</strong> How data is categorized.</li>
+                    </ul>
+                    <hr>
+                    <p><em>Click "The Metal" in the sidebar to begin installation of knowledge...</em></p>
+                    <button class="btn" onclick="navTo('machine')">Start: The Metal >></button>
+                `
+            },
+            {
+                id: 'machine',
+                folder: '1. LOW LEVEL',
+                title: 'Machine & Assembly',
+                content: `
+                    <h1>The Metal (Low Level)</h1>
+                    <p>Computers only understand electricity: On (1) or Off (0). This is <strong>Machine Code</strong>. It is incredibly tedious for humans to write.</p>
+                    
+                    
+
+                    <p>To fix this, we invented <strong>Assembly</strong>. It maps binary instructions to human-readable mnemonics (like ADD, MOV, JMP). It is still specific to the CPU architecture (x86, ARM).</p>
+
+                    <span class="code-label">X86 ASSEMBLY EXAMPLE</span>
+                    <pre>
+MOV AX, 1      ; Move 1 into Register AX
+MOV BX, 2      ; Move 2 into Register BX
+ADD AX, BX     ; Add BX to AX (Result is 3)</pre>
+
+                    <div class="quiz-panel">
+                        <strong>Knowledge Check:</strong><br>
+                        Why don't we just write everything in Assembly for maximum speed?
+                        <label class="quiz-option"><input type="radio" name="q1" onclick="checkAnswer(false, 'fb1')"> Computers can't understand it.</label>
+                        <label class="quiz-option"><input type="radio" name="q1" onclick="checkAnswer(true, 'fb1')"> It's not portable and hard to maintain.</label>
+                        <div id="fb1" class="feedback"></div>
+                    </div>
+                    
+                    <button class="btn" onclick="completeAndNext('machine', 'compilation')">Next: Compilers >></button>
+                `
+            },
+            {
+                id: 'compilation',
+                folder: '2. TRANSLATION',
+                title: 'Compilers vs Interpreters',
+                content: `
+                    <h1>How Code Runs</h1>
+                    <p>High-level languages (C++, Python) must be translated into Machine Code. There are two main ways this happens.</p>
+
+                    
+
+                    <h3>1. Compiled (e.g., C++, Go, Rust)</h3>
+                    <p>The source code is translated <em>all at once</em> into a standalone executable (.exe) before running.
+                    <br><strong>Pro:</strong> Fast execution. <strong>Con:</strong> Must re-compile after changes.</p>
+
+                    <h3>2. Interpreted (e.g., Python, JavaScript)</h3>
+                    <p>An interpreter reads the code <em>line-by-line</em> and executes it on the fly.
+                    <br><strong>Pro:</strong> Easy to test/change. <strong>Con:</strong> Slower execution.</p>
+
+                    <div class="quiz-panel">
+                        <strong>Knowledge Check:</strong><br>
+                        Which approach allows you to send a source file to a friend and have it run immediately without them needing a "Build" step?
+                        <label class="quiz-option"><input type="radio" name="q2" onclick="checkAnswer(true, 'fb2')"> Interpreted</label>
+                        <label class="quiz-option"><input type="radio" name="q2" onclick="checkAnswer(false, 'fb2')"> Compiled</label>
+                        <div id="fb2" class="feedback"></div>
+                    </div>
+
+                    <button class="btn" onclick="completeAndNext('compilation', 'paradigms')">Next: Paradigms >></button>
+                `
+            },
+            {
+                id: 'paradigms',
+                folder: '3. PARADIGMS',
+                title: 'OOP vs Functional',
+                content: `
+                    <h1>Programming Paradigms</h1>
+                    <p>A "Paradigm" is a style or way of thinking about code.</p>
+                    
+                    
+
+                    <h3>Object Oriented (OOP)</h3>
+                    <p>Examples: Java, C#, C++.<br>
+                    Models the software as <strong>Objects</strong> (like "Car", "User") that contain data and methods. It focuses on <em>encapsulation</em> and <em>state</em>.</p>
+                    <pre>
+class Dog {
+  void bark() { print("Woof"); }
+}</pre>
+
+                    <h3>Functional (FP)</h3>
+                    <p>Examples: Haskell, Lisp, Elixir.<br>
+                    Treats computation as the evaluation of mathematical functions. It avoids changing state (immutability). Data flows through a pipeline.</p>
+                    <pre>
+dogs.map(dog => dog.bark())</pre>
+
+                    <div class="quiz-panel">
+                        <strong>Knowledge Check:</strong><br>
+                        If you want to ensure data NEVER changes once created (Immutability), which paradigm prefers this?
+                        <label class="quiz-option"><input type="radio" name="q3" onclick="checkAnswer(false, 'fb3')"> OOP</label>
+                        <label class="quiz-option"><input type="radio" name="q3" onclick="checkAnswer(true, 'fb3')"> Functional</label>
+                        <div id="fb3" class="feedback"></div>
+                    </div>
+
+                    <button class="btn" onclick="completeAndNext('paradigms', 'typing')">Next: Typing Systems >></button>
+                `
+            },
+            {
+                id: 'typing',
+                folder: '4. DATA',
+                title: 'Static vs Dynamic Typing',
+                content: `
+                    <h1>Type Systems</h1>
+                    <p>When you create a variable (e.g., <code>x = 5</code>), does the computer need to know <em>exactly</em> what type of data it is forever?</p>
+
+                    <h3>Statically Typed (C++, Java, Rust)</h3>
+                    <p>You must declare the type. The compiler checks for errors <em>before</em> the program runs.</p>
+                    <pre>
+int x = 5;
+x = "Hello"; // ERROR! Cannot put a string in an integer box.</pre>
+
+                    <h3>Dynamically Typed (Python, JS, Ruby)</h3>
+                    <p>Types are figured out at runtime. Variables can change types.</p>
+                    <pre>
+x = 5
+x = "Hello" // Totally fine.</pre>
+
+                    
+
+                    <div class="quiz-panel">
+                        <strong>Knowledge Check:</strong><br>
+                        Which type system catches errors earlier (at compile time)?
+                        <label class="quiz-option"><input type="radio" name="q4" onclick="checkAnswer(true, 'fb4')"> Static Typing</label>
+                        <label class="quiz-option"><input type="radio" name="q4" onclick="checkAnswer(false, 'fb4')"> Dynamic Typing</label>
+                        <div id="fb4" class="feedback"></div>
+                    </div>
+
+                    <button class="btn" onclick="completeAndNext('typing', 'home')">Finish Installation >></button>
+                `
+            }
+        ];
+
+        // --- APP STATE ---
+        let completed = new Set();
+        let currentTheme = 'classic';
+
+        // --- FUNCTIONS ---
+        function init() {
+            renderSidebar();
+            navTo('home');
+        }
+
+        function renderSidebar() {
+            const sidebar = document.getElementById('sidebar-nav');
+            let html = '';
+            let lastFolder = '';
+
+            courseData.forEach(item => {
+                // Folder Headers
+                if (item.folder !== lastFolder) {
+                    html += `<div class="folder-label">📁 ${item.folder}</div>`;
+                    lastFolder = item.folder;
+                }
+                
+                const isDone = completed.has(item.id) ? 'checked' : '';
+                const checkMark = isDone ? '✅ ' : '';
+                
+                html += `
+                    <div class="nav-tree-item" id="nav-${item.id}" onclick="navTo('${item.id}')">
+                        ${checkMark}${item.title}
+                    </div>
+                `;
+            });
+            sidebar.innerHTML = html;
+        }
+
+        function navTo(id) {
+            const page = courseData.find(p => p.id === id);
+            const view = document.getElementById('main-content');
+            
+            // Render Content
+            view.innerHTML = page.content;
+            view.scrollTop = 0;
+
+            // Update Sidebar Active State
+            document.querySelectorAll('.nav-tree-item').forEach(el => el.classList.remove('active'));
+            const navItem = document.getElementById(`nav-${id}`);
+            if (navItem) navItem.classList.add('active');
+
+            // Update Status
+            document.getElementById('status-text').innerText = `Reading: C:\\LANG\\${page.folder}\\${page.title}`;
+        }
+
+        function checkAnswer(isCorrect, feedbackId) {
+            const fb = document.getElementById(feedbackId);
+            if(isCorrect) {
+                fb.className = "feedback success";
+                fb.innerText = "Correct. Data verified.";
+                fb.style.display = "block";
+            } else {
+                fb.className = "feedback error";
+                fb.innerText = "Error: Incorrect logic. Try again.";
+                fb.style.display = "block";
+            }
+        }
+
+        function completeAndNext(currentId, nextId) {
+            if (!completed.has(currentId)) {
+                completed.add(currentId);
+                updateProgress();
+                renderSidebar();
+            }
+            if(nextId === 'home') {
+                alert("Installation Complete: You now know the basics of Programming Languages.");
+            }
+            navTo(nextId);
+        }
+
+        function updateProgress() {
+            // Calculate percentage excluding 'home'
+            const total = courseData.length - 1;
+            const done = completed.size;
+            const percent = Math.floor((done / total) * 100);
+            
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            if (currentTheme === 'classic') {
+                body.setAttribute('data-theme', 'hacker');
+                currentTheme = 'hacker';
+            } else {
+                body.removeAttribute('data-theme');
+                currentTheme = 'classic';
+            }
+        }
+
+        function resetCourse() {
+            completed.clear();
+            updateProgress();
+            renderSidebar();
+            navTo('home');
+        }
+
+        // Start
+        init();
+
+    </script>
+</body>
+</html>
