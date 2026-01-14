@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Version Control Curriculum – Win98 Edition</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* === WIN98 STYLE SYSTEM === */
+:root{
+--bg-desktop:#008080;--bg-window:#C0C0C0;--bg-content:#fff;
+--text-main:#000;
+--border-light:#fff;--border-dark:#808080;
+--border-med:#DFDFDF;--border-black:#000;
+--title-grad-1:#000080;--title-grad-2:#1084D0;
+--bevel-outset:inset -1px -1px var(--border-black),
+inset 1px 1px var(--border-light),
+inset -2px -2px var(--border-dark),
+inset 2px 2px var(--border-med);
+--bevel-inset:inset -1px -1px var(--border-light),
+inset 1px 1px var(--border-black),
+inset -2px -2px var(--border-med),
+inset 2px 2px var(--border-dark);
+}
+
+*{box-sizing:border-box}
+body{
+margin:0;height:100vh;
+background:var(--bg-desktop);
+display:flex;align-items:center;justify-content:center;
+font-family:Segoe UI,Tahoma,sans-serif;
+}
+
+.window{
+width:960px;height:92vh;
+background:var(--bg-window);
+box-shadow:var(--bevel-outset);
+display:flex;flex-direction:column;padding:3px;
+}
+
+.title-bar{
+background:linear-gradient(90deg,var(--title-grad-1),var(--title-grad-2));
+color:#fff;font-size:13px;font-weight:bold;
+padding:4px 6px;
+display:flex;justify-content:space-between;
+}
+
+.menu-bar,.toolbar,.address-bar{
+padding:5px;border-bottom:1px solid var(--border-dark);
+}
+
+.toolbar button{
+background:var(--bg-window);
+box-shadow:var(--bevel-outset);
+border:0;padding:4px 10px;cursor:pointer;
+}
+
+.content-frame{flex:1;display:flex;gap:5px;padding:5px}
+
+.sidebar{
+width:250px;background:#fff;
+box-shadow:var(--bevel-inset);
+padding:8px;overflow:auto;
+}
+
+.main-view{
+flex:1;background:#fff;
+box-shadow:var(--bevel-inset);
+padding:20px;overflow:auto;
+}
+
+h1{font-family:"Times New Roman";border-bottom:2px solid #000}
+h2{color:#000080;border-bottom:1px solid #ccc}
+.nav-folder{font-weight:bold;margin-top:10px}
+.nav-item{margin-left:16px;cursor:pointer;padding:2px}
+.nav-item:hover{background:#000080;color:#fff}
+
+.commit-row{display:flex;align-items:center;gap:10px;margin:6px 0}
+.commit{
+width:22px;height:22px;border-radius:50%;
+background:#C0C0C0;
+box-shadow:var(--bevel-outset);
+display:flex;align-items:center;justify-content:center;
+font-size:10px;font-weight:bold;
+}
+
+.branch{
+padding:4px 8px;background:#e0e0e0;
+box-shadow:var(--bevel-outset);
+font-size:12px;
+}
+
+.command{
+background:#eee;
+padding:6px;
+font-family:monospace;
+border:1px solid #000;
+margin-top:6px;
+}
+
+button.demo{margin-top:6px}
+</style>
+</head>
+
+<body>
+<div class="window">
+
+<div class="title-bar">
+Version Control Curriculum – Windows 98 Edition
+<div>🗕 🗖 ✖</div>
+</div>
+
+<div class="menu-bar">File | Repository | Branch | Help</div>
+
+<div class="toolbar">
+<button onclick="navTo('home')">🏠 Home</button>
+<button onclick="navTo('resources')">📚 Resources</button>
+</div>
+
+<div class="address-bar">
+Address:
+<input style="width:80%" value="C:\DEV\VERSION_CONTROL\HOME.HTM" readonly>
+</div>
+
+<div class="content-frame">
+<div class="sidebar">
+
+<div class="nav-folder">📘 Beginner</div>
+<div class="nav-item" onclick="navTo('intro')">What is Version Control?</div>
+<div class="nav-item" onclick="navTo('types')">Types of VCS</div>
+<div class="nav-item" onclick="navTo('repo')">Repositories</div>
+<div class="nav-item" onclick="navTo('commits')">Commits & History</div>
+
+<div class="nav-folder">📗 Intermediate</div>
+<div class="nav-item" onclick="navTo('branches')">Branches</div>
+<div class="nav-item" onclick="navTo('merge')">Merging</div>
+<div class="nav-item" onclick="navTo('remote')">Remote Repositories</div>
+
+<div class="nav-folder">📕 Advanced</div>
+<div class="nav-item" onclick="navTo('rebase')">Rebase vs Merge</div>
+<div class="nav-item" onclick="navTo('conflicts')">Conflicts</div>
+<div class="nav-item" onclick="navTo('best')">Best Practices</div>
+
+</div>
+
+<div class="main-view" id="main"></div>
+</div>
+</div>
+
+<script>
+let branch="main";
+
+const pages={
+home:`
+<h1>Version Control Learning Path</h1>
+<p>This curriculum teaches how developers track, manage, and collaborate on code.</p>
+<ul>
+<li>Track changes safely</li>
+<li>Work in parallel with branches</li>
+<li>Collaborate using remotes</li>
+</ul>
+<p><b>Main tool:</b> Git</p>
+`,
+
+intro:`
+<h1>What is Version Control?</h1>
+<p>Version Control Systems (VCS) track changes to files over time.</p>
+<ul>
+<li>Undo mistakes</li>
+<li>See history</li>
+<li>Collaborate</li>
+</ul>
+`,
+
+types:`
+<h1>Types of Version Control</h1>
+<ul>
+<li><b>Local:</b> Changes stored locally</li>
+<li><b>Centralized:</b> One central server (SVN)</li>
+<li><b>Distributed:</b> Every user has full copy (Git)</li>
+</ul>
+`,
+
+repo:`
+<h1>Repositories</h1>
+<p>A repository stores files and their history.</p>
+<div class="command">git init</div>
+<p>Creates a new local repository.</p>
+`,
+
+commits:`
+<h1>Commits & History</h1>
+<p>Each commit is a snapshot of your project.</p>
+<div class="commit-row">
+<div class="commit">A</div> Initial commit
+</div>
+<div class="commit-row">
+<div class="commit">B</div> Add feature
+</div>
+<div class="commit-row">
+<div class="commit">C</div> Fix bug
+</div>
+<div class="command">git commit -m "message"</div>
+`,
+
+branches:`
+<h1>Branches</h1>
+<p>Branches allow parallel development.</p>
+<div class="branch">main</div>
+<div class="branch">feature/login</div>
+<div class="command">git branch feature/login</div>
+<button class="demo" onclick="switchBranch()">Switch Branch</button>
+<p>Current branch: <b id="branchName">main</b></p>
+`,
+
+merge:`
+<h1>Merging</h1>
+<p>Merging combines branches.</p>
+<pre>
+main ──●──●
+        \\
+feature ─●
+</pre>
+<div class="command">git merge feature</div>
+`,
+
+remote:`
+<h1>Remote Repositories</h1>
+<p>Remotes allow collaboration.</p>
+<div class="command">git remote add origin https://github.com/user/repo.git</div>
+<div class="command">git push origin main</div>
+`,
+
+rebase:`
+<h1>Rebase vs Merge</h1>
+<ul>
+<li><b>Merge:</b> Preserves history</li>
+<li><b>Rebase:</b> Rewrites history</li>
+</ul>
+<p>Rebase creates a cleaner linear history.</p>
+`,
+
+conflicts:`
+<h1>Merge Conflicts</h1>
+<p>Conflicts happen when changes collide.</p>
+<pre>
+<<<<<<< HEAD
+code A
+=======
+code B
+>>>>>>> feature
+</pre>
+<p>Must be resolved manually.</p>
+`,
+
+best:`
+<h1>Best Practices</h1>
+<ul>
+<li>Commit often</li>
+<li>Write clear messages</li>
+<li>Use branches</li>
+<li>Never rebase shared branches</li>
+</ul>
+`,
+
+resources:`
+<h1>Version Control Resources</h1>
+<ul>
+<li><a href="https://git-scm.com/book/en/v2" target="_blank">Pro Git Book</a></li>
+<li><a href="https://learngitbranching.js.org" target="_blank">Learn Git Branching</a></li>
+<li><a href="https://ohmygit.org" target="_blank">Oh My Git!</a></li>
+<li><a href="https://github.com" target="_blank">GitHub</a></li>
+</ul>
+`
+};
+
+function navTo(id){
+document.getElementById("main").innerHTML=pages[id];
+}
+
+function switchBranch(){
+branch = branch==="main" ? "feature/login" : "main";
+document.getElementById("branchName").textContent = branch;
+}
+
+navTo("home");
+</script>
+</body>
+</html>
