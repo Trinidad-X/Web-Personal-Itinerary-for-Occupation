@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Career Preparation</title>
+
+<link rel="stylesheet" href="styles/general.css">
+
+<!-- ONLY new styles -->
+<style>
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.prep-box {
+    box-shadow: var(--bevel-inset);
+    padding: 14px;
+    margin-bottom: 20px;
+}
+
+.metric {
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.progress {
+    height: 16px;
+    background: var(--border-med);
+    box-shadow: var(--bevel-inset);
+    margin-bottom: 12px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--title-grad-1);
+}
+
+[data-theme="dark"] .progress-fill {
+    background: var(--text-main);
+}
+</style>
+</head>
+
+<body>
+<div class="window">
+
+    <!-- TITLE BAR -->
+    <div class="title-bar">
+        <div class="title-text">🚀 Career Preparation</div>
+        <div class="title-controls">
+            <button class="win-btn" onclick="toggleTheme()">☼</button>
+        </div>
+    </div>
+
+    <!-- MENU -->
+    <div class="menu-bar">
+        <div class="menu-item">File</div>
+        <div class="menu-item">View</div>
+        <div class="menu-item">Help</div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+        <button class="tool-btn active" onclick="showTab('portfolio', this)">Portfolio</button>
+        <button class="tool-btn" onclick="showTab('github', this)">GitHub Projects</button>
+        <button class="tool-btn" onclick="showTab('internships', this)">Internships</button>
+        <button class="tool-btn" onclick="showTab('resume', this)">Resume & Cover Letters</button>
+        <button class="tool-btn" onclick="showTab('interviews', this)">Technical Interviews</button>
+        <button class="tool-btn" onclick="showTab('softskills', this)">Soft Skills</button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="window-content">
+
+        <!-- PORTFOLIO -->
+        <section id="portfolio" class="tab-content active">
+            <h1>Building a Portfolio</h1>
+            <div class="prep-box">
+                <p>
+                    A strong portfolio demonstrates your skills with concrete projects.
+                </p>
+                <ul>
+                    <li>Highlight key projects</li>
+                    <li>Showcase problem-solving and design</li>
+                    <li>Include live demos and screenshots</li>
+                </ul>
+                <div class="metric">Portfolio Strength</div>
+                <div class="progress"><div class="progress-fill" style="width:85%"></div></div>
+            </div>
+        </section>
+
+        <!-- GITHUB -->
+        <section id="github" class="tab-content">
+            <h1>GitHub Projects</h1>
+            <div class="prep-box">
+                <p>
+                    GitHub repositories reflect your coding style, collaboration, and project experience.
+                </p>
+                <ul>
+                    <li>Maintain clean, readable code</li>
+                    <li>Use proper README and documentation</li>
+                    <li>Demonstrate multiple languages and frameworks</li>
+                </ul>
+                <div class="metric">Code Visibility</div>
+                <div class="progress"><div class="progress-fill" style="width:80%"></div></div>
+            </div>
+        </section>
+
+        <!-- INTERNSHIPS -->
+        <section id="internships" class="tab-content">
+            <h1>Internships</h1>
+            <div class="prep-box">
+                <p>
+                    Internships provide real-world experience and networking opportunities.
+                </p>
+                <ul>
+                    <li>Look for internships aligned with your interests</li>
+                    <li>Participate in co-op programs if available</li>
+                    <li>Gain mentorship and feedback</li>
+                </ul>
+                <div class="metric">Practical Experience</div>
+                <div class="progress"><div class="progress-fill" style="width:75%"></div></div>
+            </div>
+        </section>
+
+        <!-- RESUME -->
+        <section id="resume" class="tab-content">
+            <h1>Resume & Cover Letters</h1>
+            <div class="prep-box">
+                <p>
+                    Tailored resumes and cover letters highlight your achievements and fit for a role.
+                </p>
+                <ul>
+                    <li>Focus on measurable impact</li>
+                    <li>Customize per job application</li>
+                    <li>Keep it concise and readable</li>
+                </ul>
+                <div class="metric">Application Readiness</div>
+                <div class="progress"><div class="progress-fill" style="width:80%"></div></div>
+            </div>
+        </section>
+
+        <!-- INTERVIEWS -->
+        <section id="interviews" class="tab-content">
+            <h1>Technical Interviews</h1>
+            <div class="prep-box">
+                <p>
+                    Prepare for coding tests, system design, and problem-solving questions.
+                </p>
+                <ul>
+                    <li>Practice coding challenges</li>
+                    <li>Study data structures & algorithms</li>
+                    <li>Mock interviews with peers or mentors</li>
+                </ul>
+                <div class="metric">Interview Readiness</div>
+                <div class="progress"><div class="progress-fill" style="width:85%"></div></div>
+            </div>
+        </section>
+
+        <!-- SOFT SKILLS -->
+        <section id="softskills" class="tab-content">
+            <h1>Soft Skills & Communication</h1>
+            <div class="prep-box">
+                <p>
+                    Strong communication and teamwork skills are critical for career success.
+                </p>
+                <ul>
+                    <li>Presentation and verbal communication</li>
+                    <li>Collaboration and teamwork</li>
+                    <li>Time management and adaptability</li>
+                </ul>
+                <div class="metric">Professional Competency</div>
+                <div class="progress"><div class="progress-fill" style="width:80%"></div></div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+        <div class="status-panel">Career Prep Loaded</div>
+        <div class="status-panel">Career Explorer</div>
+    </div>
+
+</div>
+
+<script>
+function showTab(id, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+
+    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+
+function toggleTheme() {
+    document.body.dataset.theme =
+        document.body.dataset.theme === "dark" ? "" : "dark";
+}
+</script>
+</body>
+</html>
