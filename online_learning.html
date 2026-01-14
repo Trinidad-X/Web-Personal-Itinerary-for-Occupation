@@ -2,177 +2,295 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Online Learning Resources</title>
-
-<link rel="stylesheet" href="styles/general.css">
-
-<!-- ONLY new styles -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Netscape Navigator - Learning Resources</title>
 <style>
-.tab-content { display: none; }
-.tab-content.active { display: block; }
+    /* --- WIN98 CORE THEME --- */
+    :root {
+        --bg-desktop: #008080;
+        --bg-window: #C0C0C0;
+        --bg-content: #FFFFFF;
+        --text-main: #000000;
+        --text-dim: #666666;
+        --border-light: #FFFFFF;
+        --border-med: #DFDFDF;
+        --border-dark: #808080;
+        --border-black: #000000;
+        --title-grad-1: #000080;
+        --title-grad-2: #1084D0;
+        --title-text: #FFFFFF;
+        --accent: #000080;
+        
+        --bevel-outset: inset -1px -1px var(--border-black), inset 1px 1px var(--border-light), inset -2px -2px var(--border-dark), inset 2px 2px var(--border-med);
+        --bevel-inset: inset -1px -1px var(--border-light), inset 1px 1px var(--border-black), inset -2px -2px var(--border-med), inset 2px 2px var(--border-dark);
+    }
 
-.resource-box {
-    box-shadow: var(--bevel-inset);
-    padding: 14px;
-    margin-bottom: 20px;
-}
+    [data-theme="dark"] {
+        --bg-desktop: #222;
+        --bg-window: #444;
+        --bg-content: #222;
+        --text-main: #0f0;
+        --text-dim: #0a0;
+        --border-light: #888;
+        --border-med: #666;
+        --border-dark: #222;
+        --border-black: #000;
+        --title-grad-1: #004400;
+        --title-grad-2: #000000;
+        --title-text: #0f0;
+    }
 
-.resource-metric {
-    font-size: 13px;
-    margin-bottom: 6px;
-}
+    body {
+        background-color: var(--bg-desktop);
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+        margin: 0; height: 100vh;
+        display: flex; align-items: center; justify-content: center;
+        overflow: hidden;
+    }
 
-.progress {
-    height: 16px;
-    background: var(--border-med);
-    box-shadow: var(--bevel-inset);
-    margin-bottom: 12px;
-}
+    /* --- WINDOW STRUCTURE --- */
+    .window {
+        width: 800px; max-width: 95vw; height: 80vh;
+        background-color: var(--bg-window);
+        box-shadow: 4px 4px 10px rgba(0,0,0,0.5), var(--bevel-outset);
+        display: flex; flex-direction: column; padding: 3px;
+    }
 
-.progress-fill {
-    height: 100%;
-    background: var(--title-grad-1);
-}
+    .title-bar {
+        background: linear-gradient(90deg, var(--title-grad-1), var(--title-grad-2));
+        padding: 4px; display: flex; justify-content: space-between; align-items: center;
+        color: var(--title-text); font-weight: bold; font-size: 13px; margin-bottom: 2px;
+    }
+    .win-btn {
+        width: 20px; height: 20px; font-size: 12px; font-weight: bold;
+        background: var(--bg-window); border: none; box-shadow: var(--bevel-outset);
+        cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .win-btn:active { box-shadow: var(--bevel-inset); }
 
-[data-theme="dark"] .progress-fill {
-    background: var(--text-main);
-}
+    .menu-bar { padding: 4px; border-bottom: 1px solid var(--border-dark); margin-bottom: 5px; font-size: 12px; color: var(--text-main); }
+    .menu-item { display: inline-block; margin-right: 15px; cursor: pointer; }
+    .menu-item:hover { text-decoration: underline; }
+
+    /* --- TOOLBAR TABS --- */
+    .toolbar { display: flex; gap: 5px; padding: 5px; background: var(--border-med); box-shadow: var(--bevel-inset); margin-bottom: 5px; }
+    .tool-btn {
+        flex: 1; padding: 6px; border: none; background: var(--bg-window); box-shadow: var(--bevel-outset);
+        font-size: 12px; cursor: pointer; color: var(--text-main); font-weight: bold;
+    }
+    .tool-btn:active, .tool-btn.active { box-shadow: var(--bevel-inset); background: var(--bg-content); }
+
+    /* --- CONTENT AREA --- */
+    .window-content {
+        flex-grow: 1; background: var(--bg-content); box-shadow: var(--bevel-inset);
+        padding: 20px; overflow-y: auto; color: var(--text-main);
+    }
+    
+    h1 { margin-top: 0; font-size: 18px; border-bottom: 2px solid var(--border-med); padding-bottom: 5px; }
+    .tab-content { display: none; animation: fadeIn 0.2s; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* --- INTERACTIVE GRID LINKS --- */
+    .resource-grid {
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;
+    }
+
+    .link-card {
+        display: block; text-decoration: none; color: var(--text-main);
+        border: 1px solid transparent; padding: 10px;
+        transition: all 0.1s;
+    }
+    .link-card:hover {
+        border: 1px dotted var(--text-main); background: rgba(0,0,0,0.05); transform: translateY(-2px);
+    }
+    
+    .link-title { font-weight: bold; display: flex; align-items: center; gap: 8px; margin-bottom: 5px; color: var(--accent); }
+    [data-theme="dark"] .link-title { color: #0f0; }
+    
+    .link-desc { font-size: 11px; color: var(--text-dim); }
+
+    /* --- METRICS --- */
+    .metric-row { display: flex; align-items: center; margin-top: 20px; font-size: 12px; gap: 10px; }
+    .progress-bar { flex-grow: 1; height: 16px; background: var(--border-med); box-shadow: var(--bevel-inset); }
+    .fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.5s ease-out; }
+
+    /* --- STATUS BAR --- */
+    .status-bar {
+        margin-top: 4px; padding: 3px; display: flex; gap: 5px; font-size: 11px; color: var(--text-main);
+    }
+    .status-panel {
+        box-shadow: var(--bevel-inset); padding: 3px 6px; flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .status-fixed { width: 100px; flex-grow: 0; text-align: center; }
+
 </style>
 </head>
 
 <body>
 <div class="window">
 
-    <!-- TITLE BAR -->
     <div class="title-bar">
-        <div class="title-text">🌐 Online Learning Resources</div>
+        <div class="title-text">🌐 Netscape - Learning Resources</div>
         <div class="title-controls">
             <button class="win-btn" onclick="toggleTheme()">☼</button>
+            <button class="win-btn">X</button>
         </div>
     </div>
 
-    <!-- MENU -->
     <div class="menu-bar">
         <div class="menu-item">File</div>
-        <div class="menu-item">View</div>
+        <div class="menu-item">Edit</div>
+        <div class="menu-item">Bookmarks</div>
         <div class="menu-item">Help</div>
     </div>
 
-    <!-- TOOLBAR -->
     <div class="toolbar">
-        <button class="tool-btn active" onclick="showTab('free', this)">Free Platforms</button>
-        <button class="tool-btn" onclick="showTab('paid', this)">Paid Platforms</button>
-        <button class="tool-btn" onclick="showTab('university', this)">University Courses</button>
-        <button class="tool-btn" onclick="showTab('challenges', this)">Coding Challenges</button>
-        <button class="tool-btn" onclick="showTab('docs', this)">Documentation & References</button>
+        <button class="tool-btn active" onclick="showTab('free', this)">🆓 Free Platforms</button>
+        <button class="tool-btn" onclick="showTab('paid', this)">💳 Paid/Premium</button>
+        <button class="tool-btn" onclick="showTab('uni', this)">🎓 University</button>
+        <button class="tool-btn" onclick="showTab('code', this)">⚔️ Challenges</button>
     </div>
 
-    <!-- CONTENT -->
     <div class="window-content">
 
-        <!-- FREE -->
         <section id="free" class="tab-content active">
-            <h1>Free Platforms</h1>
-            <div class="resource-box">
-                <p>Free platforms allow you to start learning programming without upfront cost:</p>
-                <ul>
-                    <li>freeCodeCamp</li>
-                    <li>Codecademy Free</li>
-                    <li>Khan Academy – Computing</li>
-                    <li>MIT OpenCourseWare</li>
-                </ul>
-                <div class="resource-metric">Accessibility</div>
-                <div class="progress"><div class="progress-fill" style="width:90%"></div></div>
+            <h1>Free Learning Resources</h1>
+            <p>Start your journey here without spending a dime.</p>
+            
+            <div class="resource-grid">
+                <a href="https://www.freecodecamp.org" target="_blank" class="link-card" onmouseover="statusUpdate(this.href)" onmouseout="statusClear()">
+                    <div class="link-title">🔥 freeCodeCamp</div>
+                    <div class="link-desc">Full stack certification path with thousands of hours of content.</div>
+                </a>
+                <a href="https://www.codecademy.com" target="_blank" class="link-card" onmouseover="statusUpdate(this.href)" onmouseout="statusClear()">
+                    <div class="link-title">💻 Codecademy (Free)</div>
+                    <div class="link-desc">Interactive syntax learning for Python, JS, HTML/CSS.</div>
+                </a>
+                <a href="https://www.theodinproject.com" target="_blank" class="link-card" onmouseover="statusUpdate(this.href)" onmouseout="statusClear()">
+                    <div class="link-title">🛡️ The Odin Project</div>
+                    <div class="link-desc">Best open-source full stack curriculum. Extremely rigorous.</div>
+                </a>
+                <a href="https://roadmap.sh" target="_blank" class="link-card" onmouseover="statusUpdate(this.href)" onmouseout="statusClear()">
+                    <div class="link-title">🗺️ Roadmap.sh</div>
+                    <div class="link-desc">Visual flowcharts of what to learn and in what order.</div>
+                </a>
+            </div>
+
+            <div class="metric-row">
+                <span>Accessibility Score:</span>
+                <div class="progress-bar"><div class="fill" style="width:95%"></div></div>
+                <span>95%</span>
             </div>
         </section>
 
-        <!-- PAID -->
         <section id="paid" class="tab-content">
-            <h1>Paid Platforms</h1>
-            <div class="resource-box">
-                <p>Paid platforms offer structured paths, mentorship, and certificates:</p>
-                <ul>
-                    <li>Udemy</li>
-                    <li>Pluralsight</li>
-                    <li>Educative.io</li>
-                    <li>LeetCode Premium</li>
-                </ul>
-                <div class="resource-metric">Content Depth</div>
-                <div class="progress"><div class="progress-fill" style="width:80%"></div></div>
+            <h1>Premium Platforms</h1>
+            <p>Specialized content for advanced topics.</p>
+            
+            <div class="resource-grid">
+                <a href="https://www.udemy.com" target="_blank" class="link-card" onmouseover="statusUpdate(this.href)" onmouseout="statusClear()">
+                    <div class="link-title">📹 Udemy</div>
+                    <div class="link-desc">Video courses on everything. Only buy during $10 sales.</div>
+                </a>
+                <a href="https://frontendmasters.com" target="_blank" class="link-card" onmouseover="statusUpdate(this.href)" onmouseout="statusClear()">
+                    <div class="link-title">🎨 Frontend Masters</div>
+                    <div class="link-desc">Deep-dive workshops from industry experts.</div>
+                </a>
+                <a href="https://www.pluralsight.com" target="_blank" class="link-card" onmouseover="statusUpdate(this.href)" onmouseout="statusClear()">
+                    <div class="link-title">🏢 Pluralsight</div>
+                    <div class="link-desc">Enterprise-standard tech skills and assessments.</div>
+                </a>
+            </div>
+
+            <div class="metric-row">
+                <span>Depth Score:</span>
+                <div class="progress-bar"><div class="fill" style="width:85%"></div></div>
+                <span>85%</span>
             </div>
         </section>
 
-        <!-- UNIVERSITY -->
-        <section id="university" class="tab-content">
-            <h1>University Open Courses</h1>
-            <div class="resource-box">
-                <p>Top universities provide free or paid online courses:</p>
-                <ul>
-                    <li>Harvard CS50 (edX)</li>
-                    <li>Stanford CS Online</li>
-                    <li>MIT OpenCourseWare</li>
-                    <li>UC Berkeley – Online CS Courses</li>
-                </ul>
-                <div class="resource-metric">Certification & Credibility</div>
-                <div class="progress"><div class="progress-fill" style="width:75%"></div></div>
+        <section id="uni" class="tab-content">
+            <h1>Academic Courseware</h1>
+            <p>The theory behind the code.</p>
+
+            <div class="resource-grid">
+                <a href="https://cs50.harvard.edu/x/" target="_blank" class="link-card" onmouseover="statusUpdate(this.href)" onmouseout="statusClear()">
+                    <div class="link-title">🏛️ Harvard CS50</div>
+                    <div class="link-desc">The absolute gold standard intro to Computer Science.</div>
+                </a>
+                <a href="https://ocw.mit.edu/" target="_blank" class="link-card" onmouseover="statusUpdate(this.href)" onmouseout="statusClear()">
+                    <div class="link-title">🧠 MIT OpenCourseWare</div>
+                    <div class="link-desc">Raw lecture notes and exams from MIT classes.</div>
+                </a>
+                <a href="https://online.stanford.edu/" target="_blank" class="link-card" onmouseover="statusUpdate(this.href)" onmouseout="statusClear()">
+                    <div class="link-title">🌲 Stanford Online</div>
+                    <div class="link-desc">Courses on Algorithms, AI, and Systems.</div>
+                </a>
             </div>
         </section>
 
-        <!-- CHALLENGES -->
-        <section id="challenges" class="tab-content">
-            <h1>Coding Challenges</h1>
-            <div class="resource-box">
-                <p>Coding challenges help you practice problem-solving:</p>
-                <ul>
-                    <li>HackerRank</li>
-                    <li>LeetCode</li>
-                    <li>Codewars</li>
-                    <li>Advent of Code</li>
-                </ul>
-                <div class="resource-metric">Difficulty Scaling</div>
-                <div class="progress"><div class="progress-fill" style="width:85%"></div></div>
-            </div>
-        </section>
-
-        <!-- DOCS -->
-        <section id="docs" class="tab-content">
-            <h1>Documentation & References</h1>
-            <div class="resource-box">
-                <p>Official documentation and references are critical for deep learning:</p>
-                <ul>
-                    <li>MDN Web Docs</li>
-                    <li>Python.org Documentation</li>
-                    <li>JavaDocs / API References</li>
-                    <li>Stack Overflow & Dev Community Forums</li>
-                </ul>
-                <div class="resource-metric">Reliability</div>
-                <div class="progress"><div class="progress-fill" style="width:95%"></div></div>
+        <section id="code" class="tab-content">
+            <h1>Code Challenges (Interview Prep)</h1>
+            
+            <div class="resource-grid">
+                <a href="https://leetcode.com" target="_blank" class="link-card" onmouseover="statusUpdate(this.href)" onmouseout="statusClear()">
+                    <div class="link-title">🧪 LeetCode</div>
+                    <div class="link-desc">Essential for FAANG interview preparation.</div>
+                </a>
+                <a href="https://www.hackerrank.com" target="_blank" class="link-card" onmouseover="statusUpdate(this.href)" onmouseout="statusClear()">
+                    <div class="link-title">🟩 HackerRank</div>
+                    <div class="link-desc">Standard platform for company technical assessments.</div>
+                </a>
+                <a href="https://www.codewars.com" target="_blank" class="link-card" onmouseover="statusUpdate(this.href)" onmouseout="statusClear()">
+                    <div class="link-title">🥋 Codewars</div>
+                    <div class="link-desc">Gamified challenges ranked by "Kyus".</div>
+                </a>
             </div>
         </section>
 
     </div>
 
-    <!-- STATUS BAR -->
     <div class="status-bar">
-        <div class="status-panel">Resources Loaded</div>
-        <div class="status-panel">Career Explorer</div>
+        <div class="status-panel" id="status-text">Ready</div>
+        <div class="status-panel status-fixed">Online 🟢</div>
     </div>
 
 </div>
 
 <script>
-function showTab(id, btn) {
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+    function showTab(id, btn) {
+        // Toggle Panels
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
 
-    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-}
+        // Toggle Buttons
+        document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
 
-function toggleTheme() {
-    document.body.dataset.theme =
-        document.body.dataset.theme === "dark" ? "" : "dark";
-}
+        // Reset Bars animation
+        const bars = document.getElementById(id).querySelectorAll('.fill');
+        bars.forEach(bar => {
+            const width = bar.style.width;
+            bar.style.width = '0%';
+            setTimeout(() => bar.style.width = width, 100);
+        });
+    }
+
+    function toggleTheme() {
+        document.body.dataset.theme = document.body.dataset.theme === "dark" ? "" : "dark";
+    }
+
+    // Status Bar Logic
+    const statusBox = document.getElementById('status-text');
+    
+    function statusUpdate(url) {
+        statusBox.innerText = "Link to: " + url;
+    }
+    
+    function statusClear() {
+        statusBox.innerText = "Ready";
+    }
 </script>
 </body>
 </html>
