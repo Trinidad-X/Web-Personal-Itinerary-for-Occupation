@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Developer Toolset Dashboard</title>
+<style>
+    /* --- GLASSMORPHISM THEME --- */
+    :root {
+        --bg-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+        --text-main: #ffffff;
+        --text-dim: #aab;
+        --accent: #00d2ff;
+        --card-hover: rgba(255, 255, 255, 0.15);
+    }
+
+    * { box-sizing: border-box; }
+    
+    body {
+        background: var(--bg-gradient);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        margin: 0; height: 100vh;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--text-main);
+        overflow: hidden;
+    }
+
+    /* --- DASHBOARD CONTAINER --- */
+    .dashboard {
+        width: 1000px; max-width: 95vw; height: 85vh;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        display: flex; overflow: hidden;
+    }
+
+    /* --- SIDEBAR --- */
+    .sidebar {
+        width: 250px; border-right: 1px solid var(--glass-border);
+        display: flex; flex-direction: column; padding: 20px;
+    }
+    
+    .brand { font-size: 18px; font-weight: bold; margin-bottom: 30px; display: flex; align-items: center; gap: 10px; }
+    .brand span { color: var(--accent); }
+
+    .nav-item {
+        padding: 12px 15px; margin-bottom: 8px; border-radius: 12px; cursor: pointer;
+        transition: all 0.3s ease; font-size: 14px; display: flex; align-items: center; gap: 10px;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.05); }
+    .nav-item.active { background: var(--accent); color: #000; font-weight: bold; box-shadow: 0 0 15px var(--accent); }
+
+    /* --- MAIN GRID AREA --- */
+    .main-view {
+        flex: 1; padding: 30px; overflow-y: auto; position: relative;
+    }
+    
+    .header { margin-bottom: 20px; }
+    .header h2 { margin: 0; font-weight: 300; font-size: 24px; }
+    .header p { color: var(--text-dim); font-size: 13px; margin-top: 5px; }
+
+    .app-grid {
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px;
+    }
+
+    /* --- APP ICONS --- */
+    .app-card {
+        background: rgba(0,0,0,0.2); border-radius: 16px; padding: 20px;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        text-align: center; cursor: pointer; border: 1px solid transparent;
+        transition: transform 0.2s, background 0.2s;
+    }
+    .app-card:hover {
+        background: var(--card-hover); transform: translateY(-5px); border-color: var(--glass-border);
+    }
+    
+    .app-icon { font-size: 32px; margin-bottom: 10px; }
+    .app-name { font-size: 13px; font-weight: 600; }
+    .app-sub { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+
+    /* --- DETAIL OVERLAY (MODAL) --- */
+    .modal-overlay {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
+        display: none; align-items: center; justify-content: center; z-index: 10;
+        opacity: 0; transition: opacity 0.3s;
+    }
+    .modal-overlay.open { display: flex; opacity: 1; }
+
+    .modal-card {
+        width: 500px; background: #1a1a2e; border: 1px solid var(--glass-border);
+        border-radius: 20px; padding: 30px; position: relative;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    .close-btn {
+        position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 20px; color: #666;
+    }
+    .close-btn:hover { color: white; }
+
+    .modal-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+    .modal-icon { font-size: 40px; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 12px; }
+    
+    .tag { display: inline-block; padding: 4px 8px; background: #333; border-radius: 4px; font-size: 10px; color: var(--accent); margin-right: 5px; }
+    
+    .modal-body p { color: #ccc; font-size: 14px; line-height: 1.6; }
+    .modal-body h4 { margin-top: 15px; margin-bottom: 5px; color: white; }
+    
+    .launch-btn {
+        display: block; width: 100%; padding: 12px; background: var(--accent);
+        color: #000; text-align: center; border-radius: 8px; text-decoration: none;
+        font-weight: bold; margin-top: 20px; transition: opacity 0.2s;
+    }
+    .launch-btn:hover { opacity: 0.9; }
+
+</style>
+</head>
+<body>
+
+<div class="dashboard">
+    <div class="sidebar">
+        <div class="brand">🚀 <span>DevToolbox</span></div>
+        <div class="nav-item active" onclick="filterApps('all', this)">⚡ All Apps</div>
+        <div class="nav-item" onclick="filterApps('editor', this)">📝 Editors (IDEs)</div>
+        <div class="nav-item" onclick="filterApps('git', this)">🌿 Version Control</div>
+        <div class="nav-item" onclick="filterApps('devops', this)">🐳 DevOps & CLI</div>
+        <div class="nav-item" onclick="filterApps('api', this)">🔌 API & Testing</div>
+    </div>
+
+    <div class="main-view">
+        <div class="header">
+            <h2 id="section-title">Essential Developer Tools</h2>
+            <p>Click an app to initialize system analysis.</p>
+        </div>
+
+        <div class="app-grid" id="grid-container">
+            </div>
+
+        <div class="modal-overlay" id="modal">
+            <div class="modal-card">
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+                <div class="modal-header">
+                    <div class="modal-icon" id="m-icon"></div>
+                    <div>
+                        <h2 style="margin:0" id="m-title">Tool Name</h2>
+                        <div id="m-tags" style="margin-top:5px"></div>
+                    </div>
+                </div>
+                <div class="modal-body" id="m-body">
+                    </div>
+                <a href="#" target="_blank" class="launch-btn" id="m-link">Visit Official Site ↗</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const tools = [
+        {
+            id: 'vscode',
+            cat: 'editor',
+            icon: '📝',
+            name: 'VS Code',
+            sub: 'Code Editor',
+            tags: ['Microsoft', 'Free', 'Extensions'],
+            desc: 'The undisputed king of modern web development. It is lightweight but powerful.',
+            why: 'Massive marketplace of extensions (Prettier, ESLint) makes it capable of any language.',
+            link: 'https://code.visualstudio.com/'
+        },
+        {
+            id: 'intellij',
+            cat: 'editor',
+            icon: '☕',
+            name: 'IntelliJ IDEA',
+            sub: 'Java IDE',
+            tags: ['JetBrains', 'Enterprise', 'Heavy'],
+            desc: 'The gold standard for Java/Kotlin development. Much "smarter" than VS Code but heavier.',
+            why: 'Best-in-class refactoring and debugging tools.',
+            link: 'https://www.jetbrains.com/idea/'
+        },
+        {
+            id: 'git',
+            cat: 'git',
+            icon: '🌿',
+            name: 'Git',
+            sub: 'Version Control',
+            tags: ['CLI', 'Essential', 'History'],
+            desc: 'The time machine for your code. It tracks every change you ever make.',
+            why: 'Industry standard. If you do not know Git, you cannot work on a team.',
+            link: 'https://git-scm.com/'
+        },
+        {
+            id: 'github',
+            cat: 'git',
+            icon: '🐙',
+            name: 'GitHub',
+            sub: 'Code Hosting',
+            tags: ['Cloud', 'Social', 'Portfolio'],
+            desc: 'Where code lives online. It is the resume of the modern developer.',
+            why: 'Pull Requests (PRs) are how code reviews happen in the real world.',
+            link: 'https://github.com/'
+        },
+        {
+            id: 'docker',
+            cat: 'devops',
+            icon: '🐳',
+            name: 'Docker',
+            sub: 'Containers',
+            tags: ['Virtualization', 'Shipping', 'Env'],
+            desc: 'Solves the "It works on my machine" problem by packaging code with its environment.',
+            why: 'Standard for deploying apps to the cloud.',
+            link: 'https://www.docker.com/'
+        },
+        {
+            id: 'terminal',
+            cat: 'devops',
+            icon: '💻',
+            name: 'Terminal',
+            sub: 'Command Line',
+            tags: ['Bash', 'Zsh', 'PowerShell'],
+            desc: 'The black box where you type commands. Don\'t fear it; master it.',
+            why: 'GUIs are limited. The CLI (Command Line Interface) gives you god-mode access.',
+            link: 'https://hyper.is/'
+        },
+        {
+            id: 'postman',
+            cat: 'api',
+            icon: '🚀',
+            name: 'Postman',
+            sub: 'API Testing',
+            tags: ['REST', 'Debugging', 'Network'],
+            desc: 'A GUI for sending requests to servers. Essential for Frontend/Backend communication.',
+            why: 'Test your backend endpoints before you even write the frontend code.',
+            link: 'https://www.postman.com/'
+        },
+        {
+            id: 'figma',
+            cat: 'api',
+            icon: '🎨',
+            name: 'Figma',
+            sub: 'Design',
+            tags: ['UI/UX', 'Vector', 'Web'],
+            desc: 'Where designs are born. Developers use "Dev Mode" to inspect CSS values.',
+            why: 'You need to translate these pictures into code.',
+            link: 'https://www.figma.com/'
+        },
+        {
+            id: 'jira',
+            cat: 'devops',
+            icon: '🎫',
+            name: 'Jira',
+            sub: 'Project Mgmt',
+            tags: ['Agile', 'Tickets', 'Corporate'],
+            desc: 'The tool most devs love to hate. It tracks tasks, bugs, and sprints.',
+            why: 'It is how managers know if you are working. Learn "Kanban" boards.',
+            link: 'https://www.atlassian.com/software/jira'
+        }
+    ];
+
+    const grid = document.getElementById('grid-container');
+    const modal = document.getElementById('modal');
+
+    // INITIAL RENDER
+    renderGrid(tools);
+
+    function filterApps(category, btn) {
+        // Update Nav
+        if (btn) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        // Filter Logic
+        if (category === 'all') {
+            renderGrid(tools);
+        } else {
+            const filtered = tools.filter(t => t.cat === category);
+            renderGrid(filtered);
+        }
+    }
+
+    function renderGrid(dataset) {
+        grid.innerHTML = '';
+        dataset.forEach(tool => {
+            const card = document.createElement('div');
+            card.className = 'app-card';
+            card.onclick = () => openModal(tool);
+            card.innerHTML = `
+                <div class="app-icon">${tool.icon}</div>
+                <div class="app-name">${tool.name}</div>
+                <div class="app-sub">${tool.sub}</div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function openModal(tool) {
+        document.getElementById('m-icon').innerText = tool.icon;
+        document.getElementById('m-title').innerText = tool.name;
+        document.getElementById('m-link').href = tool.link;
+        
+        // Tags
+        const tagsHTML = tool.tags.map(t => `<span class="tag">${t}</span>`).join('');
+        document.getElementById('m-tags').innerHTML = tagsHTML;
+
+        // Content
+        let imagePlaceholder = "";
+        
+        // Contextually relevant diagram trigger
+        if (tool.id === 'devops' || tool.id === 'docker' || tool.id === 'jenkins') {
+             imagePlaceholder = `<div style="margin: 15px 0; padding: 10px; border: 1px dashed #444; text-align: center; color: #888; font-size: 12px;"></div>`;
+        } else if (tool.id === 'git' || tool.id === 'github') {
+             imagePlaceholder = `<div style="margin: 15px 0; padding: 10px; border: 1px dashed #444; text-align: center; color: #888; font-size: 12px;"></div>`;
+        }
+
+        document.getElementById('m-body').innerHTML = `
+            <p><strong>What is it?</strong><br>${tool.desc}</p>
+            ${imagePlaceholder}
+            <p><strong>Why do I need it?</strong><br>${tool.why}</p>
+        `;
+
+        modal.classList.add('open');
+    }
+
+    function closeModal() {
+        modal.classList.remove('open');
+    }
+
+    // Close on outside click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+
+</script>
+</body>
+</html>
