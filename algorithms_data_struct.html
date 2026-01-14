@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Algo & DS Knowledge Base - Win98 Edition</title>
+    <title>Algo & DS Academy - Win98 Edition</title>
     <style>
         /* --- USER PROVIDED WIN98 STYLE SHEET --- */
         :root {
@@ -24,6 +24,8 @@
             --title-text: #FFFFFF;
             
             --link-color: #0000FF;
+            --accent-success: #008000;
+            --accent-fail: #FF0000;
             
             /* 3D Bevel Logic */
             --bevel-outset: inset -1px -1px var(--border-black), inset 1px 1px var(--border-light), inset -2px -2px var(--border-dark), inset 2px 2px var(--border-med);
@@ -48,6 +50,8 @@
             --title-text: #00FF00;
             
             --link-color: #00FF00;
+            --accent-success: #00FF00;
+            --accent-fail: #FF0000;
             
             --bevel-outset: 1px solid var(--border-med);
             --bevel-inset: 1px solid var(--border-med);
@@ -67,9 +71,6 @@
             overflow: hidden;
             color: var(--text-main);
         }
-
-        a { color: var(--link-color); }
-        a:hover { background: var(--link-color); color: var(--bg-content); text-decoration: none; }
 
         /* --- WINDOW CONTAINER --- */
         .window {
@@ -120,7 +121,6 @@
         /* --- TOOLBAR & MENU --- */
         .menu-bar { display: flex; padding: 2px 0; border-bottom: 1px solid var(--border-dark); box-shadow: 0 1px 0 var(--border-light); flex-shrink: 0; }
         .menu-item { padding: 2px 8px; font-size: 13px; cursor: default; }
-        .menu-item::first-letter { text-decoration: underline; }
         .menu-item:hover { background: var(--title-grad-1); color: white; }
 
         .toolbar {
@@ -137,8 +137,6 @@
             display: flex; align-items: center; gap: 6px;
             cursor: pointer; color: var(--text-main); text-decoration: none;
         }
-        .tool-btn:hover { background: #e0e0e0; }
-        [data-theme="dark"] .tool-btn:hover { background: #333; }
         .tool-btn:active { box-shadow: var(--bevel-inset); transform: translateY(1px); }
 
         /* --- ADDRESS BAR --- */
@@ -157,13 +155,12 @@
         }
 
         /* --- MAIN CONTENT AREA --- */
-        /* Changed slightly to support Split View */
         .content-frame {
             flex-grow: 1;
             display: flex;
             margin: 5px;
             gap: 5px;
-            overflow: hidden; /* Manage scroll internally */
+            overflow: hidden;
         }
 
         .sidebar {
@@ -185,27 +182,41 @@
         }
 
         /* TYPOGRAPHY FOR CONTENT */
-        h1 { 
-            font-family: 'Times New Roman', serif; 
-            font-size: 32px; margin-top: 0; border-bottom: 2px solid var(--text-main); 
-            padding-bottom: 10px;
-        }
+        h1 { font-family: 'Times New Roman', serif; font-size: 32px; margin-top: 0; border-bottom: 2px solid var(--text-main); padding-bottom: 10px; }
         h2 { font-size: 20px; color: var(--title-grad-1); margin-top: 25px; border-bottom: 1px solid var(--border-med); }
         [data-theme="dark"] h2 { color: var(--text-main); }
         h3 { font-size: 16px; font-weight: bold; margin-bottom: 5px; margin-top: 20px; }
         p { font-size: 14px; margin-bottom: 15px; }
-        ul { margin-bottom: 20px; padding-left: 20px; font-size: 14px; }
+        ul, ol { margin-bottom: 20px; padding-left: 20px; font-size: 14px; }
         li { margin-bottom: 5px; }
         code { background: #eee; padding: 2px 4px; font-family: monospace; border: 1px solid #ccc; font-size: 13px; }
         [data-theme="dark"] code { background: #333; border-color: #555; }
         
-        pre {
-            background: #eee;
-            padding: 10px;
-            border: 1px solid #ccc;
-            overflow-x: auto;
+        /* QUIZ STYLES */
+        .quiz-box {
+            background: var(--bg-window);
+            border: 2px solid var(--border-dark);
+            padding: 15px;
+            margin: 20px 0;
+            box-shadow: var(--bevel-outset);
         }
-        [data-theme="dark"] pre { background: #333; border-color: #555; }
+        .quiz-option {
+            display: block; margin: 8px 0; cursor: pointer;
+            padding: 5px; border: 1px dotted transparent;
+        }
+        .quiz-option:hover { background: rgba(0,0,0,0.05); border: 1px dotted var(--border-dark); }
+        [data-theme="dark"] .quiz-option:hover { background: rgba(255,255,255,0.1); }
+        
+        .feedback { display: none; margin-top: 10px; font-weight: bold; padding: 5px; }
+        .feedback.correct { color: var(--accent-success); display: block; }
+        .feedback.wrong { color: var(--accent-fail); display: block; }
+
+        .next-btn {
+            display: inline-block; margin-top: 20px; padding: 8px 20px;
+            background: var(--bg-window); box-shadow: var(--bevel-outset);
+            font-weight: bold; cursor: pointer; text-decoration: none; color: var(--text-main);
+        }
+        .next-btn:active { box-shadow: var(--bevel-inset); }
 
         /* --- STATUS BAR --- */
         .status-bar {
@@ -216,36 +227,16 @@
             box-shadow: var(--bevel-inset); padding: 3px 6px;
         }
         .status-main { flex-grow: 1; }
-        .status-small { width: 100px; }
-
-        /* --- SCROLLBARS --- */
-        ::-webkit-scrollbar { width: 16px; background: var(--bg-window); }
-        ::-webkit-scrollbar-thumb { background: var(--bg-window); box-shadow: var(--bevel-outset); }
-        ::-webkit-scrollbar-track { background: repeating-linear-gradient(45deg, #ccc 0, #ccc 1px, #fff 0, #fff 2px); }
-        [data-theme="dark"] ::-webkit-scrollbar-track { background: #000; }
+        .progress-container { width: 150px; position: relative; background: #fff; height: 100%; border: 1px solid #888; }
+        .progress-fill { background: navy; height: 100%; width: 0%; transition: width 0.3s; }
+        [data-theme="dark"] .progress-fill { background: lime; }
 
         /* --- SIDEBAR NAV STYLES --- */
-        .nav-folder {
-            cursor: pointer;
-            margin-bottom: 4px;
-            font-weight: bold;
-            font-size: 13px;
-        }
+        .nav-folder { cursor: pointer; margin-bottom: 4px; font-weight: bold; font-size: 13px; }
         .nav-folder:before { content: '📁 '; }
-        .nav-item {
-            margin-left: 20px;
-            cursor: pointer;
-            font-size: 13px;
-            padding: 2px 4px;
-            display: block;
-        }
+        .nav-item { margin-left: 20px; cursor: pointer; font-size: 13px; padding: 2px 4px; display: block; }
         .nav-item:before { content: '📄 '; }
-        .nav-item:hover {
-            background-color: var(--title-grad-1);
-            color: white;
-        }
-        .hidden-section { display: none; }
-        .visible-section { display: block; }
+        .nav-item:hover, .nav-item.active { background-color: var(--title-grad-1); color: white; }
     </style>
 </head>
 <body>
@@ -254,12 +245,12 @@
         <div class="title-bar">
             <div class="title-text">
                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" style="width:16px; height:16px; background:white; border:1px solid white;" alt="icon">
-                Algorithmic Knowledge Base v1.0
+                Algo & DS Academy v2.0
             </div>
             <div class="title-controls">
-                <button class="win-btn" aria-label="Minimize">_</button>
-                <button class="win-btn" aria-label="Maximize">□</button>
-                <button class="win-btn" aria-label="Close">×</button>
+                <button class="win-btn">_</button>
+                <button class="win-btn">□</button>
+                <button class="win-btn">×</button>
             </div>
         </div>
 
@@ -267,7 +258,6 @@
             <div class="menu-item">File</div>
             <div class="menu-item">Edit</div>
             <div class="menu-item">View</div>
-            <div class="menu-item">Favorites</div>
             <div class="menu-item">Help</div>
         </div>
 
@@ -275,237 +265,285 @@
             <button class="tool-btn" onclick="navTo('home')">🏠 Home</button>
             <button class="tool-btn" onclick="toggleTheme()">🌗 Dark Mode</button>
             <div style="width: 1px; height: 20px; background: var(--border-dark); margin: 0 5px;"></div>
-            <button class="tool-btn" onclick="window.print()">🖨️ Print</button>
+            <button class="tool-btn" onclick="resetProgress()">↺ Reset Course</button>
         </div>
 
         <div class="address-bar">
             <span>Address:</span>
-            <input type="text" class="address-input" id="addr-bar" value="C:\DOCS\ALGORITHMS\INDEX.HTM" readonly>
+            <input type="text" class="address-input" id="addr-bar" value="C:\ACADEMY\INDEX.HTM" readonly>
         </div>
 
         <div class="content-frame">
-            <div class="sidebar">
-                <div class="nav-folder" onclick="navTo('complexity')">Complexity</div>
-                <div class="nav-item" onclick="navTo('big-o')">Big O Notation</div>
-                
-                <div style="height:10px"></div>
-                
-                <div class="nav-folder">Data Structures</div>
-                <div class="nav-item" onclick="navTo('arrays')">Arrays</div>
-                <div class="nav-item" onclick="navTo('linked-lists')">Linked Lists</div>
-                <div class="nav-item" onclick="navTo('stacks-queues')">Stacks & Queues</div>
-                <div class="nav-item" onclick="navTo('trees')">Trees & Graphs</div>
-                <div class="nav-item" onclick="navTo('hashmaps')">Hash Tables</div>
-
-                <div style="height:10px"></div>
-
-                <div class="nav-folder">Algorithms</div>
-                <div class="nav-item" onclick="navTo('sorting')">Sorting</div>
-                <div class="nav-item" onclick="navTo('searching')">Searching</div>
-                <div class="nav-item" onclick="navTo('recursion')">Recursion</div>
-            </div>
+            <div class="sidebar" id="sidebar">
+                </div>
 
             <div class="main-view" id="main-content">
                 </div>
         </div>
 
         <div class="status-bar">
-            <div class="status-panel status-main" id="status-msg">Done</div>
-            <div class="status-panel status-small">My Computer</div>
+            <div class="status-panel status-main" id="status-msg">Ready</div>
+            <div class="status-panel" style="width: 200px; display:flex; align-items:center; gap:5px;">
+                <span>Progress:</span>
+                <div class="progress-container">
+                    <div class="progress-fill" id="progress-bar"></div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // --- CONTENT DATABASE ---
-        const contentDB = {
-            'home': `
-                <h1>Welcome to AlgoHelp 98</h1>
-                <p>Select a topic from the left sidebar to begin exploring the fundamentals of Computer Science.</p>
-                <p>This interactive guide covers:</p>
-                <ul>
-                    <li><strong>Time & Space Complexity</strong> (Big O)</li>
-                    <li><strong>Essential Data Structures</strong> (Lists, Trees, Maps)</li>
-                    <li><strong>Core Algorithms</strong> (Sorting, Searching, Traversal)</li>
-                </ul>
-                <hr>
-                <h3>Quick Tips:</h3>
-                <p>Use the <strong>Dark Mode</strong> button in the toolbar to switch themes.</p>
-            `,
-            'big-o': `
-                <h1>Big O Notation</h1>
-                <p>Big O notation is a mathematical notation that describes the limiting behavior of a function when the argument tends towards a particular value or infinity.</p>
-                
-                <h2>Common Complexities</h2>
-                <table style="width:100%; border-collapse: collapse; margin-top: 10px; font-size:14px;">
-                    <tr style="background:var(--bg-window); font-weight:bold; border-bottom:1px solid var(--border-dark)">
-                        <td style="padding:5px;">Notation</td>
-                        <td style="padding:5px;">Name</td>
-                        <td style="padding:5px;">Example</td>
-                    </tr>
-                    <tr><td style="padding:5px;">O(1)</td><td>Constant</td><td>Accessing Array Index</td></tr>
-                    <tr><td style="padding:5px;">O(log n)</td><td>Logarithmic</td><td>Binary Search</td></tr>
-                    <tr><td style="padding:5px;">O(n)</td><td>Linear</td><td>Looping through list</td></tr>
-                    <tr><td style="padding:5px;">O(n log n)</td><td>Linearithmic</td><td>Merge Sort</td></tr>
-                    <tr><td style="padding:5px;">O(n²)</td><td>Quadratic</td><td>Nested Loops</td></tr>
-                </table>
-            `,
-            'complexity': `
-                <h1>Complexity Analysis</h1>
-                <p>Before writing code, we must understand the cost of our algorithms.</p>
-                <ul>
-                    <li><strong>Time Complexity:</strong> How the runtime grows as input size grows.</li>
-                    <li><strong>Space Complexity:</strong> How much memory is required as input size grows.</li>
-                </ul>
-                <p>Click "Big O Notation" on the left for details.</p>
-            `,
-            'arrays': `
-                <h1>Arrays</h1>
-                <p>A collection of items stored at contiguous memory locations.</p>
-                <h3>Pros:</h3>
-                <ul>
-                    <li>Fast access by index: <code>O(1)</code></li>
-                    <li>Memory efficient (no pointers)</li>
-                </ul>
-                <h3>Cons:</h3>
-                <ul>
-                    <li>Fixed size (in static arrays)</li>
-                    <li>Slow insertion/deletion in middle: <code>O(n)</code></li>
-                </ul>
-            `,
-            'linked-lists': `
-                <h1>Linked Lists</h1>
-                <p>A linear data structure where elements are not stored at contiguous memory locations. The elements are linked using pointers.</p>
-                
-                <h3>Types:</h3>
-                <ul>
-                    <li><strong>Singly Linked:</strong> Navigation is forward only.</li>
-                    <li><strong>Doubly Linked:</strong> Navigation is forward and backward.</li>
-                </ul>
+        // --- CURRICULUM DATABASE ---
+        const curriculum = [
+            {
+                id: 'home',
+                title: 'Introduction',
+                folder: 'Start',
+                content: `
+                    <h1>Welcome to Algo Academy</h1>
+                    <p>This is an interactive course designed to teach you the fundamentals of Computer Science within a nostalgic Windows 98 environment.</p>
+                    
+                    <h3>How to use this software:</h3>
+                    <ul>
+                        <li>Read the theory in each module.</li>
+                        <li>Examine the diagrams carefully.</li>
+                        <li>Complete the <strong>Knowledge Check</strong> at the bottom of the page.</li>
+                        <li>Click <strong>Next Lesson</strong> to advance your progress.</li>
+                    </ul>
+                    <hr>
+                    <div onclick="navTo('big-o')" class="next-btn">Start First Lesson: Complexity &gt;&gt;</div>
+                `
+            },
+            {
+                id: 'big-o',
+                title: 'Big O Notation',
+                folder: 'Complexity',
+                content: `
+                    <h1>Big O Complexity</h1>
+                    <p>Big O notation describes how the runtime or space requirements of an algorithm grow as the input size (n) grows.</p>
+                    
+                    
 
-                <pre>
-struct Node {
-  int data;
-  Node* next;
-};</pre>
-            `,
-            'stacks-queues': `
-                <h1>Stacks & Queues</h1>
-                
-                <h2>Stack (LIFO)</h2>
-                <p><strong>Last In, First Out.</strong> Think of a stack of plates.</p>
-                <ul>
-                    <li><code>push()</code>: Add to top</li>
-                    <li><code>pop()</code>: Remove from top</li>
-                </ul>
+                    <h3>Common Complexities:</h3>
+                    <ul>
+                        <li><strong>O(1) - Constant:</strong> Speed doesn't change regardless of input size.</li>
+                        <li><strong>O(n) - Linear:</strong> If input doubles, time doubles.</li>
+                        <li><strong>O(n²) - Quadratic:</strong> Nested loops. Performance degrades quickly.</li>
+                    </ul>
 
-                <h2>Queue (FIFO)</h2>
-                <p><strong>First In, First Out.</strong> Think of a line at a store.</p>
-                <ul>
-                    <li><code>enqueue()</code>: Add to back</li>
-                    <li><code>dequeue()</code>: Remove from front</li>
-                </ul>
-            `,
-            'trees': `
-                <h1>Trees & Graphs</h1>
-                <p>Non-linear data structures representing hierarchical data.</p>
-                
-                <h2>Binary Search Tree (BST)</h2>
-                <p>A tree where the left child is smaller than the parent, and the right child is larger.</p>
-                <ul>
-                    <li>Search: <code>O(log n)</code> (balanced)</li>
-                    <li>Insert: <code>O(log n)</code> (balanced)</li>
-                </ul>
+                    <div class="quiz-box">
+                        <strong>Knowledge Check:</strong><br>
+                        Which of these is the SLOWEST (worst) for large datasets?
+                        <label class="quiz-option"><input type="radio" name="q1" onclick="checkQuiz(false, 'q1-fb')"> O(n) - Linear</label>
+                        <label class="quiz-option"><input type="radio" name="q1" onclick="checkQuiz(true, 'q1-fb')"> O(n²) - Quadratic</label>
+                        <label class="quiz-option"><input type="radio" name="q1" onclick="checkQuiz(false, 'q1-fb')"> O(1) - Constant</label>
+                        <div id="q1-fb" class="feedback"></div>
+                    </div>
 
-                <h2>Graphs</h2>
-                <p>Nodes (vertices) connected by edges. Can be directed or undirected.</p>
-            `,
-            'hashmaps': `
-                <h1>Hash Tables</h1>
-                <p>A structure that maps keys to values for highly efficient lookup.</p>
-                <p>Ideally, a hash function distributes keys evenly across buckets.</p>
-                
-                <h3>Complexity</h3>
-                <ul>
-                    <li>Average Case: <code>O(1)</code> for search/insert/delete.</li>
-                    <li>Worst Case: <code>O(n)</code> (due to collisions).</li>
-                </ul>
-            `,
-            'sorting': `
-                <h1>Sorting Algorithms</h1>
-                
-                <h2>Bubble Sort</h2>
-                <p>Repeatedly swaps adjacent elements if they are in the wrong order. <code>O(n²)</code>.</p>
-                
-                <h2>Merge Sort</h2>
-                <p>Divide and conquer algorithm. Divides array into halves, calls itself, then merges the two sorted halves. <code>O(n log n)</code>.</p>
-                
-                <h2>Quick Sort</h2>
-                <p>Picks a 'pivot' and partitions the array around the pivot. Fast in practice. Average <code>O(n log n)</code>.</p>
-            `,
-            'searching': `
-                <h1>Searching Algorithms</h1>
-                
-                <h2>Linear Search</h2>
-                <p>Check every element. <code>O(n)</code>.</p>
-                
-                <h2>Binary Search</h2>
-                <p>Repeatedly divides the search interval in half. <strong>Requires a sorted array.</strong></p>
-                <code>mid = (low + high) / 2</code>
-                <p>Complexity: <code>O(log n)</code>.</p>
-            `,
-            'recursion': `
-                <h1>Recursion</h1>
-                <p>The process in which a function calls itself directly or indirectly.</p>
-                
-                <h3>Key Components:</h3>
-                <ol>
-                    <li><strong>Base Case:</strong> The condition to stop recursion.</li>
-                    <li><strong>Recursive Step:</strong> The logic where the function calls itself with a modified parameter.</li>
-                </ol>
-            `
-        };
+                    <div onclick="completeLesson('big-o', 'arrays')" class="next-btn">Next Lesson: Arrays &gt;&gt;</div>
+                `
+            },
+            {
+                id: 'arrays',
+                title: 'Arrays vs Linked Lists',
+                folder: 'Data Structures',
+                content: `
+                    <h1>Arrays & Memory</h1>
+                    <p>Understanding how data is stored in hardware memory is critical. Arrays are stored in <strong>contiguous</strong> blocks (side-by-side), while Linked Lists are scattered nodes pointing to each other.</p>
+                    
+                    
 
-        // --- APPLICATION LOGIC ---
+                    <h3>The Trade-off:</h3>
+                    <ul>
+                        <li><strong>Arrays:</strong> Fast read <code>O(1)</code>, but slow insert/delete <code>O(n)</code> (need to shift items).</li>
+                        <li><strong>Linked Lists:</strong> Fast insert/delete <code>O(1)</code> (just change the pointer), but slow read <code>O(n)</code> (must traverse).</li>
+                    </ul>
+
+                    <div class="quiz-box">
+                        <strong>Knowledge Check:</strong><br>
+                        If you need to frequently retrieve the 500th element, which is better?
+                        <label class="quiz-option"><input type="radio" name="q2" onclick="checkQuiz(true, 'q2-fb')"> Array</label>
+                        <label class="quiz-option"><input type="radio" name="q2" onclick="checkQuiz(false, 'q2-fb')"> Linked List</label>
+                        <div id="q2-fb" class="feedback"></div>
+                    </div>
+
+                    <div onclick="completeLesson('arrays', 'stacks')" class="next-btn">Next Lesson: Stacks & Queues &gt;&gt;</div>
+                `
+            },
+            {
+                id: 'stacks',
+                title: 'Stacks & Queues',
+                folder: 'Data Structures',
+                content: `
+                    <h1>Stacks & Queues</h1>
+                    <p>These are linear structures that dictate the <strong>order</strong> in which data is processed.</p>
+
+                    <h2>The Stack (LIFO)</h2>
+                    <p>Last In, First Out. Like a stack of dinner plates. You can only remove the top one.</p>
+                    
+
+                    <h2>The Queue (FIFO)</h2>
+                    <p>First In, First Out. Like a line at the grocery store.</p>
+                    
+
+                    <div class="quiz-box">
+                        <strong>Knowledge Check:</strong><br>
+                        The "Undo" button in a text editor typically uses which structure?
+                        <label class="quiz-option"><input type="radio" name="q3" onclick="checkQuiz(true, 'q3-fb')"> Stack (LIFO)</label>
+                        <label class="quiz-option"><input type="radio" name="q3" onclick="checkQuiz(false, 'q3-fb')"> Queue (FIFO)</label>
+                        <div id="q3-fb" class="feedback"></div>
+                    </div>
+
+                    <div onclick="completeLesson('stacks', 'trees')" class="next-btn">Next Lesson: Trees &gt;&gt;</div>
+                `
+            },
+            {
+                id: 'trees',
+                title: 'Trees & Graphs',
+                folder: 'Data Structures',
+                content: `
+                    <h1>Trees</h1>
+                    <p>Trees are hierarchical. They have a "Root" node and "Children".</p>
+                    
+                    <h3>Binary Search Tree (BST)</h3>
+                    <p>A specific type of tree where the left child is smaller than the parent, and the right child is larger. This allows for fast searching.</p>
+
+                    
+
+[Image of binary search tree structure]
+
+
+                    <div class="quiz-box">
+                        <strong>Knowledge Check:</strong><br>
+                        In a valid Binary Search Tree, where would the number 100 go relative to a Root of 50?
+                        <label class="quiz-option"><input type="radio" name="q4" onclick="checkQuiz(false, 'q4-fb')"> Left Branch</label>
+                        <label class="quiz-option"><input type="radio" name="q4" onclick="checkQuiz(true, 'q4-fb')"> Right Branch</label>
+                        <div id="q4-fb" class="feedback"></div>
+                    </div>
+
+                    <div onclick="completeLesson('trees', 'sorting')" class="next-btn">Next Lesson: Sorting &gt;&gt;</div>
+                `
+            },
+            {
+                id: 'sorting',
+                title: 'Sorting Algorithms',
+                folder: 'Algorithms',
+                content: `
+                    <h1>Merge Sort</h1>
+                    <p>While Bubble Sort is easy to learn, <strong>Merge Sort</strong> is what's used in the real world. It uses a "Divide and Conquer" strategy.</p>
+                    
+                    <p>It cuts the array in half recursively until individual items are isolated, then merges them back together in sorted order.</p>
+
+                    
+
+                    <div class="quiz-box">
+                        <strong>Knowledge Check:</strong><br>
+                        What is the time complexity of Merge Sort?
+                        <label class="quiz-option"><input type="radio" name="q5" onclick="checkQuiz(false, 'q5-fb')"> O(n²)</label>
+                        <label class="quiz-option"><input type="radio" name="q5" onclick="checkQuiz(true, 'q5-fb')"> O(n log n)</label>
+                        <div id="q5-fb" class="feedback"></div>
+                    </div>
+
+                    <div onclick="completeLesson('sorting', 'home')" class="next-btn">Finish Course &gt;&gt;</div>
+                `
+            }
+        ];
+
+        // --- APP STATE ---
+        let completed = new Set();
+
+        // --- INITIALIZATION ---
+        function init() {
+            renderSidebar();
+            navTo('home');
+        }
+
+        function renderSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            let lastFolder = '';
+            let html = '';
+
+            curriculum.forEach(item => {
+                if (item.folder !== lastFolder) {
+                    html += `<div class="nav-folder">${item.folder}</div>`;
+                    lastFolder = item.folder;
+                }
+                const isDone = completed.has(item.id) ? '✓ ' : '';
+                html += `<div class="nav-item" id="nav-${item.id}" onclick="navTo('${item.id}')">${isDone}${item.title}</div>`;
+            });
+            sidebar.innerHTML = html;
+        }
 
         function navTo(pageId) {
-            const mainView = document.getElementById('main-content');
-            const addrBar = document.getElementById('addr-bar');
-            const statusMsg = document.getElementById('status-msg');
+            const page = curriculum.find(p => p.id === pageId);
+            if (!page) return;
 
-            // 1. Update Content
-            if (contentDB[pageId]) {
-                mainView.innerHTML = contentDB[pageId];
+            // Update View
+            document.getElementById('main-content').innerHTML = page.content;
+            document.getElementById('addr-bar').value = `C:\\ACADEMY\\${page.folder.toUpperCase()}\\${pageId.toUpperCase()}.HTM`;
+            
+            // Highlight Sidebar
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(`nav-${pageId}`).classList.add('active');
+
+            // Scroll Top
+            document.getElementById('main-content').scrollTop = 0;
+            
+            setStatus(`Loaded module: ${page.title}`);
+        }
+
+        function checkQuiz(isCorrect, feedbackId) {
+            const fbEl = document.getElementById(feedbackId);
+            if (isCorrect) {
+                fbEl.innerText = "Correct! System updated.";
+                fbEl.className = "feedback correct";
+                // Play fake sound effect logic here if needed
             } else {
-                mainView.innerHTML = "<h1>404 Not Found</h1><p>The requested file does not exist.</p>";
+                fbEl.innerText = "Incorrect. Access denied. Try again.";
+                fbEl.className = "feedback wrong";
             }
+        }
 
-            // 2. Update Address Bar simulation
-            const path = `C:\\DOCS\\ALGORITHMS\\${pageId.toUpperCase().replace('-', '_')}.HTM`;
-            addrBar.value = path;
+        function completeLesson(currentId, nextId) {
+            if (!completed.has(currentId)) {
+                completed.add(currentId);
+                updateProgress();
+                renderSidebar(); // to show checkmarks
+            }
+            if (nextId === 'home') {
+                alert("CONGRATULATIONS! Course Completed.");
+            }
+            navTo(nextId);
+        }
 
-            // 3. Status Bar Simulation
-            statusMsg.textContent = "Loading...";
-            setTimeout(() => {
-                statusMsg.textContent = "Done";
-            }, 300);
+        function updateProgress() {
+            // Excluding Home
+            const total = curriculum.length - 1; 
+            const current = completed.size;
+            const pct = Math.floor((current / total) * 100);
+            document.getElementById('progress-bar').style.width = pct + '%';
+        }
 
-            // 4. Scroll to top
-            mainView.scrollTop = 0;
+        function setStatus(msg) {
+            const el = document.getElementById('status-msg');
+            el.innerText = "Processing...";
+            setTimeout(() => { el.innerText = msg; }, 200);
         }
 
         function toggleTheme() {
             const body = document.body;
-            const currentTheme = body.getAttribute('data-theme');
-            
-            if (currentTheme === 'dark') {
-                body.removeAttribute('data-theme');
-            } else {
-                body.setAttribute('data-theme', 'dark');
-            }
+            body.dataset.theme = body.dataset.theme === 'dark' ? '' : 'dark';
         }
 
-        // Initialize
-        navTo('home');
+        function resetProgress() {
+            completed.clear();
+            updateProgress();
+            renderSidebar();
+            navTo('home');
+        }
+
+        // Start
+        init();
 
     </script>
 </body>
