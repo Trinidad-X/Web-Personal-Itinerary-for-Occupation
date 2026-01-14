@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAM Profile: Win98 Edition</title>
+    <link rel="stylesheet" href="styles/professional-profile.css">
+</head>
+<body>
+
+<div class="window">
+    <div class="title-bar">
+        <div class="title-text">
+            <img src="https://win98icons.alexmeub.com/icons/png/console_prompt-0.png" width="16" height="16" style="margin-right: 5px;">
+            DAM_Developer_Profile.exe
+        </div>
+        <div class="title-controls">
+            <button>_</button>
+            <button>□</button>
+            <button onclick="window.close()">X</button>
+        </div>
+    </div>
+
+    <div class="toolbar">
+        <button class="btn-tool" onclick="document.getElementById('profileBuilder').scrollIntoView({behavior:'smooth'})">
+            <img src="https://win98icons.alexmeub.com/icons/png/settings_gear-4.png" width="16"> Configure Profile
+        </button>
+        <button class="btn-tool" onclick="document.getElementById('careerPath').scrollIntoView({behavior:'smooth'})">
+            <img src="https://win98icons.alexmeub.com/icons/png/users-1.png" width="16"> Career Path
+        </button>
+        <div style="flex-grow: 1;"></div>
+        <button class="btn-tool" id="themeToggle">
+            <img src="https://win98icons.alexmeub.com/icons/png/display_properties-3.png" width="16"> Toggle Theme
+        </button>
+    </div>
+
+    <div class="window-content">
+        
+        <div style="display: flex; gap: 20px; margin-bottom: 20px; align-items: center;">
+            <img src="https://win98icons.alexmeub.com/icons/png/computer_explorer_2k-4.png" width="64" height="64">
+            <div>
+                <h1>Multiplatform Application Developer</h1>
+                <p>Designing, developing, and deploying software across desktop, web, and mobile environments.</p>
+            </div>
+        </div>
+
+        <fieldset>
+            <legend>Core Capabilities</legend>
+            <div class="grid-2">
+                <div>
+                    <h3><img src="https://win98icons.alexmeub.com/icons/png/gears-0.png" width="16"> Hard Skills (Tech)</h3>
+                    <ul>
+                        <li><strong>Programming:</strong> Java, Kotlin, C#, Python, JS.</li>
+                        <li><strong>Databases:</strong> SQL Design, Normalization, NoSQL.</li>
+                        <li><strong>Architecture:</strong> MVC, MVP, MVVM patterns.</li>
+                        <li><strong>Deployment:</strong> Docker, CI/CD Pipelines.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3><img src="https://win98icons.alexmeub.com/icons/png/shaking_hands-0.png" width="16"> Soft Skills (Human)</h3>
+                    <p>Often undervalued, these are critical for promotion:</p>
+                    <ul>
+                        <li><strong>Emotional Intelligence:</strong> Managing stress and team dynamics.</li>
+                        <li><strong>Communication:</strong> Explaining technical debt to non-tech managers.</li>
+                        <li><strong>Adaptability:</strong> Unlearning old frameworks to learn new ones.</li>
+                        <li><strong>Time Management:</strong> Accurate estimation of task duration.</li>
+                    </ul>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset id="careerPath">
+            <legend>Career Path Comparison</legend>
+            <p style="margin-bottom: 10px;">The journey from Junior to Senior is not just about years of experience, but a shift in mindset and responsibility.</p>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50%;">JUNIOR DEVELOPER (0-2 Years)</th>
+                        <th style="width: 50%;">SENIOR DEVELOPER (5+ Years)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <strong>Focus: "How"</strong>
+                            Focused on implementation details. "How do I write this function?"
+                        </td>
+                        <td>
+                            <strong>Focus: "Why"</strong>
+                            Focused on architecture and value. "Should we build this feature at all?"
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Autonomy</strong>
+                            Needs supervision and clear requirements. Frequently gets stuck on bugs.
+                        </td>
+                        <td>
+                            <strong>Autonomy</strong>
+                            Self-directed. Defines requirements from vague ideas. Unblocks the team.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Code Quality</strong>
+                            Writes code that works. May struggle with edge cases or scalability.
+                        </td>
+                        <td>
+                            <strong>Code Quality</strong>
+                            Writes code that is maintainable, testable, and secure. Reviews others' code.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Growth Goal</strong>
+                            Learning the syntax, tools, and the codebase.
+                        </td>
+                        <td>
+                            <strong>Growth Goal</strong>
+                            Mentoring juniors, system design, and improving team velocity.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
+
+        <fieldset id="profileBuilder">
+            <legend>Profile Configuration Wizard</legend>
+            <div class="slider-container">
+                <p>Adjust the system parameters to calculate your ideal developer role:</p>
+                
+                <div class="grid-2">
+                    <div>
+                        <div class="range-wrapper">
+                            <div class="range-label"><span>Logic & Backend</span> <span id="valLogic">50%</span></div>
+                            <input type="range" id="inLogic" min="0" max="100" value="50">
+                        </div>
+                        <div class="range-wrapper">
+                            <div class="range-label"><span>Creativity & UI</span> <span id="valCreate">50%</span></div>
+                            <input type="range" id="inCreate" min="0" max="100" value="50">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="range-wrapper">
+                            <div class="range-label"><span>Leadership & Social</span> <span id="valSocial">50%</span></div>
+                            <input type="range" id="inSocial" min="0" max="100" value="50">
+                        </div>
+                        <div class="range-wrapper">
+                            <div class="range-label"><span>Autonomy</span> <span id="valAuto">50%</span></div>
+                            <input type="range" id="inAuto" min="0" max="100" value="50">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: right; margin-top: 10px;">
+                    <button class="win-btn" onclick="calculateProfile()">
+                        <img src="https://win98icons.alexmeub.com/icons/png/msagent-3.png" width="16"> Calculate
+                    </button>
+                </div>
+
+                <div class="result-panel" id="resultBox">
+                    <h3 id="resTitle">CALCULATING...</h3>
+                    <p id="resDesc">...</p>
+                    <hr>
+                    <p><strong>Recommended Stack:</strong> <span id="resTech">...</span></p>
+                </div>
+            </div>
+        </fieldset>
+
+        <h2><img src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png" width="16"> Knowledge Base</h2>
+        <div class="grid-3">
+            <div style="background: var(--bg-window); padding: 10px; border: 1px solid var(--border-dark);">
+                <h3>Technologies</h3>
+                <button class="win-btn" style="width: 100%; justify-content: flex-start;" onclick="openModal('Java/Kotlin', 'The standard for Android & Enterprise. \n\nJunior: Learn syntax & OOP. \nSenior: Memory management & Concurrency.')">
+                    <img src="https://win98icons.alexmeub.com/icons/png/java-0.png" width="16"> Java / Kotlin
+                </button>
+                <button class="win-btn" style="width: 100%; justify-content: flex-start;" onclick="openModal('Databases', 'Persistence layers.\n\nJunior: Basic CRUD queries.\nSenior: Optimization, Indexing, Replication strategies.')">
+                    <img src="https://win98icons.alexmeub.com/icons/png/access-1.png" width="16"> SQL / NoSQL
+                </button>
+            </div>
+            
+            <div style="background: var(--bg-window); padding: 10px; border: 1px solid var(--border-dark);">
+                <h3>Workflows</h3>
+                <button class="win-btn" style="width: 100%; justify-content: flex-start;" onclick="openModal('Git Flow', 'Branching strategies.\n\nJunior: Commit & Push.\nSenior: Merge conflict resolution, Rebase, Cherry-pick.')">
+                    <img src="https://win98icons.alexmeub.com/icons/png/network_connection-1.png" width="16"> Git / GitHub
+                </button>
+                <button class="win-btn" style="width: 100%; justify-content: flex-start;" onclick="openModal('Agile / Scrum', 'Iterative development.\n\nKey: Regular feedback loops and adapting to change quickly.')">
+                    <img src="https://win98icons.alexmeub.com/icons/png/calendar_month-0.png" width="16"> Agile / Scrum
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <div style="border-top: 1px solid var(--border-dark); padding: 2px 5px; background: var(--btn-face); display: flex; gap: 5px; font-size: 11px;">
+        <div style="border: 1px solid var(--border-dark); box-shadow: var(--bevel-inset); padding: 2px 5px; flex-grow: 1;">Ready</div>
+        <div style="border: 1px solid var(--border-dark); box-shadow: var(--bevel-inset); padding: 2px 5px; width: 50px; text-align: center;">INS</div>
+    </div>
+</div>
+
+<div id="infoModal" class="modal-overlay">
+    <div class="modal-window">
+        <div class="title-bar">
+            <div class="title-text">Information</div>
+            <div class="title-controls"><button onclick="closeModal()">X</button></div>
+        </div>
+        <div class="modal-body">
+            <img src="https://win98icons.alexmeub.com/icons/png/msg_information-0.png" width="32" style="margin-bottom: 15px;">
+            <h3 id="mTitle">Title</h3>
+            <p id="mDesc" style="white-space: pre-line;">Description</p>
+            <div style="margin-top: 20px;">
+                <button class="win-btn" onclick="closeModal()">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- THEME TOGGLE LOGIC ---
+    const themeBtn = document.getElementById('themeToggle');
+    const html = document.documentElement;
+
+    themeBtn.addEventListener('click', () => {
+        if (html.getAttribute('data-theme') === 'dark') {
+            html.removeAttribute('data-theme');
+        } else {
+            html.setAttribute('data-theme', 'dark');
+        }
+    });
+
+    // --- SLIDERS UI ---
+    ['inLogic', 'inCreate', 'inSocial', 'inAuto'].forEach(id => {
+        document.getElementById(id).addEventListener('input', (e) => {
+            document.getElementById('val' + id.substring(2)).innerText = e.target.value + '%';
+        });
+    });
+
+    // --- PROFILE CALCULATOR ---
+    function calculateProfile() {
+        const logic = parseInt(document.getElementById('inLogic').value);
+        const create = parseInt(document.getElementById('inCreate').value);
+        const social = parseInt(document.getElementById('inSocial').value);
+        const auto = parseInt(document.getElementById('inAuto').value);
+        
+        const box = document.getElementById('resultBox');
+        const title = document.getElementById('resTitle');
+        const desc = document.getElementById('resDesc');
+        const tech = document.getElementById('resTech');
+
+        if (logic > 75 && create < 40) {
+            title.innerText = "BACKEND ARCHITECT";
+            desc.innerText = "You focus on system stability, API design, and data flow. You prefer the terminal over the mouse.";
+            tech.innerText = "Java Spring Boot, Python, Docker, SQL, Kubernetes";
+        } else if (create > 75 && logic > 40) {
+            title.innerText = "FRONTEND ENGINEER";
+            desc.innerText = "You bridge the gap between design and functionality. User Experience (UX) is your priority.";
+            tech.innerText = "React, Vue, CSS3, Figma, Flutter";
+        } else if (logic > 60 && create > 60 && auto > 70) {
+            title.innerText = "FULL-STACK DEVELOPER";
+            desc.innerText = "The Swiss Army Knife. You can build the database schema and style the submit button.";
+            tech.innerText = "MERN Stack, Next.js, Firebase, TypeScript";
+        } else if (social > 80 && logic > 50) {
+            title.innerText = "TECH LEAD / SCRUM MASTER";
+            desc.innerText = "You have the technical know-how but excel at unblocking teams and communicating with stakeholders.";
+            tech.innerText = "Jira, Agile, System Design, Code Reviews";
+        } else {
+            title.innerText = "MULTI-PLATFORM DEVELOPER";
+            desc.innerText = "A versatile developer capable of deploying solutions across Mobile, Web, and Desktop.";
+            tech.innerText = "Kotlin, Swift, React Native, .NET MAUI";
+        }
+
+        box.style.display = 'block';
+    }
+
+    // --- MODAL LOGIC ---
+    function openModal(title, text) {
+        document.getElementById('mTitle').innerText = title;
+        document.getElementById('mDesc').innerText = text;
+        document.getElementById('infoModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('infoModal').style.display = 'none';
+    }
+
+    window.onclick = function(e) {
+        if (e.target == document.getElementById('infoModal')) {
+            closeModal();
+        }
+    }
+</script>
+
+</body>
+</html>
