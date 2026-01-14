@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Programming Labor Market – US</title>
+
+<!-- Link to provided CSS -->
+<link rel="stylesheet" href="styles/general.css">
+
+<!-- ONLY new styles -->
+<style>
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.chart {
+    margin: 15px 0;
+}
+.chart-bar {
+    height: 18px;
+    background: var(--border-med);
+    box-shadow: var(--bevel-inset);
+    margin-bottom: 8px;
+}
+.chart-fill {
+    height: 100%;
+    background: var(--title-grad-1);
+}
+[data-theme="dark"] .chart-fill {
+    background: var(--text-main);
+}
+
+.compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+.compare-box {
+    box-shadow: var(--bevel-inset);
+    padding: 12px;
+}
+</style>
+</head>
+
+<body>
+<div class="window">
+
+    <!-- TITLE BAR -->
+    <div class="title-bar">
+        <div class="title-text">💾 Programming Labor Market Explorer (US)</div>
+        <div class="title-controls">
+            <button class="win-btn" onclick="toggleTheme()">☼</button>
+        </div>
+    </div>
+
+    <!-- MENU -->
+    <div class="menu-bar">
+        <div class="menu-item">File</div>
+        <div class="menu-item">View</div>
+        <div class="menu-item">Help</div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+        <button class="tool-btn active" onclick="showTab('demand', this)">Job Demand</button>
+        <button class="tool-btn" onclick="showTab('salaries', this)">Salaries</button>
+        <button class="tool-btn" onclick="showTab('levels', this)">Entry vs Senior</button>
+        <button class="tool-btn" onclick="showTab('remote', this)">Remote Work</button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="window-content">
+
+        <!-- JOB DEMAND -->
+        <section id="demand" class="tab-content active">
+            <h1>Job Demand & Trends</h1>
+            <p>
+                Software development continues to be one of the strongest labor markets in the US,
+                driven by cloud computing, AI, cybersecurity, and enterprise digitization.
+            </p>
+
+            <div class="chart">
+                <div class="label">Web & Application Development</div>
+                <div class="chart-bar">
+                    <div class="chart-fill" style="width:85%"></div>
+                </div>
+
+                <div class="label">Data / AI / ML Engineering</div>
+                <div class="chart-bar">
+                    <div class="chart-fill" style="width:75%"></div>
+                </div>
+
+                <div class="label">Systems / Embedded Software</div>
+                <div class="chart-bar">
+                    <div class="chart-fill" style="width:55%"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SALARIES -->
+        <section id="salaries" class="tab-content">
+            <h1>Salaries & Career Outlook</h1>
+            <ul>
+                <li>Median software developer salary: <strong>$120k+</strong></li>
+                <li>High-paying specialties: AI, distributed systems, security</li>
+                <li>Equity & bonuses common in mid-to-senior roles</li>
+            </ul>
+
+            <p>
+                Long-term outlook remains strong due to automation, legacy system replacement,
+                and sustained tech investment across industries.
+            </p>
+        </section>
+
+        <!-- ENTRY VS SENIOR -->
+        <section id="levels" class="tab-content">
+            <h1>Entry-Level vs Senior Roles</h1>
+
+            <div class="compare-grid">
+                <div class="compare-box">
+                    <h3>Entry-Level</h3>
+                    <ul>
+                        <li>$70k–$95k salaries</li>
+                        <li>Higher competition</li>
+                        <li>Mentorship & training focused</li>
+                        <li>Generalist skill sets</li>
+                    </ul>
+                </div>
+
+                <div class="compare-box">
+                    <h3>Senior-Level</h3>
+                    <ul>
+                        <li>$140k–$200k+ salaries</li>
+                        <li>Strong demand</li>
+                        <li>Architecture & leadership</li>
+                        <li>Specialization rewarded</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- REMOTE -->
+        <section id="remote" class="tab-content">
+            <h1>Remote vs On-Site Opportunities</h1>
+            <ul>
+                <li>Remote roles dominate software job postings</li>
+                <li>Hybrid models common at large enterprises</li>
+                <li>On-site roles remain in defense, hardware, and regulated sectors</li>
+            </ul>
+
+            <div class="chart">
+                <div class="label">Remote</div>
+                <div class="chart-bar">
+                    <div class="chart-fill" style="width:70%"></div>
+                </div>
+
+                <div class="label">Hybrid</div>
+                <div class="chart-bar">
+                    <div class="chart-fill" style="width:20%"></div>
+                </div>
+
+                <div class="label">On-Site</div>
+                <div class="chart-bar">
+                    <div class="chart-fill" style="width:10%"></div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+        <div class="status-panel">Ready</div>
+        <div class="status-panel">US Market Overview</div>
+    </div>
+
+</div>
+
+<script>
+function showTab(id, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+
+    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+
+function toggleTheme() {
+    document.body.dataset.theme =
+        document.body.dataset.theme === "dark" ? "" : "dark";
+}
+</script>
+</body>
+</html>
